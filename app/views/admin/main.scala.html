@@ -1,0 +1,46 @@
+@(content: Html)
+
+<!DOCTYPE HTML>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>MilmSearch admin</title>
+    <link href="@routes.Assets.at("admin/css/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css">
+    <link href="@routes.Assets.at("admin/css/bootstrap.min.css")" rel="stylesheet" type="text/css">
+    <link href="@routes.Assets.at("admin/css/tuning.css")" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="brand" href="@routes.Admin.index">
+            <img src="@routes.Assets.at("admin/img/logo_admin.png")"
+                 alt="MilmSearch admin" title="MilmSearch admin">
+          </a>
+          <ul class="nav">
+            <li>
+              <a href="@{routes.Admin.listMLProposals}?status=new">審査待ち</a>
+            </li>
+            <li>
+              <a href="@{routes.Admin.listMLProposals}?status=accepted">承認済み</a>
+            </li>
+            <li>
+              <a href="@{routes.Admin.listMLProposals}?status=rejected">却下済み</a>
+            </li>
+            <a class="btn tune_btn-user" href="@routes.Application.index">ユーザー側サイト</a>
+          </ul>
+        </div>
+      </div>
+      @content
+    </div>
+    <footer id="footer">
+      <div class="container">
+        <a class="pull-right" href="@routes.Admin.index">ページトップへ</a>
+        <p>Copyright © MilmSearch All Rights Reserved.</p>
+      </div>
+    </footer>
+  
+    <script src="@routes.Assets.at("admin/js/jquery-latest.js")"></script>
+    <script src="@routes.Assets.at("admin/js/bootstrap.min.js")"></script>
+  </body>
+</html>
