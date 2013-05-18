@@ -1,4 +1,6 @@
-@(content: Html)
+@(status: Option[MLProposalStatus.Value] = None)(content: Html)
+
+@import MLProposalStatus._
 
 <!DOCTYPE HTML>
 <html lang="ja">
@@ -20,15 +22,13 @@
                  alt="MilmSearch admin" title="MilmSearch admin">
           </a>
           <ul class="nav">
-            <li>
-              <a href="@{routes.Admin.listMLProposals}?status=new">審査待ち</a>
+          @Seq((New,      "審査待ち"),
+               (Accepted, "承認済み"),
+               (Rejected, "却下済み")).map { tpl =>
+            <li class="@if(status == Some(tpl._1)) {active}">
+              <a href="@routes.AdminMLProposals.list(tpl._1.toString)">@tpl._2</a>
             </li>
-            <li>
-              <a href="@{routes.Admin.listMLProposals}?status=accepted">承認済み</a>
-            </li>
-            <li>
-              <a href="@{routes.Admin.listMLProposals}?status=rejected">却下済み</a>
-            </li>
+          }
             <a class="btn tune_btn-user" href="@routes.Application.index">ユーザー側サイト</a>
           </ul>
         </div>
