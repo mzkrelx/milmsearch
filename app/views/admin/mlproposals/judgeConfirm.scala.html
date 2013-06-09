@@ -1,0 +1,46 @@
+@(mlp: MLProposal, statusTo: MLProposalStatus.Value)
+
+@import MLProposalStatus._
+
+@moreScripts = {
+  <script type="text/javascript">
+    function submit() {
+      jsRouter.controllers.AdminMLProposals.judge(@mlp.id.get).ajax({
+        data: { status: '@statusTo' },
+        success: function(data) {
+          window.location = '@routes.AdminMLProposals.showJudgeCompleted(mlp.id.get, statusTo.toString)';
+        },
+        error: function(xhr, status, err) { alert(xhr.responseText) }
+      });
+    }
+    
+    $(function() {
+      $('button.tune_btn-decide').on('click', submit);
+    });
+  </script>
+}
+
+@admin.main(Some(mlp.status), moreScripts) {
+  <section>
+    <header class="page-header">
+      <h1>@mlp.mlTitle</h1>
+    </header>
+    @defining(statusTo match {
+      case Accepted => "承認"
+      case Rejected => "却下"
+      case _ => ""
+    }) { actionName =>
+      <p>このML登録申請を@{actionName}し、申請者に下記のご案内メールを送信します。</p>
+      <h2>ご案内メール</h2>
+      <div class="tune_mailtext">
+        <pre>TODO</pre>
+      </div>
+      <p><strong>このMLの登録申請を@{actionName}してよろしいですか？</strong></p>
+      <div class="tune_stdecide">
+        <a class="btn btn-large tune_btn-decide"
+           href="@routes.AdminMLProposals.show(mlp.id.get)">ML詳細画面に戻る</a>
+        <button type="submit" class="btn btn-large btn-primary tune_btn-decide">この申請を@{actionName}する</button>
+      </div>
+    }
+  </section>
+}

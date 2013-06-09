@@ -2,6 +2,7 @@ package controllers
 
 import play.api._
 import play.api.mvc._
+import models.MLProposal
 
 object Admin extends Controller {
   
@@ -9,8 +10,9 @@ object Admin extends Controller {
     Ok(views.html.admin.index())
   }
   
-  def listMLProposals = Action {
-    Ok(views.html.admin.listMLProposals())
+  def javascriptRoutes = Action { implicit request =>
+    Ok(Routes.javascriptRouter("jsRouter", Some("jQuery.ajax"))(
+      routes.javascript.AdminMLProposals.judge)).as("text/javascript")
   }
   
 }

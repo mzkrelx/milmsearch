@@ -1,0 +1,92 @@
+@(mlp: MLProposal)
+
+@import MLProposalStatus._
+
+@admin.main(Some(mlp.status)) {
+  <section>
+    <header class="page-header">
+      <h1>@mlp.mlTitle</h1>
+    </header>
+    <table class="table table-bordered">
+    <tbody>
+    @mlp.status match {
+      case New => {
+        <tr>
+          <th class="tune_th-250 text-error tune_table-stnew"><strong>審査待ち</strong></td>
+          <td>申請日：@mlp.createdAt.toString("yyyy/MM/dd")</td>
+        </tr>
+      }
+      case Accepted => {
+        <tr>
+          <th class="tune_th-250 text-info tune_table-stnew"><strong>承認済み</strong></td>
+          <td>申請日：@mlp.createdAt.toString("yyyy/MM/dd")　承認日：@mlp.judgedAt.map(_.toString("yyyy/MM/dd")).getOrElse("-")</td>
+        </tr>
+      }
+      case Rejected => {
+        <tr>
+          <th class="tune_th-250 text-warning tune_table-strejected"><strong>却下済み</strong></td>
+          <td>申請日：@mlp.createdAt.toString("yyyy/MM/dd")　却下日：@mlp.judgedAt.map(_.toString("yyyy/MM/dd")).getOrElse("-")</td>
+        </tr>
+      }
+    }
+      <tr>
+        <th class="tune_th-250 tune_th-head">管理者コメント</th>
+        <td><a class="editor " href="javascript:void(0)">管理者コメントはまだ編集できません。</a><i class="icon-pencil"></i></td>
+      </tr>
+    </tbody>
+    </table>
+    <section>
+      <header class="clearfix">
+        <h2 class="pull-left">メーリングリスト情報</h2>
+        <a class="btn btn-primary pull-right tune_btn-mledit"
+           href="@routes.AdminMLProposals.showEditForm(mlp.id.get)">変更する</a>
+      </header>
+      <table class="table table-bordered">
+      <tbody>
+      <tr>
+        <th class="tune_th-250 tune_th-head">MLタイトル</th>
+        <td>@mlp.mlTitle<i class="tune_icon-ok pull-right"></i></td>
+      </tr>
+      <tr>
+        <th class="tune_th-250 tune_th-head">公開アーカイブURL</th>
+        <td><a href="@mlp.archiveURL">@mlp.archiveURL</a><i class="tune_icon-ng pull-right"></i></td>
+      </tr>
+      <tr>
+        <th class="tune_th-250 tune_th-head">アーカイブソフトタイプ</th>
+        <td>@mlp.archiveType<i class="tune_icon-ok pull-right"></i></td>
+      </tr>
+      </tbody>
+      </table>
+    </section>
+    <section>
+      <header>
+        <h2>申請者情報</h2>
+      </header>
+      <table class="table table-bordered">
+      <tbody>
+      <tr>
+        <th class="tune_th-250 tune_th-head">申請者名</th>
+        <td>@mlp.proposerName</td>
+      </tr>
+      <tr>
+        <th class="tune_th-250 tune_th-head">連絡先メールアドレス</th>
+        <td>@mlp.proposerEmail</td>
+      </tr>
+      <tr>
+        <th class="tune_th-250 tune_th-head">申請時コメント</th>
+        <td>@mlp.message</td>
+      </tr>
+      </tbody>
+      </table>
+    </section>
+    @if(mlp.status == New) {
+      <div class="tune_decide">
+        <a class="btn btn-large btn-warning tune_btn-decide"
+           href="@routes.AdminMLProposals.showJudgeConfirm(mlp.id.get, Rejected.toString)">却下する</a>
+        <a class="btn btn-large btn-primary tune_btn-decide"
+           href="@routes.AdminMLProposals.showJudgeConfirm(mlp.id.get, Accepted.toString)">承認する</a>
+      </div>
+    }
+    <a class="btn" href="@routes.AdminMLProposals.list(mlp.status.toString)">一覧へ戻る</a>
+  </section>
+}

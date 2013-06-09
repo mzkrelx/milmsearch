@@ -1,0 +1,44 @@
+@(id: Long, editForm: Form[MLProposalUpdateRequest])
+
+@import helper._
+@import models.MLArchiveType._
+
+@implicitField = @{ FieldConstructor(tableFieldConstructor.f) }
+
+@admin.main(None) {
+  <section>
+  	<header class="page-header">
+  		<h1>メーリングリスト情報の変更</h1>
+  	</header>
+  	@helper.form(action = routes.AdminMLProposals.submitEditForm(id)) {
+  		<table class="table table-bordered">
+    		<tbody>
+    		  @inputText(editForm("mlTitle"),
+    		    '_label -> "MLタイトル",
+    		    '_th_class -> "tune_th-250 tune_th-head",
+    		    '_showConstraints -> false
+  		    )
+    		  @inputText(editForm("archiveURL"),
+    		    '_label -> "公開アーカイブURL",
+    		    '_th_class -> "tune_th-250 tune_th-head",
+    		    '_showConstraints -> false
+  		    )
+    		  @select(editForm("archiveType"),
+    		    Seq(
+    		      Mailman.toString -> "Mailman",
+    		      Other.toString   -> "その他"
+    		    ),
+    		    '_label -> "アーカイブソフトタイプ",
+    		    '_th_class -> "tune_th-250 tune_th-head",
+    		    '_help  -> "「その他」の場合、ソフト名等の注記はML詳細画面から管理者コメントに追記してください。",
+    		    '_showConstraints -> false
+  		    )
+    		</tbody>
+  		</table>
+  		<div class="tune_decide">
+  			<a class="btn btn-large tune_btn-decide" href="@routes.AdminMLProposals.show(id)">戻る</a>
+  			<input class="btn btn-large btn-primary tune_btn-decide" type="submit" value="変更する">
+  		</div>
+  	}
+  </section>
+}

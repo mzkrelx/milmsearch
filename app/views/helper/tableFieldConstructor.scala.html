@@ -1,0 +1,14 @@
+@(elements: helper.FieldElements)
+
+<tr class="@elements.args.get('_class) @if(elements.hasErrors) {error}" id="@elements.args.get('_id).getOrElse(elements.id + "_field")">
+  <th class="@elements.args.get('_th_class)">@elements.label(elements.lang)</th>
+  <td class="@elements.args.get('_td_class)">
+    @elements.input
+    @elements.errors(elements.lang).map { error =>
+      <span class="error">@error</span>
+    }   
+    @elements.infos(elements.lang).map { info =>
+      <p class="info"><small>@info</small></p>
+    }   
+  </td>
+</tr>
