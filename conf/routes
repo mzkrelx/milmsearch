@@ -4,8 +4,19 @@
 
 # Home page
 GET     /                           controllers.Application.index
+
+# Admin area
 GET     /admin                      controllers.Admin.index 
-GET     /admin/ml-proposals         controllers.Admin.listMLProposals
+GET     /admin/ml-proposals         controllers.AdminMLProposals.list(status, startIndex:Long ?= 0, count:Int ?= 10)
+GET     /admin/ml-proposals/:id     controllers.AdminMLProposals.show(id: Long)
+PUT     /admin/ml-proposals/:id/status          controllers.AdminMLProposals.judge(id: Long)
+GET     /admin/ml-proposals/:id/edit-form       controllers.AdminMLProposals.showEditForm(id: Long)
+POST    /admin/ml-proposals/:id/edit-form       controllers.AdminMLProposals.submitEditForm(id: Long)
+GET     /admin/ml-proposals/:id/judge-confirm   controllers.AdminMLProposals.showJudgeConfirm(id: Long, statusTo)
+GET     /admin/ml-proposals/:id/judge-completed controllers.AdminMLProposals.showJudgeCompleted(id: Long, statusTo)
+
+# Javascript routing
+GET     /admin/js/routes            controllers.Admin.javascriptRoutes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
