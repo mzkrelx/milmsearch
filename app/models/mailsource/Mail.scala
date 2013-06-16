@@ -5,8 +5,8 @@ import java.net.URL
 import javax.mail.internet.InternetAddress
 
 case class Mail(
-  date:    DateTime,
-  address: InternetAddress,
-  subject: String,
-  text:    String,
-  url:     URL)
+  date:     DateTime,
+  fromAddr: InternetAddress,
+  subject:  String,
+  body:     String,
+  srcURL:   URL)
