@@ -12,7 +12,8 @@ object ApplicationBuild extends Build {
     jdbc,
     anorm,
     "postgresql" % "postgresql" % "9.1-901.jdbc4",
-    "org.apache.commons" % "commons-email" % "1.3.1"
+    "org.apache.commons" % "commons-email" % "1.3.1",
+    "com.github.seratch" %% "scalikesolr" % "4.3.1"
   )
 
 

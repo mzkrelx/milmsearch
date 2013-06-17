@@ -1,0 +1,29 @@
+@(res:com.github.seratch.scalikesolr.QueryResponse, sampleForm: Form[String])
+@import com.github.seratch.scalikesolr._
+@import helper._
+
+@main("SolrSample") {
+  <p>Data Num : @res.response.documents.size</p>
+  @form(routes.SolrSample.update) {
+    @inputText(sampleForm("data")) 
+    <input type="submit" value="Update">
+  }
+    
+  @form(routes.SolrSample.search) {
+    @inputText(sampleForm("data")) 
+    <input type="submit" value="Search">
+  } 
+    @res.response.documents.map { case doc =>
+    <p>------------------------------</p>
+    <p>id : @doc.get("id").toString()</p>
+    <p>title : @doc.get("title").toString()</p>
+    <p>archive_type : @doc.get("archive_type").toString()</p>
+    <p>archive_u_r_l : @doc.get("archive_u_r_l").toString()</p>
+    <p>last_mailed_at : @doc.get("last_mailed_at").toString()</p>
+    <p>comment : @doc.get("comment").toString()</p>
+    @form(routes.SolrSample.delete(doc.get("id").toString())) {
+      <input type="submit" value="Delete">
+    }
+    <p>------------------------------</p>
+  }
+}
