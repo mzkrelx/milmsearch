@@ -26,14 +26,14 @@
       <h1>@mlp.mlTitle</h1>
     </header>
     @defining(statusTo match {
-      case Accepted => "承認"
-      case Rejected => "却下"
-      case _ => ""
-    }) { actionName =>
+      case Accepted => ("承認", views.txt.admin.mlproposals.acceptMailBody(mlp))
+      case Rejected => ("却下", views.txt.admin.mlproposals.rejectMailBody(mlp))
+      case _ => ("", "")
+    }) { case (actionName, mailBody) =>
       <p>このML登録申請を@{actionName}し、申請者に下記のご案内メールを送信します。</p>
       <h2>ご案内メール</h2>
       <div class="tune_mailtext">
-        <pre>TODO</pre>
+        <pre>@mailBody</pre>
       </div>
       <p><strong>このMLの登録申請を@{actionName}してよろしいですか？</strong></p>
       <div class="tune_stdecide">
