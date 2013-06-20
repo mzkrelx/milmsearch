@@ -27,7 +27,7 @@
     </header>
     @defining(statusTo match {
       case Accepted => ("承認", views.txt.admin.mlproposals.acceptMailBody(mlp))
-      case Rejected => ("却下", views.txt.admin.mlproposals.acceptMailBody(mlp))
+      case Rejected => ("却下", views.txt.admin.mlproposals.rejectMailBody(mlp))
       case _ => ("", "")
     }) { case (actionName, mailBody) =>
       <p>このML登録申請を@{actionName}し、申請者に下記のご案内メールを送信します。</p>
