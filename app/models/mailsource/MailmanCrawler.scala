@@ -14,47 +14,99 @@ import play.Logger
 import org.joda.time.format.DateTimeFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
+import scala.xml.Node
+import utils.HTMLUtil
+import scala.util.Try
+
+case class MailmanCrawlingException(msg: String) extends Exception(msg)
 
 object MailmanCrawler {
 
-  /** Crawling test
+  /** Crawling test to check archiveURL is valid.
+   *
    * @param  url ML archive URL
-   * @return first mail
+   *   e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/"
+   * @return Success if the first mail is crawled; Failure otherwise
    */
-  def test(url: URL): Mail = {
+  def crawlingTest(archiveURL: URL): Try[Mail] = {
+    import HTMLUtil._
 
-    val monthlyUrlNodeSeq = toNode(url) \\ "table" \\ "td" \\ "a" \\ "@href" map { _.toString } collect {
+    Try {
+
+      val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
+
+      // e.g. 2011-August/date.html
+      val firstMonthHref = monthHrefs.reverse.headOption.getOrElse(
+        throw MailmanCrawlingException("The archive month href could not be found."))
+
+      // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/date.html"
+      val firstMonthURL = new URL(archiveURL + firstMonthHref)
+      val mailHrefs = collectMailHref(toNode(fetchHTML(firstMonthURL)))
+
+      // e.g. "000000.html"
+      val firstMailHref = mailHrefs.headOption.getOrElse(
+          throw MailmanCrawlingException("The mail href could not be found."))
+
+      // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/000000.html"
+      val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
+      val mailHTMLNode = toNode(fetchHTML(firstMailURL))
+
+      Mail(
+       findDate(mailHTMLNode),
+       new InternetAddress(findFromAddress(mailHTMLNode),
+         findFromName(mailHTMLNode)),
+       findSubject(mailHTMLNode),
+       findBody(mailHTMLNode),
+       firstMailURL)
+    }
+  }
+
+  private def collectMonthHref(node: Node): Seq[String] = {
+    node \\ "table" \\ "td" \\ "a" \\ "@href" map { _.toString } collect {
       case href if href.endsWith("/date.html") => href
     } distinct
+  }
 
-    val firstMonthUrl = new URL(url + monthlyUrlNodeSeq.reverse.head.toString)
-
+  private def collectMailHref(node: Node): Seq[String] = {
     val regexp = """^([0-9]+\.html)$""".r
-    val mailUrlNodeSeq = toNode(firstMonthUrl) \\ "ul" \ "li" \ "a" \\ "@href" map { _.toString } collect {
+    node \\ "ul" \ "li" \ "a" \\ "@href" map { _.toString } collect {
       case regexp(str) => str
     }
-
-    val firstMailURL = new URL(firstMonthUrl.toString().replaceFirst("date.html", mailUrlNodeSeq.head))
-
-    val mailNode = toNode(firstMailURL)
-
-    Mail(
-     date = new DateTime(new SimpleDateFormat("yyyy年 M月 d日 (EEE) HH:mm:ss z", Locale.JAPAN).parse((mailNode \\ "p" \ "i").head.text)),
-     fromAddr = new InternetAddress((mailNode \\ "p" \ "a").head.text.trim().replaceAll(" ", "").replaceAll("＠", "@"),
-         (mailNode \\ "p" \ "b").head.text),
-     subject = mailNode \\ "p" \ "a" \\ "@title" toString(),
-     body = (mailNode \\ "pre").head.text.trim,
-     srcURL = firstMailURL)
   }
 
-  def toNode(url: URL) = {
-    val htmlParser = new HtmlParser
-    htmlParser.setNamePolicy(XmlViolationPolicy.ALLOW)
+  private def findDate(mailHTMLNode: Node): DateTime = {
+    val format = "yyyy年 M月 d日 (EEE) HH:mm:ss z"
+    val dateStr = (mailHTMLNode \\ "p" \ "i").headOption.getOrElse {
+      throw MailmanCrawlingException("The mail's date could not be found.")
+    }.text
 
-    val contentHandler = new NoBindingFactoryAdapter
-    htmlParser.setContentHandler(contentHandler)
-    htmlParser.parse(new InputSource(url.openStream()))
-
-    contentHandler.rootElem
+    // JodaTime doesn't support parsing time zone 'JST' Ver. 2.1 & 2.2
+    new DateTime(new SimpleDateFormat(format, Locale.JAPAN).parse(dateStr))
   }
+
+  private def findFromName(mailHTMLNode: Node): String = {
+    (mailHTMLNode \\ "p" \ "b").headOption.getOrElse {
+      throw MailmanCrawlingException("The mail's from name could not be found.")
+    }.text
+  }
+
+  private def findFromAddress(mailHTMLNode: Node): String = {
+    (mailHTMLNode \\ "p" \ "a").headOption.getOrElse {
+      throw MailmanCrawlingException("The mail's from address could not be found.")
+    }.text.trim.replaceAll(" ", "").replaceAll("＠", "@")
+  }
+
+  private def findSubject(mailHTMLNode: Node): String = {
+    mailHTMLNode \\ "p" \ "a" \\ "@title" match {
+      case s if s.isEmpty => throw MailmanCrawlingException("The mail's subject could not be found.")
+      case s => s.toString
+    }
+  }
+
+  private def findBody(mailHTMLNode: Node): String = {
+    (mailHTMLNode \\ "pre").headOption.getOrElse {
+      throw MailmanCrawlingException("The mail's body could not be found.")
+    }.text.trim
+  }
+
 }
