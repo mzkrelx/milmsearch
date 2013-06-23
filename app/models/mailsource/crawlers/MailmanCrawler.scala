@@ -39,15 +39,30 @@ object MailmanCrawler {
           throw MailmanCrawlingException("The mail href could not be found."))
 
       val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
-      val mailHTMLNode = toNode(fetchHTML(firstMailURL))
 
-      Mail(
-       findDate(mailHTMLNode),
-       new InternetAddress(findFromAddress(mailHTMLNode),
-         findFromName(mailHTMLNode)),
-       findSubject(mailHTMLNode),
-       findBody(mailHTMLNode),
-       firstMailURL)
+      createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
+    }
+  }
+
+  def clawling(archiveURL: URL) {
+    import HTMLUtil._
+
+    val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
+    val monthURLs = monthHrefs.reverse.map { href =>
+      new URL(archiveURL + href)
+    }
+
+    monthURLs foreach { monthURL =>
+      val mailHrefs = collectMailHref(toNode(fetchHTML(monthURL)))
+      val mailURLs = mailHrefs map { href =>
+        new URL(monthURL.toString.replaceFirst("date.html", href))
+      }
+
+      val mails = mailURLs map { mailURL =>
+        createMail(toNode(fetchHTML(mailURL)), mailURL)
+      }
+      // TODO  save to search server
+      // mails foreach { mail =>
     }
   }
 
@@ -68,6 +83,17 @@ object MailmanCrawler {
     node \\ "ul" \ "li" \ "a" \\ "@href" map { _.toString } collect {
       case regexp(str) => str
     }
+  }
+
+  private def createMail(mailHTMLNode: Node, mailURL: URL) = {
+    Mail(
+      findDate(mailHTMLNode),
+      new InternetAddress(
+        findFromAddress(mailHTMLNode),
+        findFromName(mailHTMLNode)),
+      findSubject(mailHTMLNode),
+      findBody(mailHTMLNode),
+      mailURL)
   }
 
   private def findDate(mailHTMLNode: Node): DateTime = {
