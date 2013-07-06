@@ -10,6 +10,7 @@ import java.util.Date
 import java.net.URL
 import utils.MatchableEnumeration
 import controllers.Page
+import models.mailsource.MailmanCrawler
 
 object MLProposalStatus extends MatchableEnumeration {
   type MLProposalStatus = Value
@@ -158,12 +159,14 @@ object MLProposal {
 
   def judge(id: Long, statusTo: MLProposalStatus) {
     DB.withTransaction { implicit conn =>
-      SQL(s"SELECT status FROM ${DBTableName} WHERE id = {id} FOR UPDATE")
-        .on('id -> id).singleOpt.map(_[String]("status")) match {
+      val statusAndArchiveURL = SQL(s"SELECT status, archive_url FROM ${DBTableName} WHERE id = {id} FOR UPDATE")
+        .on('id -> id).singleOpt map { row =>
+          Pair(row[String]("status"), new URL(row[String]("archive_url")))
+        } match {
           case None => throw UnexpectedException(Some("record not found."))
-          case Some(status) if (status != New.toString) =>
+          case Some((status, _)) if (status != New.toString) =>
             throw UnexpectedException(Some("already judged."))
-          case _ =>
+          case some => some.get
         }
 
       SQL(s"""
@@ -172,6 +175,11 @@ object MLProposal {
               judged_at  = current_timestamp,
               updated_at = current_timestamp WHERE id = {id}""")
         .on('status -> statusTo.toString, 'id -> id).executeUpdate()
+
+      statusTo match {
+        case MLProposalStatus.Accepted => MailmanCrawler.crawling(statusAndArchiveURL._2)
+        case _ =>
+      }
     }
   }
 }
