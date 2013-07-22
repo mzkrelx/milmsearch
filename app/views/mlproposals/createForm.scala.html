@@ -1,4 +1,6 @@
-@(mlpForm: Form[_])
+@(mlpForm: Form[MLProposal])
+
+@implicitField = @{ FieldConstructor(inputTemplate.f) }
 
 @import helper._
 
@@ -17,35 +19,43 @@
         </p>
         </nav>
     
-        @helper.form(action = routes.MLProposals.confirm()) {
+        @helper.form(action = routes.MLProposals.confirm) {
           <table class="table table-bordered">
           <tbody>
           <tr>
-            <th class="tune_th-250 tune_th-head"><span class="text-error">【必須】</span>お名前（ニックネーム可）</th>
-            <td>@input(mlpForm("proposerName")) { (id, name, value, args) =>
-              <input type="text" name="@name" id="@id">}</td>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>お名前（ニックネーム可）
+            </th>
+            <td>@inputText(mlpForm("proposerName"))</td>
           </tr>
           <tr>
-            <th class="tune_th-250 tune_th-head"><span class="text-error">【必須】</span>連絡先メールアドレス</th>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>連絡先メールアドレス
+            </th>
             <td>
-              <input type="email" name="proposer_email" value=""><?php if (isset($errors['proposer_email'])): ?><span class="text-error">　※<?php echo $errors['proposer_email'] ?></span><?php endif ?> <br />
+              @inputText(mlpForm("proposerEmail"))
+              <br>
               確認のため、再度ご入力ください。<br>
-              <input type="email" name="proposer_email2" value=""><?php if (isset($errors['proposer_email2'])): ?><span class="text-error">　※<?php echo $errors['proposer_email2'] ?></span><?php endif ?>
+              @inputText(mlpForm("proposerEmail2"))
             </td>
           </tr>
           <tr>
-            <th class="tune_th-250 tune_th-head"><span class="text-error">【必須】</span>メーリングリストのタイトル</th>
-            <td><input type="text" name="ml_title" value=""><?php if (isset($errors['ml_title'])): ?><span class="text-error">　※<?php echo $errors['ml_title'] ?></span><?php endif ?></td>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>メーリングリストのタイトル
+            </th>
+            <td>
+              @inputText(mlpForm("proposerEmail2"))
+            </td>
           </tr>
           <tr>
-            <th class="tune_th-250 tune_th-head"><span class="text-error">【必須】</span>メーリングリストのアーカイブソフトタイプ</th>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>メーリングリストのアーカイブソフトタイプ
+            </th>
             <td>
-              <select name="archive_type">
-                <option value="">選択してください</option>
-                <option value="<?php echo Config::get('_ml_archive_type.mailman') ?>"<?php if (array_get_or($inputs, 'archive_type') === Config::get('_ml_archive_type.mailman')) echo ' selected'?>><?php echo Config::get('_ml_archive_type.mailman_label') ?></option>
-                <option value="<?php echo Config::get('_ml_archive_type.other') ?>"<?php if (array_get_or($inputs, 'archive_type') === Config::get('_ml_archive_type.other')) echo ' selected'?>><?php echo Config::get('_ml_archive_type.other_label') ?></option>
-              </select>
-              <?php if (isset($errors['archive_type'])): ?><span class="text-error">　※<?php echo $errors['archive_type'] ?></span><?php endif ?>
+              @select(mlpForm("archiveType"), options(
+                "" -> "選択してください",
+                MLArchiveType.Mailman.toString -> "Mailman",
+                MLArchiveType.Other.toString   -> "その他"))
               <p><small>
                 「その他」のソフトをご利用の方は、コメント欄にソフト名をご記入ください。<br>
                 今後の参考にさせていただきます。わからない場合は「その他」を選択してください。
@@ -53,17 +63,23 @@
             </td>
           </tr>
           <tr>
-            <th class="tune_th-250 tune_th-head"><span class="text-error">【必須】</span>メーリングリスト公開アーカイブのURL</th>
-            <td><input type="url" name="archive_u_r_l" value="<?php echo array_get_or($inputs, 'archive_u_r_l') ?>"><?php if (isset($errors['archive_u_r_l'])): ?><span class="text-error">　※<?php echo $errors['archive_u_r_l'] ?></span><?php endif ?></td>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>メーリングリスト公開アーカイブのURL
+            </th>
+            <td>
+              @inputText(mlpForm("archiveURL"))
+            </td>
           </tr>
           <tr>
             <th class="tune_th-250 tune_th-head">ご質問やコメントをどうぞ</th>
-            <td><textarea name="comment"><?php echo array_get_or($inputs, 'comment') ?></textarea></td>
+            <td>@textarea(mlpForm("message"))</td>
           </tr>
           </tbody>
           </table>
           <div class="check_rule">
-            <label><input type="checkbox" name="agreement" value="on"<?php if (array_get_or($inputs, 'agreement') === 'on') echo ' checked'?>>利用規約に同意する</label><?php if (isset($errors['agreement'])): ?><span class="text-error">　※<?php echo $errors['agreement'] ?></span><?php endif ?>
+            <label>
+              @checkbox(mlpForm("agreement"), ('_text -> "利用規約に同意する"))
+            </label>
             <a href="@routes.Application.rule">利用規約</a>
           </div>
     
