@@ -15,7 +15,7 @@ GET    /mls                                      controllers.MLs.list
 
 ## Add MLProposal
 GET    /ml-proposals/new                         controllers.MLProposals.create
-GET    /ml-proposals/confirm                     controllers.MLProposals.confirm
+POST   /ml-proposals/confirm                     controllers.MLProposals.confirm
 POST   /ml-proposals                             controllers.MLProposals.save
 
 # Admin area
