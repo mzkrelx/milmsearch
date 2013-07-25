@@ -13,13 +13,13 @@
         </header>
         登録フローイメージが入ります
         <nav>
-        <p class="pull-right">
-          <small>メーリングリスト登録は注意点について詳しくは…</small>
-          <a class="btn btn-primary" href="@routes.Application.help">ヘルプ</a>
-        </p>
+          <p class="pull-right">
+            <small>メーリングリスト登録は注意点について詳しくは…</small>
+            <a class="btn btn-primary" href="@routes.Application.help">ヘルプ</a>
+          </p>
         </nav>
     
-        @helper.form(action = routes.MLProposals.confirm) {
+        @form(action = routes.MLProposals.confirm) {
           <table class="table table-bordered">
           <tbody>
           <tr>
@@ -33,10 +33,10 @@
               <span class="text-error">【必須】</span>連絡先メールアドレス
             </th>
             <td>
-              @inputText(mlpForm("proposerEmail"))
+              @inputText(mlpForm("proposerEmail"), 'type -> "email")
               <br>
               確認のため、再度ご入力ください。<br>
-              @inputText(mlpForm("proposerEmail2"))
+              @inputText(mlpForm("proposerEmail2"), 'type -> "email")
             </td>
           </tr>
           <tr>
@@ -44,7 +44,7 @@
               <span class="text-error">【必須】</span>メーリングリストのタイトル
             </th>
             <td>
-              @inputText(mlpForm("proposerEmail2"))
+              @inputText(mlpForm("mlTitle"))
             </td>
           </tr>
           <tr>
@@ -67,7 +67,7 @@
               <span class="text-error">【必須】</span>メーリングリスト公開アーカイブのURL
             </th>
             <td>
-              @inputText(mlpForm("archiveURL"))
+              @inputText(mlpForm("archiveURL"), 'type -> "url")
             </td>
           </tr>
           <tr>
@@ -78,7 +78,7 @@
           </table>
           <div class="check_rule">
             <label>
-              @checkbox(mlpForm("agreement"), ('_text -> "利用規約に同意する"))
+              @checkbox(mlpForm("agreement"), '_text -> "利用規約に同意する", 'value -> "on")
             </label>
             <a href="@routes.Application.rule">利用規約</a>
           </div>
