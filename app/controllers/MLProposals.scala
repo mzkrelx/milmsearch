@@ -53,8 +53,8 @@ object MLProposals extends Controller {
   )
 
   /** Show create form. */
-  def create = Action {
-    Ok(views.html.mlproposals.createForm(mlpForm))
+  def create = Action { implicit request =>
+    Ok(views.html.mlproposals.createForm(mlpForm.bindFromRequest))
   }
 
   def confirm = Action { implicit request =>
