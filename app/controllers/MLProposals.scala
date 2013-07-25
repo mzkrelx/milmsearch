@@ -14,16 +14,16 @@ import java.net.URL
 
 object MLProposals extends Controller {
 
-  val form = Form(
+  val mlpForm = Form(
     mapping(
-      "proposerName"    -> nonEmptyText,
-      "proposerEmail"   -> nonEmptyText,
-      "proposerEmail2"  -> nonEmptyText,
-      "mlTitle"         -> nonEmptyText,
-      "archiveType"     -> nonEmptyText,
-      "archiveURL"      -> nonEmptyText,
-      "message"         -> optional(text),
-      "agreement"       -> checked("利用規約に同意する")
+      "proposerName"    -> nonEmptyText(maxLength = 100),
+      "proposerEmail"   -> nonEmptyText(maxLength = 100),
+      "proposerEmail2"  -> nonEmptyText(maxLength = 100),
+      "mlTitle"         -> nonEmptyText(maxLength = 100),
+      "archiveType"     -> nonEmptyText(maxLength = 20),
+      "archiveURL"      -> nonEmptyText(maxLength = 100),
+      "message"         -> optional(text(maxLength = 200)),
+      "agreement"       -> nonEmptyText(maxLength = 2) // Not checked type, because multilingual correspondence of error message is simple.
     ){
       (proposerName, proposerEmail, _, mlTitle, archiveType,
         archiveURL, message, _) =>
@@ -48,20 +48,32 @@ object MLProposals extends Controller {
         mlp.archiveType.toString,
         mlp.archiveURL.toString,
         Option(mlp.message),
-        false))
+        "on"))
     }
   )
 
+  /** Show create form. */
   def create = Action {
-    Ok(views.html.mlproposals.createForm(form))
+    Ok(views.html.mlproposals.createForm(mlpForm))
   }
 
-  def confirm = Action {
-    Ok(views.html.mlproposals.createConfirm())
+  def confirm = Action { implicit request =>
+    mlpForm.bindFromRequest.fold(
+      errorForm => BadRequest(views.html.mlproposals.createForm(errorForm)),
+      _ => {
+        Ok(views.html.mlproposals.createConfirm(mlpForm.bindFromRequest))
+      }
+    )
   }
 
-  def save = Action {
-    Ok(views.html.mlproposals.createComplete())
+  def save = Action { implicit request =>
+    mlpForm.bindFromRequest.fold(
+      errorForm => BadRequest(views.html.mlproposals.createForm(errorForm)),
+      mlp => {
+        MLProposal.save(mlp)
+        Ok(views.html.mlproposals.createComplete())
+      }
+    )
   }
 
 }

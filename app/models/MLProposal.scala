@@ -38,7 +38,7 @@ case class MLProposal(
   judgedAt:      Option[DateTime],
   createdAt:     DateTime,
   updatedAt:     DateTime) {
-  
+
   def asUpdateRequest =
     MLProposalUpdateRequest(id, mlTitle, archiveType, archiveURL)
 }
@@ -51,8 +51,8 @@ case class MLProposalUpdateRequest(
 
 object MLProposal {
   val DBTableName = "ml_proposal"
-  
-  def create(mlp: MLProposal) {
+
+  def save(mlp: MLProposal) {
     DB.withConnection { implicit conn =>
       SQL(s"""
         INSERT INTO ${DBTableName}
@@ -81,7 +81,7 @@ object MLProposal {
       ).executeInsert()
     }
   }
-  
+
   def list(startIndex: Long, itemsPerPage: Int,
            status: MLProposalStatus) = {
     DB.withConnection { implicit conn =>
@@ -109,17 +109,17 @@ object MLProposal {
             new DateTime(row[Date]("created_at")),
             new DateTime(row[Date]("updated_at")))
         }
-      
+
       val totalResults =
         SQL(s"""
           SELECT COUNT(*) AS "c" FROM ${DBTableName}
             WHERE status = {status}""").on(
               'status -> status.toString)().head[Long]("c")
-     
+
       Page(items.toList, totalResults, startIndex, itemsPerPage)
     }
   }
-  
+
   def find(id: Long): Option[MLProposal] =
     DB.withConnection { implicit conn =>
       SQL(s"SELECT * FROM ${DBTableName} WHERE id = {id}")
@@ -138,7 +138,7 @@ object MLProposal {
             new DateTime(row[Date]("updated_at")))
         }
     }
-  
+
   def update(req: MLProposalUpdateRequest) {
     DB.withConnection { implicit conn =>
       SQL(s"""
@@ -155,7 +155,7 @@ object MLProposal {
           'id           -> req.id).executeUpdate()
     }
   }
-  
+
   def judge(id: Long, statusTo: MLProposalStatus) {
     DB.withTransaction { implicit conn =>
       SQL(s"SELECT status FROM ${DBTableName} WHERE id = {id} FOR UPDATE")
@@ -165,7 +165,7 @@ object MLProposal {
             throw UnexpectedException(Some("already judged."))
           case _ =>
         }
-      
+
       SQL(s"""
         UPDATE ${DBTableName}
           SET status     = {status},
