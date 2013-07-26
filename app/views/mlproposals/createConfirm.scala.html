@@ -43,7 +43,7 @@
         </table>
   
         <div class="tune_stdecide">
-          @form(action = routes.MLProposals.create, 'class -> "desidebtn") {
+          @form(action = routes.MLProposals.modify, 'class -> "desidebtn") {
             <input type="submit" class="btn btn-large tune_btn-decide" name="modify" value="修正する">
             
             @inputHidden(mlpForm("proposerName"))
