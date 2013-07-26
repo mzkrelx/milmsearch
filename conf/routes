@@ -11,7 +11,7 @@ GET    /help                                     controllers.Application.help
 GET    /search                                   controllers.Application.search
 
 ## MLs list
-GET    /mls                                      controllers.MLs.list
+GET    /mls                                      controllers.MLs.list(startIndex:Long ?= 0, count:Int ?= 0)
 
 ## Add MLProposal
 GET    /ml-proposals/new                         controllers.MLProposals.create
