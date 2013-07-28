@@ -15,3 +15,5 @@ dist
 /.settings
 /bin
 /.target
+/.cache
+/.gitignore

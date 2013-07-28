@@ -36,6 +36,12 @@ object AdminMLProposals extends Controller {
   val judgeForm = Form(
     single("status" -> nonEmptyText.verifying(
       pattern(("^(%s|%s)$" format (MLPStatus.Accepted, MLPStatus.Rejected)).r))))
+      
+  def testCrawling(id: Long) = Action { // findでMLのURLを持ってきて、Modelに渡す
+    MLProposal.find(id) map { mlp =>
+      Ok(views.html.admin.mlproposals.show(mlp))
+    } getOrElse NotFound
+  }
     
   def list(statusParam: String, startIndex: Long, count: Int) = TryCatch4xx {
     Action { implicit request =>
