@@ -16,10 +16,16 @@ GET     /admin/ml-proposals/:id/judge-confirm   controllers.AdminMLProposals.sho
 GET     /admin/ml-proposals/:id/judge-completed controllers.AdminMLProposals.showJudgeCompleted(id: Long, statusTo)
 
 # Solr Sample
-GET		/solrsample					controllers.SolrSample.index(searchString: String ?= "*:*")
-GET		/solrsample/update			controllers.SolrSample.update
-GET		/solrsample/delete:deleteId	controllers.SolrSample.delete(deleteId:String)
-GET		/solrsample/search			controllers.SolrSample.search
+GET		/solrsample						controllers.SolrSample.index(searchString: String ?= "*:*")
+GET		/solrsample/update				controllers.SolrSample.update
+GET		/solrsample/delete:deleteId		controllers.SolrSample.delete(deleteId:String)
+GET		/solrsample/search				controllers.SolrSample.search
+
+# ElasticSearch Sample
+GET		/elasticsearch					controllers.ElasticsearchSample.index
+GET		/elasticsearch/update			controllers.ElasticsearchSample.update
+GET		/elasticsearch/delete:deleteId	controllers.ElasticsearchSample.delete(deleteId:String)
+GET		/elasticsearch/search			controllers.ElasticsearchSample.search
 
 # Javascript routing
 GET     /admin/js/routes            controllers.Admin.javascriptRoutes
