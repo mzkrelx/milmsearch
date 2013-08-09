@@ -1,0 +1,33 @@
+@(result: org.elasticsearch.action.search.SearchResponse, comment: String)
+@import helper._
+
+@main("ElasticsearchSample") {
+	<h2>サンプルデータ</h2>
+	<p>{"title":"PHP ML1","archive_type":"mailman","archive_u_r_l":"http:\/\/aaa.com\/archieve.html","last_mailed_at":"2013-06-21T03:04:05+09:00","comment":"コメントテスト"}<p>
+	<h2>@comment</h2>
+	<h2>DataNum : @result.getHits().getHits().length</h2>
+	<form action="/elasticsearch/update" method="get">
+	index:<input type="text" name="index"><br>
+    json String:<input type="text" name="jsonStr"><br>
+    <input type="submit" value="update">
+    </form>
+  
+  <form action="/elasticsearch/search" method="get">
+    <input type="text" name="searchStr"><br>
+    <input type="submit" value="search">
+  </form>
+  
+    @result.getHits().getHits().map { case doc =>
+    <p>------------------------------<br>
+    id : @doc.getId.toString()<br>
+    title : @doc.getSource().get("title")<br>
+    archive_type : @doc.getSource().get("archive_type")<br>
+    archive_u_r_l : @doc.getSource().get("archive_u_r_l")<br>
+    last_mailed_at : @doc.getSource().get("last_mailed_at")<br>
+    comment : @doc.getSource().get("comment")<br>
+    @form(routes.ElasticsearchSample.delete(doc.getId.toString())) {
+      <input type="submit" value="Delete">
+    }
+    ------------------------------</p>
+  }
+}
