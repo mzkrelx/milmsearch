@@ -1,0 +1,6 @@
+@* Show input hidden of field without wrapper. *@
+@(field: Field) 
+
+@defining(field) { f =>
+  <input type="hidden" name="@f.name" value="@f.value">
+}

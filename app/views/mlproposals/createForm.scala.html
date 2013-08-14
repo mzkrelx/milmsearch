@@ -1,0 +1,94 @@
+@(mlpForm: Form[MLProposal])
+
+@implicitField = @{ FieldConstructor(inputTemplate.f) }
+
+@import helper._
+
+@main("登録申請 : MilmSearch") {
+  <div class="mainArea">
+    <div class="container">
+      <section>
+        <header class="page-header">
+          <h1>メーリングリストの登録申請</h1>
+        </header>
+        登録フローイメージが入ります@* TODO *@
+        <nav>
+          <p class="pull-right">
+            <small>メーリングリスト登録は注意点について詳しくは…</small>
+            <a class="btn btn-primary" href="@routes.Application.help">ヘルプ</a>
+          </p>
+        </nav>
+    
+        @form(action = routes.MLProposals.confirm) {
+          <table class="table table-bordered">
+          <tbody>
+          <tr>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>お名前（ニックネーム可）
+            </th>
+            <td>@inputText(mlpForm("proposerName"))</td>
+          </tr>
+          <tr>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>連絡先メールアドレス
+            </th>
+            <td>
+              @inputText(mlpForm("proposerEmail"), 'type -> "email")
+              <br>
+              確認のため、再度ご入力ください。<br>
+              @inputText(mlpForm("proposerEmail2"), 'type -> "email")
+            </td>
+          </tr>
+          <tr>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>メーリングリストのタイトル
+            </th>
+            <td>
+              @inputText(mlpForm("mlTitle"))
+            </td>
+          </tr>
+          <tr>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>メーリングリストのアーカイブソフトタイプ
+            </th>
+            <td>
+              @select(mlpForm("archiveType"), options(
+                "" -> "選択してください",
+                MLArchiveType.Mailman.toString -> "Mailman",
+                MLArchiveType.Other.toString   -> "その他"))
+              <p><small>
+                「その他」のソフトをご利用の方は、コメント欄にソフト名をご記入ください。<br>
+                今後の参考にさせていただきます。わからない場合は「その他」を選択してください。
+              </small></p>
+            </td>
+          </tr>
+          <tr>
+            <th class="tune_th-250 tune_th-head">
+              <span class="text-error">【必須】</span>メーリングリスト公開アーカイブのURL
+            </th>
+            <td>
+              @inputText(mlpForm("archiveURL"), 'type -> "url")
+            </td>
+          </tr>
+          <tr>
+            <th class="tune_th-250 tune_th-head">ご質問やコメントをどうぞ</th>
+            <td>@textarea(mlpForm("message"))</td>
+          </tr>
+          </tbody>
+          </table>
+          <div class="check_rule">
+            <label>
+              @checkbox(mlpForm("agreement"), '_text -> "利用規約に同意する", 'value -> "on")
+            </label>
+            <a href="@routes.Application.rule">利用規約</a>
+          </div>
+    
+          <div class="tune_decide">
+            <a class="btn btn-large tune_btn-decide" href="@routes.Application.index">トップページへ</a>
+            <input class="btn btn-large btn-primary tune_btn-decide" type="submit" value="確認する">
+          </div>
+        }
+      </section>
+    </div>
+  </div>
+}

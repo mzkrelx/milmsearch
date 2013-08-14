@@ -1,15 +1,53 @@
 @(title: String)(content: Html)
 
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>@title</title>
+    <link href="@routes.Assets.at("css/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css">
+    <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet" type="text/css">
+    <link href="@routes.Assets.at("css/tuning.css")" rel="stylesheet" type="text/css">
+  </head>
 
-<html>
-    <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
-    </head>
-    <body>
-        @content
-    </body>
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="header-inner">
+        <div class="container">
+          <a class="brand" title="MilmSearch Ver.0.1" href="@routes.Application.index">
+            <img src="@routes.Assets.at("img/logo_user.png")">
+          </a>
+          <nav id="headmenu">
+            <ul class="mainmenu">
+              <li><a class="btn" href="@routes.MLs.list(0, 10)">MLを見る</a></li>
+              <li><a class="btn" href="@routes.MLProposals.create">MLを登録する</a></li>
+            </ul>
+            <div class="submenu">
+              <a href="@routes.Application.help">ヘルプ</a><br>
+              <a href="@routes.Application.inquiry">お問い合わせ</a>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+    
+    @content
+    
+    <footer id="footer">
+      <div class="container">
+        <div class="navbar">
+          <ul class="nav footnav">
+            <li><a href="@routes.Application.inquiry">お問い合わせ</a></li>
+            <li><a href="@routes.Application.rule">利用規約</a></li>
+            <li><a href="@routes.Application.poricy">プライバシーポリシー</a></li>
+          </ul>
+        </div>
+        <a class="btn_pagetop" href="#">ページトップへ</a>
+        <p class="copyright">Copyright © MilmSearch All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script src="@routes.Assets.at("js/jquery-latest.js")"></script>
+    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+  </body>
 </html>
