@@ -16,4 +16,3 @@ dist
 /bin
 /.target
 /.cache
-/.gitignore
