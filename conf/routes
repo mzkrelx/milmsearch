@@ -28,6 +28,7 @@ GET    /admin/ml-proposals/:id/edit-form         controllers.AdminMLProposals.sh
 POST   /admin/ml-proposals/:id/edit-form         controllers.AdminMLProposals.submitEditForm(id: Long)
 GET    /admin/ml-proposals/:id/judge-confirm     controllers.AdminMLProposals.showJudgeConfirm(id: Long, statusTo)
 GET    /admin/ml-proposals/:id/judge-completed   controllers.AdminMLProposals.showJudgeCompleted(id: Long, statusTo)
+GET    /admin/ml-proposals/:id/test-crawling     controllers.AdminMLProposals.testCrawling(id: Long)
 
 # Javascript routing
 GET    /admin/js/routes                          controllers.Admin.javascriptRoutes
