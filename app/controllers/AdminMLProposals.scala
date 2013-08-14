@@ -6,6 +6,7 @@ import models.MLProposal
 import models.MLProposalUpdateRequest
 import models.{MLProposalStatus => MLPStatus}
 import models.MLArchiveType
+import models.mailsource.MailmanCrawler
 import utils.BadRequestException
 import Defaults.MaxItemsPerPage
 import play.api.data._
@@ -14,6 +15,8 @@ import play.api.data.validation.Constraints.pattern
 import java.rmi.UnexpectedException
 import java.net.URL
 import anorm._
+import models.mailsource.MailmanCrawlingException
+import java.io.FileNotFoundException
 
 object AdminMLProposals extends Controller {
   
@@ -36,7 +39,23 @@ object AdminMLProposals extends Controller {
   val judgeForm = Form(
     single("status" -> nonEmptyText.verifying(
       pattern(("^(%s|%s)$" format (MLPStatus.Accepted, MLPStatus.Rejected)).r))))
-    
+      
+      
+  def testCrawling(id: Long) = Action {
+    MLProposal.find(id) map { mlp =>
+      try {
+    	MailmanCrawler.crawlingTest(mlp.archiveURL).get
+    	Ok
+      } catch {
+        case e: Exception => {
+          Logger.debug("Test crawling Error:" + e.getMessage)
+          InternalServerError(e.getMessage)
+        }
+      }
+    } getOrElse NotFound    
+  }
+
+  
   def list(statusParam: String, startIndex: Long, count: Int) = TryCatch4xx {
     Action { implicit request =>
       if (startIndex < 0 || count < 0) {

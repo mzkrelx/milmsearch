@@ -12,7 +12,9 @@ object Admin extends Controller {
   
   def javascriptRoutes = Action { implicit request =>
     Ok(Routes.javascriptRouter("jsRouter", Some("jQuery.ajax"))(
-      routes.javascript.AdminMLProposals.judge)).as("text/javascript")
+      routes.javascript.AdminMLProposals.judge,
+      routes.javascript.AdminMLProposals.testCrawling)
+    ).as("text/javascript")
   }
   
 }
