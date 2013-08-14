@@ -61,6 +61,8 @@ object MailmanCrawler {
     }
   }
 
+  def crawling(archiveURL: URL) { /* TODO issue#21 */ }
+
   private def collectMonthHref(node: Node): Seq[String] = {
     node \\ "table" \\ "td" \\ "a" \\ "@href" map { _.toString } collect {
       case href if href.endsWith("/date.html") => href
