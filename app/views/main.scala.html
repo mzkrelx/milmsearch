@@ -1,53 +1,118 @@
 @(title: String)(content: Html)
 
+@import helper._
+
 <!DOCTYPE HTML>
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
     <title>@title</title>
-    <link href="@routes.Assets.at("css/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css">
-    <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet" type="text/css">
-    <link href="@routes.Assets.at("css/tuning.css")" rel="stylesheet" type="text/css">
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="@routes.Assets.at("images/favicon.ico")" rel="shortcut icon" />
+    <link href="@routes.Assets.at("styles/base.css")" media="all" rel="stylesheet" />
+    <link href="@routes.Assets.at("styles/style.css")" media="all" rel="stylesheet" />
+    <link href="@routes.Assets.at("styles/south-street/jquery-ui.css")" media="all" rel="stylesheet" />
   </head>
 
   <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="header-inner">
-        <div class="container">
-          <a class="brand" title="MilmSearch Ver.0.1" href="@routes.Application.index">
-            <img src="@routes.Assets.at("img/logo_user.png")">
-          </a>
-          <nav id="headmenu">
-            <ul class="mainmenu">
-              <li><a class="btn" href="@routes.MLs.list(0, 10)">MLを見る</a></li>
-              <li><a class="btn" href="@routes.MLProposals.create">MLを登録する</a></li>
-            </ul>
-            <div class="submenu">
-              <a href="@routes.Application.help">ヘルプ</a><br>
-              <a href="@routes.Application.inquiry">お問い合わせ</a>
+  
+    <header>
+      <div class="contentarea">
+        <h1><a href="@routes.Application.index">Milm Search ver.0.2</a></h1>
+        <nav class="clearfix">
+          <ul class="sub">
+            <li><a href="@routes.Application.help">ヘルプ</a></li>
+            <li><a href="@routes.Application.inquiry">お問い合わせ</a></li>
+          </ul>
+          <ul>
+            <li class="btn"><a href="@routes.MLProposals.create">MLを登録する</a></li>
+            <li class="btn"><a href="@routes.MLs.list(0, 10)">MLを探す・見る</a></li>
+          </ul>
+        </nav>
+      </div>  
+      <div id="searchnav">
+        <div class="contentarea clearfix">
+          <h2>メーリングリストを検索する</h2>
+          @form(action = routes.Application.search) {
+            <input type="text" id="keywords" name="keywords" placeholder="キーワード" />
+            <fieldset class="dateselect">
+              <legend>検索対象期間の指定</legend>
+              <input name="from" type="text" id="from" size="10" />
+              <p>〜</p>
+              <input type="text" id="to" name="to" size="10" />
+              <p>まで</p>
+            </fieldset>
+            <a rel="leanModal" href="#div787" class="arrowlink">詳細設定</a>
+            <div id="div787" class="modalbox">
+              <h3>詳細設定</h3>
+              <fieldset>
+                <legend>検索対象</legend>
+                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle">MLタイトル</label>
+                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle" checked="checked">メールタイトル</label>
+                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle" checked="checked">メール本文</label>
+                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle">送信者</label>
+              </fieldset>
+              <div class="btn modal_close"><a href="#">閉じる</a></div>
             </div>
-          </nav>
+            <button type="submit" class="btn decide">検索する</button>
+          }
         </div>
       </div>
+    </header>
+
+    <div class="contentarea">
+      <section>
+      @content
+      </section>
     </div>
     
-    @content
-    
-    <footer id="footer">
-      <div class="container">
-        <div class="navbar">
-          <ul class="nav footnav">
+    <footer id="footer" class="clearfix">
+      <div class="contentarea">
+        <div class="pagetop"><a href="#">pagetop</a></div>
+        <nav>
+          <ul>
             <li><a href="@routes.Application.inquiry">お問い合わせ</a></li>
             <li><a href="@routes.Application.rule">利用規約</a></li>
             <li><a href="@routes.Application.poricy">プライバシーポリシー</a></li>
           </ul>
-        </div>
-        <a class="btn_pagetop" href="#">ページトップへ</a>
-        <p class="copyright">Copyright © MilmSearch All Rights Reserved.</p>
+        </nav>
+        <p>&copy;Milm Search</p>
       </div>
     </footer>
 
     <script src="@routes.Assets.at("js/jquery-latest.js")"></script>
     <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="@routes.Assets.at("styles/html5shiv.js")></script>
+    <script type="text/javascript" src="@routes.Assets.at("styles/footerFixed.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("styles/jquery.leanModal.min.js")"></script>
+    <script type="text/javascript">
+      $(function() {
+        $( "#from" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#to" ).datepicker( "option", "minDate", selectedDate );
+          }
+        });
+        $( "#to" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+          }
+        });
+        $( 'a[rel*=leanModal]' ).leanModal({
+          top: 50, // モーダルウィンドウの縦位置を指定
+          overlay : 0.5, // 背面の透明度
+          closeButton: ".modal_close" // 閉じるボタンのCSS classを指定
+        });
+      });
+    </script>
+
   </body>
 </html>
