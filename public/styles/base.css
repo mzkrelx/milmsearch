@@ -1,0 +1,985 @@
+
+  /* RESET */
+
+
+  * {
+
+    /* Box properties - *not* inherited: */
+
+    height : auto;
+    width : auto;
+
+    border : 0;
+    outline : none;
+
+    margin : 0;
+    padding : 0;
+
+    -moz-box-sizing : content-box;
+    -webkit-box-sizing : content-box;
+    box-sizing : content-box;
+
+    /* Layout properties - *not* inherited: */
+
+    clear : none;
+    clip : auto;
+    /*display : inline; - Set below. */
+    float : none;
+    overflow : visible; /* Must be visible to show box-shadow etc. */
+    position : static;
+    visibility : visible;
+    z-index : auto;
+
+    top : auto;
+    right : auto;
+    bottom : auto;
+    left : auto;
+
+    /* Backgrounds - *not* inherited: */
+
+    background-attachment : scroll;
+    background-color : transparent;
+    background-image : none;
+    background-position : 0% 0%;
+    background-repeat : repeat;
+
+    /* Typography is to be largely inherited from body throughout. This resolves
+    inconsistencies with the default typography of <pre> and <code> tags, inputs
+    and other control elements, and tables among others. */
+
+    color : inherit;
+
+    font-family : inherit;
+    font-smooth : inherit;
+    font-style : inherit;
+    font-variant : inherit;
+    font-weight : inherit;
+
+    line-height : inherit;
+    letter-spacing : inherit;
+    word-spacing : inherit;
+
+    text-align : inherit;
+    text-transform : inherit;
+    white-space : inherit;
+
+    direction : inherit;
+
+    /* A few typographic styles are *not* inherited: */
+
+    text-decoration : none;
+    text-indent : 0;
+    text-shadow : none;
+    unicode-bidi : normal;
+    vertical-align : baseline;
+    word-wrap : break-word;
+
+    /* A font-size of 100% is important. We will set the body tag to 10px. This
+    means that our reference point for setting font sizes is 10px throughout. This
+    makes for easy maths when setting font sizes in ems. For example, to have a
+    font rendered at 15px, we would set a font-size value of 1.5em (15/10 = 1.5). */
+
+    font-size : 100%;
+
+    /* List styles are disabled universally. We'll change <li> to inherit later. */
+
+    list-style-image : none;
+    list-style-position : inside; /* Changed from default 'outside'. */
+    list-style-type : none;
+
+    /* Cursor inherited from parents: */
+
+    cursor : inherit;
+
+    /* Use proprietary zoom property to force IE hasLayout throughout: */
+
+    zoom : 1;
+
+  }
+
+
+  /* To allow us to use 100% height on layout containers, all parent elements
+  -- starting with html and body -- must have their heights set to 100%.
+  This means that padding must not be set on <body>, but only on layout <div>s.*/
+
+
+  html, body {
+
+    height : 100%;
+
+  }
+
+
+  body {
+
+    background : #FFF;
+
+    /* Typography: */
+
+    color : #000;
+
+    font-family : Arial,
+                  Helvetica,
+                  sans-serif;
+
+    font-size : 62.5%; /* 10px (10/16) */
+
+    font-smooth : always;
+    font-style : normal;
+    font-variant : normal;
+    font-weight : 100;
+
+    line-height : 1em;
+    letter-spacing : 0;
+    word-spacing : 0;
+
+    text-align : left;
+    text-decoration : none;
+    text-shadow : none;
+    text-transform : none;
+    white-space : normal;
+
+    direction : ltr;
+
+    cursor : default;
+
+  }
+
+
+  /* Text direction and alignment. Left-to-right is the default. */
+
+
+  body {
+
+    direction : ltr;
+    text-align : left;
+
+  }
+
+
+  body[dir="rtl"] {
+
+    direction : rtl;
+    text-align : right;
+
+  }
+
+
+  /* Resets for some pseudo classes. */
+
+
+  :link,
+  :visited,
+  :focus,
+  :hover,
+  :active {
+
+    outline : none;
+    text-decoration : none;
+
+  }
+
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:focus,
+  a:active {
+
+    outline : none;
+    text-decoration : underline;
+
+  }
+
+
+  /* ENFORCE CONSISTENT DISPLAY PROPERTIES */
+
+
+  /* Block-level elements.
+
+  Note: legacy IE needs telling that HTML5 tags such as article and hgroup
+  should be rendered as block-level elements. */
+
+
+  address, article, aside, audio,
+  blockquote, bdo, body,
+  canvas, command,
+  datalist, dd, details, div, dl, dt,
+  embed,
+  fieldset, figcaption, figure, footer, form,
+  h1, h2, h3, h4, h5, h6, header, hgroup, hr,
+  iframe, img,
+  keygen,
+  legend,
+  map, menu, meter,
+  nav, noscript,
+  object, ol, optgroup, option, output,
+  p, pre, progress,
+  section, summary,
+  ul,
+  video {
+
+    display : block;
+
+  }
+
+
+  /* Inline elements. */
+
+
+  a, abbr,
+  b, bdi, br, button,
+  cite, code,
+  dfn,
+  em,
+  i, input,
+  kbd,
+  label,
+  mark,
+  q,
+  ruby, rt, /*rp,*/
+  samp, select, small, span, strong, sub, sup,
+  textarea, time,
+  var,
+  wbr {
+
+    display : inline;
+
+  }
+
+
+  /* Tables - ref http://www.w3.org/TR/CSS2/tables.html */
+
+
+  table    { display : table }
+  tr       { display : table-row }
+  thead    { display : table-header-group }
+  tbody    { display : table-row-group }
+  tfoot    { display : table-footer-group }
+  col      { display : table-column }
+  colgroup { display : table-column-group }
+  td, th   { display : table-cell }
+  caption  { display : table-caption }
+
+
+  /* Lists. */
+
+
+  li       { display : list-item }
+
+
+  /* <script>, <meta>, etc. and deprecated tags must not be shown at all. */
+
+
+  script,
+  base, meta, link, style, title,
+  source, track, param, area,
+
+  acronym, applet,
+  basefont, big,
+  center,
+  dialog, dir,
+  font, frame, frameset,
+  noframes,
+  strike,
+  tt,
+  u {
+
+    display : none;
+
+  }
+
+
+  /* VIEWPORT */
+
+
+  /* Always show vertical scrollbar to prevent the page jumping
+  on the horizontal plane between long and short pages. */
+
+
+  body {
+
+    overflow : auto; /* IE7 */
+    overflow-y : scroll;
+
+  }
+
+
+  /* Iframes should never show scrollbars. "overflow: hidden" is required here
+  to hide scrollbars in Chrome/Safari which can otherwise still show up even
+  when the 'scrolling="no"' attribute is used. */
+
+
+  body[role="window"] {
+
+    height : auto;
+    overflow : hidden;
+
+  }
+
+
+  /* FONT RENDERING */
+
+
+  /* Enable smoother font rendering in Webkit browsers, and prevent text-size
+  changing after orientation switch on some phones (without disabling user
+  zoom controls). */
+
+
+  html {
+
+    -webkit-font-smoothing : antialiased;
+    -webkit-text-size-adjust : 100%;
+    -ms-text-size-adjust : 100%;
+
+  }
+
+
+  /* LISTS */
+
+
+  /* List styles should be defined on parent <ul> and <ol> elements,
+  with child <li> elements inheriting. */
+
+
+  li {
+
+    list-style : inherit;
+
+  }
+
+
+  /* Nested lists need to have a font-size of 100% of their parents
+  for consistency. */
+
+
+  ul ul,
+  ol ol,
+  ul ol,
+  ol ul {
+
+    font-size : 100%;
+
+  }
+
+
+  /* QUOTES */
+
+
+  q:before {
+
+    content : open-quote;
+
+  }
+
+
+  q:after {
+
+    content : close-quote;
+
+  }
+
+
+  /* Generated quotes are not supported in IE7 and below, FireFox 3.5 and
+  below, Chrome 2 and below, Safari 4 and below, and support in Opera 10 and
+  below is buggy.
+
+  Default quotations: Double outer quotes ("), single inner quotes (').
+
+  Note: it is not necessary to use Unicode escapes as long as you're
+  using UTF-8. But it's good to use Unicode values in case the IDE font is
+  missing some characters. */
+
+
+  :lang(en) > q {
+
+    quotes : '\201C' '\201D' '\2018' '\2019';
+
+  }
+
+
+  /* Quotation marks for other languages. */
+
+
+  :lang(af) > q,
+  :lang(nl) > q,
+  :lang(pl) > q {
+
+    quotes : '\201E' '\201D' '\201A' '\2019';
+
+  }
+
+
+  :lang(bg) > q,
+  :lang(cs) > q,
+  :lang(de) > q,
+  :lang(is) > q,
+  :lang(lt) > q,
+  :lang(sk) > q,
+  :lang(sr) > q,
+  :lang(ro) > q {
+
+    quotes : '\201E' '\201C' '\201A' '\2018';
+
+  }
+
+
+  :lang(da) > q,
+  :lang(hr) > q {
+
+    quotes : '\00BB' '\00AB' '\203A' '\2039';
+
+  }
+
+
+  :lang(el) > q,
+  :lang(es) > q,
+  :lang(sq) > q,
+  :lang(tr) > q {
+
+    quotes : '\00AB' '\00BB' '\2039' '\203A';
+
+  }
+
+
+  :lang(fi) > q,
+  :lang(sv) > q {
+
+    quotes :'\201D' '\201D' '\2019' '\2019';
+
+  }
+
+
+  :lang(fr) > q {
+
+    quotes :'\ab\2005' '\2005\bb' '\2039\2005' '\2005\203a';
+
+  }
+
+
+  /* Remove other content styling for block quotations. */
+
+
+  blockquote:before,
+  blockquote:after {
+
+    content : '';
+    content : none;
+
+  }
+
+
+  /* Turn off quotes completely inside blockquotes. */
+
+
+  blockquote,
+  blockquote q {
+
+    quotes : none;
+
+  }
+
+
+  /* CODE */
+
+
+  /* Do NOT wrap, looks ugly on small devices. Horizontal scrolling better! */
+
+
+  pre {
+
+    white-space : pre;
+    overflow-x : auto;
+    overflow-y : hidden;
+
+  }
+
+
+  /* HORIZONTAL RULE */
+
+
+  hr {
+
+    border-bottom : 1px solid #000;
+    clear : both;
+    height : 0;
+
+  }
+
+
+  /* TABLES */
+
+
+  /* Note: tables still need 'cellspacing="0"' in the markup for ultimate
+  backwards consistency. */
+
+
+  table {
+
+
+    background-color : transparent;
+    border-collapse : collapse;
+    border-spacing : 0;
+
+
+    /* Tables should fill the width of the container always. */
+
+
+    width : 100%;
+    max-width : 100%;
+
+
+    /* Cell widths should adjust automatically to fit their content. */
+
+
+    table-layout : auto;
+
+
+    /* Empty cells must be there for a reason. Show them. */
+
+
+    empty-cells : show;
+
+
+  }
+
+
+  table,
+  th,
+  td {
+
+    vertical-align : top;
+
+  }
+
+
+  /* Captions should appear above table box.
+  Better to use figure/figcaption anyway. */
+
+
+  caption {
+
+    caption-side : top;
+
+  }
+
+
+  /* FORMS & CONTROLS */
+
+
+  /* Show most suitable mouse pointer over input and clickable elements. */
+
+
+  input,
+  textarea {
+
+    cursor : text;
+
+  }
+
+
+  a,
+  button,
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"],
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="file"],
+  label {
+
+    cursor : pointer;
+
+  }
+
+
+  button[disabled], /* button[disabled="disabled"] */
+  input[type="button"][disabled="disabled"],
+  input[type="reset"][disabled="disabled"],
+  input[type="submit"][disabled="disabled"] {
+
+    cursor : auto;
+
+  }
+
+
+  /* Make these input types stylable in iOS. */
+
+
+  button,
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"] {
+
+    -webkit-appearance : button;
+
+  }
+
+
+  /* Better visual vertical alignment on radios and checkboxes. */
+
+
+  input[type="radio"],
+  input[type="checkbox"] {
+
+    margin-top : -2px;
+    vertical-align : middle;
+
+  }
+
+
+  /* Important fix to make buttons to appear the same size as
+  identically-styled anchors in Firefox. */
+
+
+  button::-moz-focus-inner {
+
+    padding : 0;
+    border : 0;
+
+  }
+
+
+  /* Turn off default textarea resizing. Also set overflow to remove
+  vertical scrollbar in IE6-9, and set verical-align to top to improve
+  alignment in all browsers. */
+
+
+  textarea {
+
+    overflow : auto;
+    resize : none;
+    vertical-align : top;
+
+  }
+
+
+  /* Safari 5 and Chrome have their own style for search fields ("searchfield");
+  make this consistent with other browsers ("textfield"). */
+
+
+  input[type="search"] {
+
+    -webkit-appearance : textfield;
+
+  }
+
+
+  /* Remove inner padding for S5 and Chrome on OS X. */
+
+
+  input[type="search"]::-webkit-search-decoration {
+
+    -webkit-appearance : none;
+
+  }
+
+
+  /* Placeholder text color. */
+
+
+  :-moz-placeholder {
+
+    color : #999;
+
+  }
+
+
+  ::-webkit-input-placeholder {
+
+    color : #999;
+
+  }
+
+
+  /* Fix for Webkit/Mac: selects can fail to inherit properties if they
+  do not have any type of styling applied to them directly. */
+
+
+  select {
+
+    background-color : transparent;
+
+  }
+
+
+  select[multiple],
+  select[size] {
+
+    height : auto;
+
+  }
+
+
+  /* MULTIMEDIA */
+
+
+  /* Responsive images and objects. */
+
+
+  img,
+  object,
+  embed {
+
+    height : auto;
+    max-width : 100%;
+    width : auto;
+
+  }
+
+
+  /* Prevent gap below images in some browsers, and use bicubic resampling to
+  improve the quality of scaled images in IE7+. */
+
+
+  img {
+
+    vertical-align : bottom;
+    -ms-interpolation-mode : bicubic;
+
+  }
+
+
+  /* Prevent browsers displaying audio without controls. */
+
+
+  audio:not([controls]) {
+
+    display : none;
+
+  }
+
+
+  /* LAYOUT HELPERS */
+
+
+  .hide {
+
+    display : none;
+
+  }
+
+
+  /* Clearfix: <div class="clearfix">{ content }</div> */
+
+
+  .clearfix:after {
+
+    clear : both;
+    content : ' ';
+    display : block;
+    font-size : 0;
+    height : 0;
+    visibility : hidden;
+
+  }
+
+
+  /* Alternative: <div>{ content }<div class="clear"></div></div> */
+
+
+  div.clear {
+
+    border : 0;
+    clear : both;
+    display : block;
+    height : 0;
+    margin : 0;
+    padding : 0;
+
+  }
+
+
+  /* MISC BROWSER PATCHES */
+
+
+  /* hidden attribute is missing from IE7-9, FF3 and S4. */
+
+
+  [hidden] {
+
+    display : none;
+
+  }
+
+
+  /* Overflow not hidden in IE9. */
+
+
+  svg:not(:root) {
+
+    overflow : hidden;
+
+  }
+
+
+  /* PRINT BASE */
+
+
+  @media print {
+
+
+    /* @page
+    Ref: http://www.w3.org/TR/css3-page/
+    At this time there is limited browser support for Paged Media. */
+
+
+    @page {
+
+      margin : 1.5cm;
+
+    }
+
+
+    * {
+
+      background : transparent !important;
+      color : black !important;
+      height : auto !important;
+      box-shadow : none !important;
+      text-shadow : none !important;
+      filter : none !important;
+      -ms-filter : none !important;
+
+    }
+
+
+    h1, h2, h3, h4, h5, h6 {
+
+      page-break-after : avoid;
+
+    }
+
+
+    p, h2, h3 {
+
+      orphans : 3;
+      widows : 3;
+
+    }
+
+
+    pre,
+    blockquote,
+    tr, img {
+
+      page-break-inside : avoid;
+
+    }
+
+
+    /* Enable wrapping for <pre> tags when printed. */
+
+
+    pre {
+
+      overflow : hidden;
+      white-space : -moz-pre-wrap; /* Mozilla, supported since 1999 */
+      white-space : -pre-wrap;     /* Opera 4-6 */
+      white-space : -o-pre-wrap;   /* Opera 7 */
+      white-space : pre-wrap;      /* CSS 3 http://www.w3.org/TR/css3-text/#white-space */
+      word-wrap : break-word;    /* IE 5.5+ */
+
+    }
+
+
+    thead {
+
+      display : table-header-group;
+
+    }
+
+
+    mark {
+
+      background : transparent !important;
+
+    }
+
+
+    /* Hide useless stuff. */
+
+
+    acronym, applet, area, audio,
+    base, basefont, big, button,
+    canvas, center, command,
+    datalist, details, dialog, dir,
+    embed,
+    fieldset, font, form, frame, frameset,
+    iframe, input,
+    keygen,
+    label, legend, link,
+    menu, meta, meter,
+    nav, noframes, noscript,
+    object, output,
+    param, progress,
+    script, select, source, strike, style, summary,
+    textarea, title, track, tt,
+    u,
+    video {
+
+      display : none !important;
+
+    }
+
+
+    /* Remove anchor underlines. For external links, print destination URL
+    in brackets after hyperlinked text. To do the same for internal links,
+    change "http://www.example.com/" below for your own domain and
+    un-comment; this works only where all internal page links are relative
+    to a consistent base URL.
+
+    Do not show destination URLs for hotlinked images and media files;
+    javascript actions; or for bookmark links starting with the hash
+    character (#). */
+
+
+    a:link,
+    a:visited {
+
+      text-decoration : none !important;
+
+    }
+
+
+    a:after {
+
+      /*content : ' (http://www.example.com/' attr(href) ')' !important;*/
+
+    }
+
+
+    a[rel="external"]:after,
+    a[href^="http://"]:after,
+    a[href^="https://"]:after,
+    a[href^="ftp://"]:after {
+
+      content : ' (' attr(href) ')' !important;
+
+    }
+
+
+    abbr[title]:after {
+
+      content : ' (' attr(title) ')' !important;
+
+    }
+
+
+    dfn[title]:after {
+
+      content : ' (' attr(title) ')' !important;
+
+    }
+
+
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+
+      content : '' !important;
+
+    }
+
+
+  }
+
