@@ -17,6 +17,8 @@ import java.util.Locale
 import scala.xml.Node
 import utils.HTMLUtil
 import scala.util.Try
+import models.MLProposal
+import java.sql.Connection
 
 case class MailmanCrawlingException(msg: String) extends Exception(msg)
 
@@ -61,7 +63,11 @@ object MailmanCrawler {
     }
   }
 
-  def crawling(archiveURL: URL) { /* TODO issue#21 */ }
+  def crawlingWithConn(id: Long)(implicit conn: Connection) {
+    /* TODO issue#21 */
+//    val mlp = MLProposal.findWithConn(id)
+//    Logger.debug(mlp.toString())
+ }
 
   private def collectMonthHref(node: Node): Seq[String] = {
     node \\ "table" \\ "td" \\ "a" \\ "@href" map { _.toString } collect {

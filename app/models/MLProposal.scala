@@ -164,12 +164,12 @@ object MLProposal {
 
   def judge(id: Long, statusTo: MLProposalStatus) {
     DB.withTransaction { implicit conn =>
-      val statusAndArchiveURL = SQL(s"SELECT status, archive_url FROM ${DBTableName} WHERE id = {id} FOR UPDATE")
+      SQL(s"SELECT status FROM ${DBTableName} WHERE id = {id} FOR UPDATE")
         .on('id -> id).singleOpt map { row =>
-          Pair(row[String]("status"), new URL(row[String]("archive_url")))
+          row[String]("status")
         } match {
           case None => throw UnexpectedException(Some("record not found."))
-          case Some((status, _)) if (status != New.toString) =>
+          case Some(status) if (status != New.toString) =>
             throw UnexpectedException(Some("already judged."))
           case some => some.get
         }
@@ -182,7 +182,7 @@ object MLProposal {
         .on('status -> statusTo.toString, 'id -> id).executeUpdate()
 
       statusTo match {
-        case MLProposalStatus.Accepted => MailmanCrawler.crawling(statusAndArchiveURL._2)
+        case MLProposalStatus.Accepted => MailmanCrawler.crawlingWithConn(id)
         case _ =>
       }
     }
