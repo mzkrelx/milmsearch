@@ -11,6 +11,8 @@ import java.net.URL
 import utils.MatchableEnumeration
 import controllers.Page
 import models.mailsource.MailmanCrawler
+import java.sql.Connection
+
 
 object MLProposalStatus extends MatchableEnumeration {
   type MLProposalStatus = Value
@@ -123,22 +125,25 @@ object MLProposal {
 
   def find(id: Long): Option[MLProposal] =
     DB.withConnection { implicit conn =>
-      SQL(s"SELECT * FROM ${DBTableName} WHERE id = {id}")
-        .on('id -> id).singleOpt map { row =>
-          MLProposal(
-            row[Pk[Long]]("id"),
-            row[String]("proposer_name"),
-            row[String]("proposer_email"),
-            row[String]("ml_title"),
-            MLProposalStatus.withName(row[String]("status")),
-            MLArchiveType.withName(row[String]("archive_type")),
-            new URL(row[String]("archive_url")),
-            row[String]("message"),
-            row[Option[Date]]("judged_at") map { new DateTime(_) },
-            new DateTime(row[Date]("created_at")),
-            new DateTime(row[Date]("updated_at")))
-        }
+      findWithConn(id)
     }
+
+  private[models] def findWithConn(id: Long)(implicit conn: Connection): Option[MLProposal] =
+    SQL(s"SELECT * FROM ${DBTableName} WHERE id = {id}")
+      .on('id -> id).singleOpt map { row =>
+        MLProposal(
+          row[Pk[Long]]("id"),
+          row[String]("proposer_name"),
+          row[String]("proposer_email"),
+          row[String]("ml_title"),
+          MLProposalStatus.withName(row[String]("status")),
+          MLArchiveType.withName(row[String]("archive_type")),
+          new URL(row[String]("archive_url")),
+          row[String]("message"),
+          row[Option[Date]]("judged_at") map { new DateTime(_) },
+          new DateTime(row[Date]("created_at")),
+          new DateTime(row[Date]("updated_at")))
+      }
 
   def update(req: MLProposalUpdateRequest) {
     DB.withConnection { implicit conn =>
@@ -159,12 +164,12 @@ object MLProposal {
 
   def judge(id: Long, statusTo: MLProposalStatus) {
     DB.withTransaction { implicit conn =>
-      val statusAndArchiveURL = SQL(s"SELECT status, archive_url FROM ${DBTableName} WHERE id = {id} FOR UPDATE")
+      SQL(s"SELECT status FROM ${DBTableName} WHERE id = {id} FOR UPDATE")
         .on('id -> id).singleOpt map { row =>
-          Pair(row[String]("status"), new URL(row[String]("archive_url")))
+          row[String]("status")
         } match {
           case None => throw UnexpectedException(Some("record not found."))
-          case Some((status, _)) if (status != New.toString) =>
+          case Some(status) if (status != New.toString) =>
             throw UnexpectedException(Some("already judged."))
           case some => some.get
         }
@@ -177,7 +182,7 @@ object MLProposal {
         .on('status -> statusTo.toString, 'id -> id).executeUpdate()
 
       statusTo match {
-        case MLProposalStatus.Accepted => MailmanCrawler.crawling(statusAndArchiveURL._2)
+        case MLProposalStatus.Accepted => MailmanCrawler.crawlingWithConn(id)
         case _ =>
       }
     }
