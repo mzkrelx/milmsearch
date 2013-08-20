@@ -1,22 +1,27 @@
 package controllers
 
-import play.api._
-import play.api.mvc._
-import models.MLProposal
-import models.MLProposalUpdateRequest
-import models.{MLProposalStatus => MLPStatus}
-import models.MLArchiveType
-import models.mailsource.MailmanCrawler
-import utils.BadRequestException
-import Defaults.MaxItemsPerPage
-import play.api.data._
-import play.api.data.Forms._
-import play.api.data.validation.Constraints.pattern
-import java.rmi.UnexpectedException
 import java.net.URL
-import anorm._
-import models.mailsource.MailmanCrawlingException
-import java.io.FileNotFoundException
+import java.rmi.UnexpectedException
+
+import Defaults.MaxItemsPerPage
+import anorm.Id
+import anorm.NotAssigned
+import anorm.Pk
+import models.MLArchiveType
+import models.MLProposal
+import models.{MLProposalStatus => MLPStatus}
+import models.MLProposalUpdateRequest
+import models.mailsource.Crawler
+import play.api.Logger
+import play.api.data.Form
+import play.api.data.Forms.ignored
+import play.api.data.Forms.mapping
+import play.api.data.Forms.nonEmptyText
+import play.api.data.Forms.single
+import play.api.data.validation.Constraints.pattern
+import play.api.mvc.Action
+import play.api.mvc.Controller
+import utils.BadRequestException
 
 object AdminMLProposals extends Controller {
   
@@ -44,8 +49,8 @@ object AdminMLProposals extends Controller {
   def testCrawling(id: Long) = Action {
     MLProposal.find(id) map { mlp =>
       try {
-    	MailmanCrawler.crawlingTest(mlp.archiveURL).get
-    	Ok
+        Crawler.crawlingTest(mlp.archiveType, mlp.archiveURL).get
+        Ok
       } catch {
         case e: Exception => {
           Logger.debug("Test crawling Error:" + e.getMessage)

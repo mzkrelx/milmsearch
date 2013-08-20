@@ -7,6 +7,7 @@ import org.joda.time.DateTime
 import java.net.URL
 import MLArchiveType._
 import java.util.Date
+import java.sql.Connection
 
 case class ML(
   id: Long,
@@ -55,6 +56,30 @@ object ML {
       ).on(
         'status -> MLProposalStatus.Accepted.toString
       )().head[Long]("c")
+    }
+  }
+
+  def findWithConn(id: Long)(implicit conn: Connection): Option[ML] = {
+
+    SQL(
+      """
+        SELECT * FROM ml_proposal
+          WHERE id = {id}
+          AND status = {status}
+      """
+    ).on(
+      'id     -> id,
+      'status -> MLProposalStatus.Accepted.toString
+    ).apply.headOption map { row =>
+      val id = row[Long]("id")
+      lazy val lastMailedAt = this.lastMailedAt(id)
+      ML(
+        id,
+        row[String]("ml_title"),
+        MLArchiveType.withName(row[String]("archive_type")),
+        new URL(row[String]("archive_url")),
+        new DateTime(row[Date]("judged_at")),
+        lastMailedAt)
     }
   }
 

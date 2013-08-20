@@ -25,7 +25,8 @@
   		    )
     		  @select(editForm("archiveType"),
     		    Seq(
-    		      Mailman.toString -> "Mailman",
+              Mailman.toString -> "Mailman",
+              SourceForgeJP.toString -> "SourceForgeJP",
     		      Other.toString   -> "その他"
     		    ),
     		    '_label -> "アーカイブソフトタイプ",

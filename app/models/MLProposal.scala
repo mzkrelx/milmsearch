@@ -10,8 +10,8 @@ import java.util.Date
 import java.net.URL
 import utils.MatchableEnumeration
 import controllers.Page
-import models.mailsource.MailmanCrawler
 import java.sql.Connection
+import models.mailsource.Crawler
 
 
 object MLProposalStatus extends MatchableEnumeration {
@@ -24,8 +24,9 @@ import MLProposalStatus._
 
 object MLArchiveType extends MatchableEnumeration {
   type MLArchiveType = Value
-  val Mailman = Value("mailman")
-  val Other   = Value("other")
+  val Mailman       = Value("mailman")
+  val SourceForgeJP = Value("sourceforgejp")
+  val Other         = Value("other")
 }
 import MLArchiveType._
 
@@ -182,7 +183,7 @@ object MLProposal {
         .on('status -> statusTo.toString, 'id -> id).executeUpdate()
 
       statusTo match {
-        case MLProposalStatus.Accepted => MailmanCrawler.crawlingWithConn(id)
+        case MLProposalStatus.Accepted => Crawler.crawlingWithConn(id)
         case _ =>
       }
     }
