@@ -22,9 +22,7 @@ object Crawler {
     }
   }
 
-  def crawlingWithConn(mlID: Long)(implicit conn: Connection) {
-
-    val ml = ML.findWithConn(mlID).getOrElse(throw new NoSuchElementException("ml to crawl not found."))
+  def crawling(ml: ML) {
 
     ml.archiveType match {
       case Mailman => MailmanCrawler.crawling(ml)

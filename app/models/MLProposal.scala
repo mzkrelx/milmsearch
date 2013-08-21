@@ -183,7 +183,9 @@ object MLProposal {
         .on('status -> statusTo.toString, 'id -> id).executeUpdate()
 
       statusTo match {
-        case MLProposalStatus.Accepted => Crawler.crawlingWithConn(id)
+        case MLProposalStatus.Accepted => Crawler.crawling(
+          ML.findWithConn(id).getOrElse(throw new NoSuchElementException(
+            "ml to crawl not found.")))
         case _ =>
       }
     }
