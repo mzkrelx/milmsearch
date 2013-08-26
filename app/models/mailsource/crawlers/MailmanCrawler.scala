@@ -48,35 +48,11 @@ object MailmanCrawler {
     }
   }
 
-  def clawling(archiveURL: URL) {
-    import HTMLUtil._
-
-    val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
-    val monthURLs = monthHrefs.reverse.map { href =>
-      new URL(archiveURL + href)
-    }
-
-    monthURLs foreach { monthURL =>
-      val mailHrefs = collectMailHref(toNode(fetchHTML(monthURL)))
-      val mailURLs = mailHrefs map { href =>
-        new URL(monthURL.toString.replaceFirst("date.html", href))
-      }
-
-      val mails = mailURLs map { mailURL =>
-        createMail(toNode(fetchHTML(mailURL)), mailURL)
-      }
-      // TODO  save to search server
-      // mails foreach { mail =>
-    }
-  }
-
   def crawling(ml: ML) {
-    
-    val archiveURL = ml.archiveURL
-    
-    val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
+
+    val monthHrefs = collectMonthHref(toNode(fetchHTML(ml.archiveURL)))
     val monthURLs = monthHrefs.reverse.map { href =>
-      new URL(archiveURL + href)
+      new URL(ml.archiveURL + href)
     }
 
     monthURLs foreach { monthURL =>
@@ -87,10 +63,10 @@ object MailmanCrawler {
 
       mailURLs map { mailURL =>
         Indexer.indexing(ml,createMail(toNode(fetchHTML(mailURL)), mailURL))
-      } 
+      }
     }
   }
-  
+
   private def collectMonthHref(node: Node): Seq[String] = {
     node \\ "table" \\ "td" \\ "a" \\ "@href" map { _.toString } collect {
       case href if href.endsWith("/date.html") => href
