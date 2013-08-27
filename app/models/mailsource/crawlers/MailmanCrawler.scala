@@ -3,20 +3,19 @@ package models.mailsource.crawlers
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 import scala.util.Try
 import scala.xml.Node
+
 import org.joda.time.DateTime
+
 import javax.mail.internet.InternetAddress
+import models.Indexer
 import models.ML
 import models.mailsource.CrawlingException
 import models.mailsource.Mail
 import utils.HTMLUtil.fetchHTML
 import utils.HTMLUtil.toNode
-import java.sql.Connection
-import models.MLProposal
-import play.Logger
-import utils.HTMLUtil
-import models.Indexer
 
 case class MailmanCrawlingException(msg: String) extends CrawlingException(msg)
 

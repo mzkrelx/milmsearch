@@ -1,7 +1,6 @@
 package models.mailsource.crawlers
 
 import java.net.URL
-import java.sql.Connection
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -11,10 +10,12 @@ import scala.xml.Node
 import org.joda.time.DateTime
 
 import javax.mail.internet.InternetAddress
+import models.Indexer
 import models.ML
 import models.mailsource.CrawlingException
 import models.mailsource.Mail
-import utils.HTMLUtil._
+import utils.HTMLUtil.fetchHTML
+import utils.HTMLUtil.toNode
 
 case class SourceForgeJPCrawlingException(msg: String) extends CrawlingException(msg)
 
@@ -48,13 +49,7 @@ object SourceForgeJPCrawler {
       val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
       val mailHTMLNode = toNode(fetchHTML(firstMailURL))
 
-      Mail(
-       findDate(mailHTMLNode),
-       new InternetAddress(findFromAddress(mailHTMLNode),
-         findFromName(mailHTMLNode)),
-       findSubject(mailHTMLNode),
-       findBody(mailHTMLNode),
-       firstMailURL)
+      createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
     }
   }
 
@@ -71,8 +66,8 @@ object SourceForgeJPCrawler {
         new URL(monthURL.toString.replaceFirst("date.html", href))
       }
 
-      val mails = mailURLs map { mailURL =>
-        createMail(toNode(fetchHTML(mailURL)), mailURL)
+      mailURLs map { mailURL =>
+        Indexer.indexing(ml,createMail(toNode(fetchHTML(mailURL)), mailURL))
       }
     }
   }
