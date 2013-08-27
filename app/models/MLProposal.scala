@@ -12,23 +12,10 @@ import utils.MatchableEnumeration
 import controllers.Page
 import java.sql.Connection
 import models.mailsource.Crawler
-
-
-object MLProposalStatus extends MatchableEnumeration {
-  type MLProposalStatus = Value
-  val New      = Value("new")
-  val Accepted = Value("accepted")
-  val Rejected = Value("rejected")
-}
 import MLProposalStatus._
-
-object MLArchiveType extends MatchableEnumeration {
-  type MLArchiveType = Value
-  val Mailman       = Value("mailman")
-  val SourceForgeJP = Value("sourceforgejp")
-  val Other         = Value("other")
-}
 import MLArchiveType._
+import models.executors.FirstCrawlingExecutor
+import play.api.Logger
 
 case class MLProposal(
   id: Pk[Long],
@@ -183,9 +170,21 @@ object MLProposal {
         .on('status -> statusTo.toString, 'id -> id).executeUpdate()
 
       statusTo match {
-        case MLProposalStatus.Accepted => Crawler.crawling(
-          ML.findWithConn(id).getOrElse(throw new NoSuchElementException(
-            "ml to crawl not found.")))
+        case MLProposalStatus.Accepted =>
+          // Connection closes when returning response, so findWithConn
+          // must not reach in execute method.
+          val ml = ML.findWithConn(id).getOrElse(
+            throw new NoSuchElementException("ml to crawl not found."))
+
+          FirstCrawlingExecutor.es.execute(
+            new Runnable() {
+              def run() = {
+                Logger.debug("crawling start")
+                Crawler.crawling(ml)
+                Logger.debug("crawling end")
+              }
+            }
+          )
         case _ =>
       }
     }
