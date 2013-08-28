@@ -43,15 +43,15 @@
               <input type="text" id="to" name="to" size="10" />
               <p>まで</p>
             </fieldset>
-            <a rel="leanModal" href="#div787" class="arrowlink">詳細設定</a>
-            <div id="div787" class="modalbox">
+            <a rel="leanModal" href="#searchnavopt" class="arrowlink">詳細設定</a>
+            <div id="searchnavopt" class="modalbox">
               <h3>詳細設定</h3>
               <fieldset>
                 <legend>検索対象</legend>
-                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle">MLタイトル</label>
-                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle" checked="checked">メールタイトル</label>
-                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle" checked="checked">メール本文</label>
-                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle">送信者</label>
+                <input name="mltitle" type="checkbox" id="mltitle" value="mltitle"><label for="mltitle">MLタイトル</label>
+                <input name="mailtitle" type="checkbox" id="mailtitle" value="mailtitle" checked="checked"><label for="mailtitle">メールタイトル</label>
+                <input name="mailtext" type="checkbox" id="mailtext" value="mailtext" checked="checked"><label for="mailtext">メール本文</label>
+                <input name="sender" type="checkbox" id="sender" value="sender"><label for="sender">送信者</label>
               </fieldset>
               <div class="btn modal_close"><a href="#">閉じる</a></div>
             </div>
@@ -88,6 +88,7 @@
     <script type="text/javascript" src="@routes.Assets.at("styles/html5shiv.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("styles/footerFixed.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("styles/jquery.leanModal.min.js")"></script>
+    
     <script type="text/javascript">
       $(function() {
         $( "#from" ).datepicker({
@@ -106,13 +107,32 @@
             $( "#from" ).datepicker( "option", "maxDate", selectedDate );
           }
         });
-        $( 'a[rel*=leanModal]' ).leanModal({
-          top: 50, // モーダルウィンドウの縦位置を指定
-          overlay : 0.5, // 背面の透明度
-          closeButton: ".modal_close" // 閉じるボタンのCSS classを指定
+        $( "#from2" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#to" ).datepicker( "option", "minDate", selectedDate );
+          }
+        });
+        $( "#to2" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+          }
         });
       });
+      $(function() {
+          $( 'a[rel*=leanModal]').leanModal({
+              top: 50,                     // モーダルウィンドウの縦位置を指定
+              overlay : 0.5,               // 背面の透明度 
+              closeButton: ".modal_close"  // 閉じるボタンのCSS classを指定
+          });
+      }); 
     </script>
+
 
   </body>
 </html>
