@@ -7,6 +7,7 @@ import models.MLProposal
 import models.{MLProposalStatus => MLPStatus}
 import utils.BadRequestException
 import models.ML
+import utils.Page
 
 object MLs extends Controller {
 
