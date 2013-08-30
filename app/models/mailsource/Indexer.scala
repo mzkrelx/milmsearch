@@ -1,11 +1,10 @@
-package models
+package models.mailsource
 
-import models.mailsource.Mail
 import org.elasticsearch.common.xcontent.XContentFactory._
-import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import utils.Utils.playConfig
+import models.ML
 
 case class IndexingException(msg: String) extends Exception(msg)
 object Indexer {
@@ -16,16 +15,14 @@ object Indexer {
     val client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(hostname, port))
 
     client.prepareIndex("milmsearch", "mailInfo")
-    .setSource(
-      jsonBuilder()
-        .startObject()
-          .field("date", mail.date.toString())
-          .field("fromAddr", mail.fromAddr.toString())
-          .field("subject", mail.subject)
-          .field("body", mail.body)
-          .field("srcURL", mail.srcURL.toString())
-          .field("MLTitle", ml.mlTitle)
-          .field("MLID", ml.id.toString())
+      .setSource(jsonBuilder().startObject()
+        .field("date", mail.date.toString())
+        .field("fromAddr", mail.fromAddr.toString())
+        .field("subject", mail.subject)
+        .field("body", mail.body)
+        .field("srcURL", mail.srcURL.toString())
+        .field("MLTitle", ml.mlTitle)
+        .field("MLID", ml.id.toString())
         .endObject())
       .setOperationThreaded(false)
       .execute()
