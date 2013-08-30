@@ -1,135 +1,138 @@
-@main("MilmSearch") {
-<h1 id="pagetitle">検索結果一覧</h1>
-<aside class="searcharea">
-  <form>
-    <div class="searchbasic">
-    <input type="text" id="keywords" name="keywords" placeholder="キーワード" />
-    <fieldset class="dateselect">
-      <legend>検索対象期間の指定</legend>
-      <input name="from2" type="text" id="from2" size="10" />
-      <p>〜</p>
-      <input type="text" id="to2" name="to2" size="10" />
-      <p>まで</p>
-    </fieldset>
-    </div>
-    <div class="searchoption">
-      <h3>検索対象</h3>
-      <fieldset>
-        <legend>検索対象</legend>
-        <input name="mltitle" type="checkbox" id="mltitle" value="mltitle"><label for="mltitle">MLタイトル</label>
-        <input name="mailtitle" type="checkbox" id="mailtitle" value="mailtitle" checked="checked"><label for="mailtitle">メールタイトル</label>
-        <input name="mailtext" type="checkbox" id="mailtext" value="mailtext" checked="checked"><label for="mailtext">メール本文</label>
-        <input name="sender" type="checkbox" id="sender" value="sender"><label for="sender">送信者</label>
-      </fieldset>
-    </div>
-    <div class="searchoption grid">
-      <div class="row">
-        <div class="column span-2">
-          <h3>条件で絞り込む</h3>
-        </div>
-        <div class="optselect column span-5">
-          <!— MLタイトルも送信者も、デフォルトはul、liがない状態 —>
-          <div class="optbtn"><a rel="leanModal" href="#divml">＋ MLタイトルを指定する</a></div>
-        </div>
-        <div class="optselect column span-5">
-          <!— MLタイトル、送信者を指定すると、選択された条件が下記のようにul、liで表示される —>
-          <ul>
-            <li>チェックした条件が入りますチェックした条件が入りますチェックした条件が入ります</li>
-            <li>チェックした条件が入ります</li>
-            <li>チェックした条件が入ります</li>
-          </ul>
-          <div class="optbtn"><a rel="leanModal" href="#divsend">＋ 送信者を指定する</a></div>
-        </div>
-      </div>
-      <div id="divml" class="modalbox">
-        <h3>MLタイトルを指定する</h3>
-        <div class="checklist">
-          <fieldset>
-            <legend>MLタイトルの指定</legend>
-            <ul>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle01"><label for="optmltitle01">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle02"><label for="optmltitle02">MLタイトルが入りますMLタイトルが入りますMLタイトルが入りますMLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle03"><label for="optmltitle03">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle04"><label for="optmltitle04">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle05"><label for="optmltitle05">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle06"><label for="optmltitle06">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle07"><label for="optmltitle07">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle08"><label for="optmltitle08">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle09"><label for="optmltitle09">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle10"><label for="optmltitle10">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle11"><label for="optmltitle11">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle12"><label for="optmltitle12">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle10"><label for="optmltitle10">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle11"><label for="optmltitle11">MLタイトルが入ります</label></li>
-              <li><input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle12"><label for="optmltitle12">MLタイトルが入ります</label></li>
-            </ul>
-          </fieldset>
-        </div>
-        <div class="btn modal_close"><a href="#">閉じる</a></div>
-      </div>
-      <div id="divsend" class="modalbox ">
-        <h3>送信者を指定する</h3>
-        <div class="checklist">
-          <fieldset>
-            <legend>送信者の指定</legend>
-            <ul>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender01"><label for="optsender01">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender02"><label for="optsender02">送信者が入ります送信者が入ります送信者が入ります送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender03"><label for="optsender03">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender04"><label for="optsender04">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender05"><label for="optsender05">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender06"><label for="optsender06">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender07"><label for="optsender07">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender08"><label for="optsender08">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender09"><label for="optsender09">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender10"><label for="optsender10">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender11"><label for="optsender11">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender12"><label for="optsender12">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender10"><label for="optsender10">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender11"><label for="optsender11">送信者が入ります</label></li>
-              <li><input name="optsender" type="checkbox" id="optsender" value="optsender12"><label for="optsender12">送信者が入ります</label></li>
-            </ul>
-          </fieldset>
-        </div>
-        <div class="btn modal_close"><a href="#">閉じる</a></div>
-      </div>
-    </div>
-    <button type="submit" class="btn decide">検索する</button>
-  </form>
-</aside>
-    
-<div class="grid archive">
-  <div class="pager row">
-    <div class="column span-9">
-      1〜10件&ensp;/&ensp;30件<a href="#">&lt;&lt;</a><a href="" class="current">1</a><a href="#">2</a><a href="#">3</a><a href="#">&gt;&gt;</a>
-    </div>
-    <div class="column span-3">
-      <a href="" class="current">新しい順</a>&ensp;/&ensp;<a href="#">古い順</a>
-    </div>
-  </div>
+@(request: models.search.SearchRequest, page: utils.Page[Mail])
 
-  <article>
-    <aside><a href="" tadget="_blank">ML:ML名が入ります。外部アーカイブページにリンク</a></aside>
-    <div class="row">
+@import helper._
+@import models.search._
+
+@main("MilmSearch") {
+  <h1 id="pagetitle">検索結果一覧</h1>
+  
+  <aside class="searcharea">
+  
+    @form(action = routes.Application.search) {
+      
+      <div class="searchbasic">
+        <input id="keywords" type="text" name="keywords" placeholder="キーワード" value="@request.keywords" />
+        <fieldset class="dateselect">
+          <legend>検索対象期間の指定</legend>
+          <input id="from2" type="text" name="from2" size="10" value="@request.fromDate.toString(Defaults.searchDateFormat)" />
+          <p>〜</p>
+          <input id="to2" type="text" name="to2" size="10" value="@request.toDate.toString(Defaults.searchDateFormat)" />
+          <p>まで</p>
+        </fieldset>
+      </div>
+      <div class="searchoption">
+        <h3>検索対象</h3>
+        <fieldset>
+          <legend>検索対象</legend>
+          <input id="mltitle" name="fields[]" type="checkbox" value="mltitle" @fieldChecked(request.fields, "mltitle") >
+          <label for="mltitle">MLタイトル</label>
+          <input id="subject" name="fields[]" type="checkbox" value="subject" @fieldChecked(request.fields, "subject") >
+          <label for="subject">メールタイトル</label>
+          <input id="body" name="fields[]" type="checkbox" value="body" @fieldChecked(request.fields, "body") >
+          <label for="body">メール本文</label>
+          <input id="from" name="fields[]" type="checkbox" value="from" @fieldChecked(request.fields, "from")>
+          <label for="from">送信者</label>
+        </fieldset>
+      </div>
+      <div class="searchoption grid">
+        <div class="row">
+          <div class="column span-2">
+            <h3>条件で絞り込む</h3>
+          </div>
+          <div id="" class="optselect column span-5">
+            @* MLタイトルも送信者も、デフォルトはul、liがない状態 *@
+            <div class="optbtn"><a rel="leanModal" href="#divml">＋ MLタイトルを指定する</a></div>
+          </div>
+          <div class="optselect column span-5">
+            @* MLタイトル、送信者を指定すると、選択された条件が下記のようにul、liで表示される *@
+            <ul>
+              <li>チェックした条件が入りますチェックした条件が入りますチェックした条件が入ります</li>
+              <li>チェックした条件が入ります</li>
+              <li>チェックした条件が入ります</li>
+            </ul>
+            <div class="optbtn"><a rel="leanModal" href="#divsend">＋ 送信者を指定する</a></div>
+          </div>
+        </div>
+        <div id="divml" class="modalbox">
+          <h3>MLタイトルを指定する</h3>
+          <div class="checklist">
+            <fieldset>
+              <legend>MLタイトルの指定</legend>
+              <ul>
+                @* <<繰り返し *@
+                <li>
+                  <input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle01">
+                  <label for="optmltitle01">MLタイトルが入ります</label>
+                </li>
+                @* 繰り返し>> *@
+              </ul>
+            </fieldset>
+          </div>
+          <div class="btn modal_close"><a href="#">閉じる</a></div>
+        </div>
+        <div id="divsend" class="modalbox ">
+          <h3>送信者を指定する</h3>
+          <div class="checklist">
+            <fieldset>
+              <legend>送信者の指定</legend>
+              <ul>
+                @* <<繰り返し *@
+                <li>
+                  <input name="optsender" type="checkbox" id="optsender" value="optsender01">
+                  <label for="optsender01">送信者が入ります</label>
+                </li>
+                @* 繰り返し>> *@
+              </ul>
+            </fieldset>
+          </div>
+          <div class="btn modal_close"><a href="#">閉じる</a></div>
+        </div>
+      </div>
+      <button type="submit" class="btn decide">検索する</button>
+      
+    }
+    
+  </aside>
+      
+  <div class="grid archive">
+    <div class="pager row">
       <div class="column span-9">
-        <h3><a href="" target="_blank">MLのスレッド名が入ります。外部アーカイブページにリンクします。</a></h3>
-        <p>メールの冒頭分がはいりますメールの冒頭分がはいりますメールの冒頭分がはいりますメールの冒頭分がはいります</p>
+        1〜10件&ensp;/&ensp;30件<a href="#">&lt;&lt;</a>
+        <a href="" class="current">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">&gt;&gt;</a>
       </div>
       <div class="column span-3">
-        <p>
-          <date>yyyy/mm/dd</date><br>
-          送信者：なまえがはいります
-        </p>
+        <a href="" class="current">新しい順</a>&ensp;/&ensp;<a href="#">古い順</a>
       </div>
     </div>
-  </article>
-
-  <div class="pager">
-    <div class="column span-9">
-      1〜10件&ensp;/&ensp;30件<a href="#">&lt;&lt;</a><a href="" class="current">1</a><a href="#">2</a><a href="#">3</a><a href="#">&gt;&gt;</a>
+  
+    <article>
+      <aside><a href="" tadget="_blank">ML:ML名が入ります。外部アーカイブページにリンク</a></aside>
+      <div class="row">
+        <div class="column span-9">
+          <h3><a href="" target="_blank">MLのスレッド名が入ります。外部アーカイブページにリンクします。</a></h3>
+          <p>メールの冒頭分がはいりますメールの冒頭分がはいりますメールの冒頭分がはいりますメールの冒頭分がはいります</p>
+        </div>
+        <div class="column span-3">
+          <p>
+            <date>yyyy/mm/dd</date><br>
+            送信者：なまえがはいります
+          </p>
+        </div>
+      </div>
+    </article>
+  
+    <div class="pager">
+      <div class="column span-9">
+        1〜10件&ensp;/&ensp;30件<a href="#">&lt;&lt;</a>
+        <a href="" class="current">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">&gt;&gt;</a>
+      </div>
     </div>
+  
   </div>
-
-</div>
-
 }

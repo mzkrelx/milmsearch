@@ -35,27 +35,36 @@
         <div class="contentarea clearfix">
           <h2>メーリングリストを検索する</h2>
           @form(action = routes.Application.search) {
-            <input type="text" id="keywords" name="keywords" placeholder="キーワード" />
-            <fieldset class="dateselect">
-              <legend>検索対象期間の指定</legend>
-              <input name="from" type="text" id="from" size="10" />
-              <p>〜</p>
-              <input type="text" id="to" name="to" size="10" />
-              <p>まで</p>
-            </fieldset>
-            <a rel="leanModal" href="#searchnavopt" class="arrowlink">詳細設定</a>
-            <div id="searchnavopt" class="modalbox">
-              <h3>詳細設定</h3>
-              <fieldset>
-                <legend>検索対象</legend>
-                <input name="mltitle" type="checkbox" id="mltitle" value="mltitle"><label for="mltitle">MLタイトル</label>
-                <input name="mailtitle" type="checkbox" id="mailtitle" value="mailtitle" checked="checked"><label for="mailtitle">メールタイトル</label>
-                <input name="mailtext" type="checkbox" id="mailtext" value="mailtext" checked="checked"><label for="mailtext">メール本文</label>
-                <input name="sender" type="checkbox" id="sender" value="sender"><label for="sender">送信者</label>
+            @defining(Application.searchForm) { searchForm => 
+              <input id="keywords" type="text" name="keywords" placeholder="キーワード" />
+              <fieldset class="dateselect">
+                <legend>検索対象期間の指定</legend>
+                <input id="from" type="text" name="fromDate" size="10" />
+                <p>〜</p>
+                <input id="to" type="text" name="toDate" size="10" />
+                <p>まで</p>
               </fieldset>
-              <div class="btn modal_close"><a href="#">閉じる</a></div>
-            </div>
-            <button type="submit" class="btn decide">検索する</button>
+              <a rel="leanModal" href="#searchnavopt" class="arrowlink">詳細設定</a>
+              <div id="searchnavopt" class="modalbox">
+                <h3>詳細設定</h3>
+                <fieldset>
+                  <legend>検索対象</legend>
+                  
+                  <!-- デフォルトで、「メールタイトル」と「メール本文」がチェック済み -->
+                  
+                  <input id="mltitle_nav" name="fields[]" type="checkbox" value="mltitle">
+                  <label for="mltitle_nav">MLタイトル</label>
+                  <input id="subject_nav" name="fields[]" type="checkbox" value="subject" checked="checked">
+                  <label for="subject_nav">メールタイトル</label>
+                  <input id="body_nav" name="fields[]" type="checkbox" value="body" checked="checked">
+                  <label for="body_nav">メール本文</label>
+                  <input id="from_nav" name="fields[]" type="checkbox" value="from">
+                  <label for="from_nav">送信者</label>
+                </fieldset>
+                <div class="btn modal_close"><a href="#">閉じる</a></div>
+              </div>
+              <button type="submit" class="btn decide">検索する</button>
+            }
           }
         </div>
       </div>

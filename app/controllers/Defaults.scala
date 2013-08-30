@@ -6,4 +6,6 @@ package controllers
 object Defaults {
   val ItemsPerPage = 10
   val MaxItemsPerPage = 100
+
+  val searchDateFormat = "MM/dd/yyyy"
 }
