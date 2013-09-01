@@ -12,23 +12,35 @@ import anorm.Pk
 import anorm.NotAssigned
 import org.specs2.specification.BeforeExample
 import org.specs2.specification.AfterExample
+import test.gui.MilmSearchBeforeAfter
 import org.openqa.selenium.WebDriver
+import test.gui.MilmSearchSpec
 
-case class MLProposalTestData(
+trait MLProposalsBeforeAfter extends MilmSearchBeforeAfter with Before {
+
+  case class MLProposalTestData(
   number: Int,
   status: String,
   createdAt: DateTime)
 
-class MLProposalsSpec extends Specification with BeforeExample with AfterExample {
-
-  def before = {
-    println("before")
+  
+  //テストケースごとにDBが初期化されてしまったり問題を修正するまではbeforeではテストデータを入れられない
+  //それらの問題が解決するまでは、テストを実行するときにテストデータを入れる
+  override def before {
+    super.before
+  }
+  
+  def createMLProposalList(status: String) {
+    for (i <- 1 to 10) {
+      for (j <- 1 to 10) {
+        val createdAd = new DateTime(2011, i, j, 3, 50, 0)
+        val data = MLProposalTestData(i * j, status, createdAd)
+        createMLProposal(data)
+      }
+    }
   }
 
-  def after = {
-    println("after")
-  }
-
+private
   def createMLProposal(data: MLProposalTestData) {
 
     val model = MLProposal(
@@ -47,23 +59,17 @@ class MLProposalsSpec extends Specification with BeforeExample with AfterExample
     MLProposal.create(model)
   }
 
-  def createMLProposalList(status: String) {
-    for (i <- 1 to 10) {
-      for (j <- 1 to 10) {
-        val createdAd = new DateTime(2011, i, j, 3, 50, 0)
-        val data = MLProposalTestData(i * j, status, createdAd)
-        createMLProposal(data)
-      }
-    }
-  }
+} 
   
+class MLProposalsSpec extends MilmSearchSpec with MLProposalsBeforeAfter {
+
   "mlProposals" should {
 
     "status is new" in {
       running(TestServer(3333), HTMLUNIT) { browser =>
-
+        
         createMLProposalList("new")
-
+        
         val browserHandler = new ProposalsBrowserHandler(browser)
 
         browserHandler.gotoProposalListPage("new")
@@ -81,9 +87,9 @@ class MLProposalsSpec extends Specification with BeforeExample with AfterExample
 
     "status is accepted" in {
       running(TestServer(3333), HTMLUNIT) { browser =>
-      	
+
         createMLProposalList("accepted")
-      	
+        
         val browserHandler = new ProposalsBrowserHandler(browser)
         
         browserHandler.gotoProposalListPage("accepted");
