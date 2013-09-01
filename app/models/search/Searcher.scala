@@ -18,6 +18,42 @@ case class SearchResult(
   itemsPerPage: Long,
   items: List[Mail])
 
+case class MLOption(id: Long, title: String)
+
+case class FromOption(name: String, email: Email) {
+
+  def value = s"""$name, ${email.toView}"""
+
+  def label = s"""$name <${email.toView}>"""
+
+}
+
+object FromOption {
+
+  def apply(ia: InternetAddress): FromOption = {
+    this(ia.getPersonal, Email(ia.getAddress))
+  }
+
+  def apply(name: String, email: String) {
+    this(name, Email(email))
+  }
+
+  def apply(value: String) {
+    val nameEmail = value.splitAt(value.lastIndexOf(", "))
+    this(nameEmail._1, Email.fromView(nameEmail._2))
+  }
+
+}
+
+case class Email(email: String) {
+  def toView = email.replaceFirst("@", " ＠ ")
+}
+
+object Email {
+  def fromView(viewEmail: String): Email =
+    Email(viewEmail.replaceFirst(" ＠ ", "@"))
+}
+
 object Searcher {
   def search(req: SearchRequest): Page[Mail] = {
     Page[Mail](

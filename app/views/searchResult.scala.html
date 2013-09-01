@@ -1,4 +1,4 @@
-@(request: models.search.SearchRequest, page: utils.Page[Mail])
+@(request: search.SearchRequest, page: utils.Page[Mail], mlOptions: List[search.MLOption], fromOptions: List[search.FromOption])
 
 @import helper._
 @import models.search._
@@ -8,7 +8,7 @@
   
   <aside class="searcharea">
   
-    @form(action = routes.Application.search) {
+    @form(action = routes.MailSearch.search) {
       
       <div class="searchbasic">
         <input id="keywords" type="text" name="keywords" placeholder="キーワード" value="@request.keywords" />
@@ -53,40 +53,47 @@
             <div class="optbtn"><a rel="leanModal" href="#divsend">＋ 送信者を指定する</a></div>
           </div>
         </div>
+        
+        <!-- << MLタイトル選択Modal -->
         <div id="divml" class="modalbox">
           <h3>MLタイトルを指定する</h3>
           <div class="checklist">
             <fieldset>
               <legend>MLタイトルの指定</legend>
               <ul>
-                @* <<繰り返し *@
-                <li>
-                  <input name="optmltitle" type="checkbox" id="optmltitle" value="optmltitle01">
-                  <label for="optmltitle01">MLタイトルが入ります</label>
-                </li>
-                @* 繰り返し>> *@
+                @mlOptions.zipWithIndex.map { case (mlOpt, i) =>
+                  <li>
+                    <input name="mlOptions[]" type="checkbox" id="optmltitle_@i" value="@mlOpt.id">
+                    <label for="optmltitle_@i">@mlOpt.title</label>
+                  </li>
+                }
               </ul>
             </fieldset>
           </div>
           <div class="btn modal_close"><a href="#">閉じる</a></div>
         </div>
+        <!-- MLタイトル選択Modal >> -->
+        
+        <!-- << 送信者選択Modal -->
         <div id="divsend" class="modalbox ">
           <h3>送信者を指定する</h3>
           <div class="checklist">
             <fieldset>
               <legend>送信者の指定</legend>
               <ul>
-                @* <<繰り返し *@
-                <li>
-                  <input name="optsender" type="checkbox" id="optsender" value="optsender01">
-                  <label for="optsender01">送信者が入ります</label>
-                </li>
-                @* 繰り返し>> *@
+                @fromOptions.zipWithIndex.map { case (fromOpt, i) =>
+                  <li>
+                    <input name="fromOptions[]" type="checkbox" id="optsender_@i" value="@fromOpt.value">
+                    <label for="optsender_@i">@fromOpt.label</label>
+                  </li>
+                }
               </ul>
             </fieldset>
           </div>
           <div class="btn modal_close"><a href="#">閉じる</a></div>
         </div>
+        <!-- 送信者選択Modal >> -->
+        
       </div>
       <button type="submit" class="btn decide">検索する</button>
       

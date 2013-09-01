@@ -34,8 +34,8 @@
       <div id="searchnav">
         <div class="contentarea clearfix">
           <h2>メーリングリストを検索する</h2>
-          @form(action = routes.Application.search) {
-            @defining(Application.searchForm) { searchForm => 
+          @form(action = routes.MailSearch.search) {
+            @defining(MailSearch.searchForm) { searchForm => 
               <input id="keywords" type="text" name="keywords" placeholder="キーワード" />
               <fieldset class="dateselect">
                 <legend>検索対象期間の指定</legend>
