@@ -165,21 +165,23 @@
       </div>
     </div>
   
-    <article>
-      <aside><a href="" tadget="_blank">ML:ML名が入ります。外部アーカイブページにリンク</a></aside>
-      <div class="row">
-        <div class="column span-9">
-          <h3><a href="" target="_blank">MLのスレッド名が入ります。外部アーカイブページにリンクします。</a></h3>
-          <p>メールの冒頭分がはいりますメールの冒頭分がはいりますメールの冒頭分がはいりますメールの冒頭分がはいります</p>
+    @page.items.map { mail =>
+      <article>
+        <aside><a href="@mail.mlURL" tadget="_blank">ML:@mail.mlTitle</a></aside>
+        <div class="row">
+          <div class="column span-9">
+            <h3><a href="@mail.url" target="_blank">@mail.subject</a></h3>
+            <p>@mail.snippet</p>
+          </div>
+          <div class="column span-3">
+            <p>
+              <date>@mail.date.toString("yyyy/MM/dd")</date><br>
+              送信者：@mail.fromAddr.getPersonal
+            </p>
+          </div>
         </div>
-        <div class="column span-3">
-          <p>
-            <date>yyyy/mm/dd</date><br>
-            送信者：なまえがはいります
-          </p>
-        </div>
-      </div>
-    </article>
+      </article>
+    }
   
     <div class="pager">
       <div class="column span-9">

@@ -66,6 +66,7 @@ object Searcher {
           new InternetAddress("dummy@example.com" + i, "dummy" + i),
           "タイトルが入ります" + i,
           "メール本文が入ります。メール本文が入ります。メール本文が入ります。",
+          "メールスニペットが入ります。メールスニペットが入ります。メールスニペットが入ります。",
           new URL("http://example.com"),
           "MLタイトルが入ります" + i,
           new URL("http://example.com/ml"))

@@ -9,6 +9,7 @@ case class Mail(
   fromAddr: InternetAddress,
   subject:  String,
   body:     String,
-  srcURL:   URL,
+  snippet:  String,
+  url:      URL,
   mlTitle:  String,
   mlURL:    URL)
