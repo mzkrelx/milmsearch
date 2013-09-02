@@ -4,7 +4,7 @@ import org.joda.time.DateTime
 import models.Mail
 import javax.mail.internet.InternetAddress
 import java.net.URL
-import utils.Page
+import models.Page
 
 case class SearchRequest(
   keywords: String,

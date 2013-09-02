@@ -1,13 +1,10 @@
 package controllers
 
+import Defaults._
+import models._
 import play.api._
 import play.api.mvc._
-import controllers.Defaults._
-import models.MLProposal
-import models.{MLProposalStatus => MLPStatus}
 import utils.BadRequestException
-import models.ML
-import utils.Page
 
 object MLs extends Controller {
 

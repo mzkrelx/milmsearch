@@ -9,7 +9,6 @@ import anorm.SQL
 import java.util.Date
 import java.net.URL
 import utils.MatchableEnumeration
-import utils.Page
 import java.sql.Connection
 import models.mailsource.Crawler
 import MLProposalStatus._

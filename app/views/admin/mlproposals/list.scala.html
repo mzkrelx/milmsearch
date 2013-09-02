@@ -43,7 +43,7 @@
       </tbody>
     </table>
     <div class="row">
-      @helper.paginator(page, routes.AdminMLProposals.list(status.toString, _: Long, page.itemsPerPage))
+      @admin.helper.paginator(page, routes.AdminMLProposals.list(status.toString, _: Long, page.itemsPerPage))
     </div>
   </section>
 }

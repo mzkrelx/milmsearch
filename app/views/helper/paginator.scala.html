@@ -1,34 +1,26 @@
-@(page: Page[_], navLink: Long => Call)
+@(page: Page[_])
 
-@if(page.totalResults > 0) { 
-<div class="span2 tune_pagetotal">@{page.startIndex + 1}-@{page.startIndex + page.items.length} / @{page.totalResults}件</div>
-<div class="span10">
-  <nav class="pagination">
-    <ul>
-    @page.prevIndex.map { idx =>
-      <li class="previous">
-        <a href="@navLink(idx)">Prev</a>
-      </li>
-    }.getOrElse {
-      <li class="disabled"><a href="">Prev</a></li>
-    }
-    @for(pageNum <- 1L to page.totalPages) {
-      @defining((pageNum - 1) * page.itemsPerPage) { idx =>
-        @if(page.startIndex == idx) {
-          <li class="active"><a href="">@pageNum</a></li>
-        } else {
-          <li><a href="@navLink(idx)">@pageNum</a></li>
-        }
+@if(page.totalResults > 0) {   
+  
+  @(page.start)〜@(page.end)件&ensp;/&ensp;@(page.totalResults)件<a href="#">&lt;&lt;</a>
+  
+  @page.prevIndex.map { idx =>
+    <a href="#">&gt;&gt;</a>
+  }.getOrElse {
+  }
+  
+  @for(pageNum <- 1L to page.totalPages) {
+    @defining((pageNum - 1) * page.itemsPerPage) { idx =>
+      @if(page.startIndex == idx) {
+        <a href="" class="current">@pageNum</a>
+      } else {
+        <a href="#">@pageNum</a>
       }
     }
-    @page.nextIndex.map { idx =>
-      <li class="next">
-        <a href="@navLink(idx)">Next</a>
-      </li>
-    }.getOrElse {
-      <li class="disabled"><a href="">Next</a></li>
-    }
-    </ul>
-  </nav>
-</div>
+  }
+  
+  @page.nextIndex.map { idx =>
+    <a href="#">&gt;&gt;</a>
+  }.getOrElse {
+  }  
 }
