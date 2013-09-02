@@ -3,7 +3,42 @@
 @import helper._
 @import models.search._
 
-@main("MilmSearch") {
+@moreScripts = {
+  <script type="text/javascript">
+    $(function() {
+        $("#mltitle_close").click(function() {
+          $("#mltitle_list").remove();
+          var ul = $("<ul />").attr("id", "mltitle_list");
+          var mlOptions = $(".mlOptions").filter(":checked");
+          for (var i = 0; i < mlOptions.length; i++) {
+            var mlOption = mlOptions.eq(i);
+            var label = $("label[for=" + mlOption.attr("id") + "]").text();
+            ul.append($("<li />").text(label));
+            ul.append("<input type=\"hidden\" name=\"mlIDs[]\" value=\"" + mlOption.val() + "\" />");
+          }
+          if (ul.children().length > 0) {
+            $("#selected_mltitle").prepend(ul);
+          }
+        });
+        $("#sender_close").click(function() {
+          $("#sender_list").remove();
+          var ul = $("<ul />").attr("id", "sender_list");
+          var fromOptions = $(".fromOptions").filter(":checked");
+          for (var i = 0; i < fromOptions.length; i++) {
+            var fromOption = fromOptions.eq(i);
+            var label = $("label[for=" + fromOption.attr("id") + "]").text();
+            ul.append($("<li />").text(label));
+            ul.append("<input type=\"hidden\" name=\"froms[]\" value=\"" + fromOption.val() + "\" />");
+          }
+          if (ul.children().length > 0) {
+            $("#selected_sender").prepend(ul);
+          }
+        });
+    }); 
+  </script>
+}
+
+@main("MilmSearch", moreScripts) {
   <h1 id="pagetitle">検索結果一覧</h1>
   
   <aside class="searcharea">
@@ -14,9 +49,9 @@
         <input id="keywords" type="text" name="keywords" placeholder="キーワード" value="@request.keywords" />
         <fieldset class="dateselect">
           <legend>検索対象期間の指定</legend>
-          <input id="from2" type="text" name="from2" size="10" value="@request.fromDate.toString(Defaults.searchDateFormat)" />
+          <input id="from2" type="text" name="fromDate" size="10" value="@request.fromDate.toString(Defaults.searchDateFormat)" />
           <p>〜</p>
-          <input id="to2" type="text" name="to2" size="10" value="@request.toDate.toString(Defaults.searchDateFormat)" />
+          <input id="to2" type="text" name="toDate" size="10" value="@request.toDate.toString(Defaults.searchDateFormat)" />
           <p>まで</p>
         </fieldset>
       </div>
@@ -34,70 +69,85 @@
           <label for="from">送信者</label>
         </fieldset>
       </div>
+      
       <div class="searchoption grid">
         <div class="row">
           <div class="column span-2">
             <h3>条件で絞り込む</h3>
           </div>
-          <div id="" class="optselect column span-5">
-            @* MLタイトルも送信者も、デフォルトはul、liがない状態 *@
+          <div id="selected_mltitle" class="optselect column span-5">
+            @if(request.mlIDs.size > 0) {
+              <ul id="mltitle_list">
+                @mlOptions.collect { 
+                  case MLOption(id, title) if request.mlIDs.contains(id) => {
+                    <li>@title</li>
+                    <input type="hidden" name="mlIDs[]" value="@id">
+                  }
+                }
+              </ul>
+            }
             <div class="optbtn"><a rel="leanModal" href="#divml">＋ MLタイトルを指定する</a></div>
           </div>
-          <div class="optselect column span-5">
-            @* MLタイトル、送信者を指定すると、選択された条件が下記のようにul、liで表示される *@
-            <ul>
-              <li>チェックした条件が入りますチェックした条件が入りますチェックした条件が入ります</li>
-              <li>チェックした条件が入ります</li>
-              <li>チェックした条件が入ります</li>
-            </ul>
+          <div id="selected_sender" class="optselect column span-5">
+            @if(request.froms.size > 0) {
+              <ul id="sender_list">
+                @fromOptions.collect { 
+                  case from if request.froms.contains(FromOption(from.value)) => {
+                    <li>@from.label</li>
+                    <input type="hidden" name="froms[]" value="@from.value">
+                  }
+                }
+              </ul>
+            }
             <div class="optbtn"><a rel="leanModal" href="#divsend">＋ 送信者を指定する</a></div>
           </div>
         </div>
-        
-        <!-- << MLタイトル選択Modal -->
-        <div id="divml" class="modalbox">
-          <h3>MLタイトルを指定する</h3>
-          <div class="checklist">
-            <fieldset>
-              <legend>MLタイトルの指定</legend>
-              <ul>
-                @mlOptions.zipWithIndex.map { case (mlOpt, i) =>
-                  <li>
-                    <input name="mlOptions[]" type="checkbox" id="optmltitle_@i" value="@mlOpt.id">
-                    <label for="optmltitle_@i">@mlOpt.title</label>
-                  </li>
-                }
-              </ul>
-            </fieldset>
-          </div>
-          <div class="btn modal_close"><a href="#">閉じる</a></div>
-        </div>
-        <!-- MLタイトル選択Modal >> -->
-        
-        <!-- << 送信者選択Modal -->
-        <div id="divsend" class="modalbox ">
-          <h3>送信者を指定する</h3>
-          <div class="checklist">
-            <fieldset>
-              <legend>送信者の指定</legend>
-              <ul>
-                @fromOptions.zipWithIndex.map { case (fromOpt, i) =>
-                  <li>
-                    <input name="fromOptions[]" type="checkbox" id="optsender_@i" value="@fromOpt.value">
-                    <label for="optsender_@i">@fromOpt.label</label>
-                  </li>
-                }
-              </ul>
-            </fieldset>
-          </div>
-          <div class="btn modal_close"><a href="#">閉じる</a></div>
-        </div>
-        <!-- 送信者選択Modal >> -->
-        
       </div>
-      <button type="submit" class="btn decide">検索する</button>
       
+      <button type="submit" class="btn decide">検索する</button>
     }
+        
+    <!-- << MLタイトル選択Modal -->
+    <div id="divml" class="modalbox">
+      <h3>MLタイトルを指定する</h3>
+      <div class="checklist">
+        <fieldset>
+          <legend>MLタイトルの指定</legend>
+          <ul>
+            @mlOptions.zipWithIndex.map { case (mlOpt, i) =>
+              <li>
+                <input id="optmltitle_@i" class="mlOptions" name="mlOptions[]" type="checkbox" value="@mlOpt.id"
+                  @if(request.mlIDs.contains(mlOpt.id)) { checked="checked" } />
+                <label for="optmltitle_@i">@mlOpt.title</label>
+              </li>
+            }
+          </ul>
+        </fieldset>
+      </div>
+      <div id="mltitle_close" class="btn modal_close"><a href="#">閉じる</a></div>
+    </div>
+    <!-- MLタイトル選択Modal >> -->
+    
+    <!-- << 送信者選択Modal -->
+    <div id="divsend" class="modalbox ">
+      <h3>送信者を指定する</h3>
+      <div class="checklist">
+        <fieldset>
+          <legend>送信者の指定</legend>
+          <ul>
+            @fromOptions.zipWithIndex.map { case (fromOpt, i) =>
+              <li>
+                <input id="optsender_@i" class="fromOptions" name="fromOptions[]" type="checkbox" value="@fromOpt.value"
+                  @if(request.froms.contains(FromOption(fromOpt.value))) { checked="checked" } />
+                <label for="optsender_@i">@fromOpt.label</label>
+              </li>
+            }
+          </ul>
+        </fieldset>
+      </div>
+      <div id="sender_close" class="btn modal_close"><a href="#">閉じる</a></div>
+    </div>
+    <!-- 送信者選択Modal >> -->
     
   </aside>
       

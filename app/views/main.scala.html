@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, moreScripts: Html = Html(""))(content: Html)
 
 @import helper._
 
@@ -141,7 +141,6 @@
           });
       }); 
     </script>
-
-
+    @moreScripts
   </body>
 </html>

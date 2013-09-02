@@ -10,7 +10,9 @@ case class SearchRequest(
   keywords: String,
   fromDate: DateTime,
   toDate:   DateTime,
-  fields:   Set[MailSearchField.Value])
+  fields:   Set[MailSearchField.Value],
+  mlIDs:    Set[Long],
+  froms:    Set[FromOption])
 
 case class SearchResult(
   totalResults: Long,
@@ -22,7 +24,7 @@ case class MLOption(id: Long, title: String)
 
 case class FromOption(name: String, email: Email) {
 
-  def value = s"""$name, ${email.toView}"""
+  def value = s"""$name${FromOption.valueSeparator}${email.toView}"""
 
   def label = s"""$name <${email.toView}>"""
 
@@ -30,17 +32,16 @@ case class FromOption(name: String, email: Email) {
 
 object FromOption {
 
+  val valueSeparator = ", "
+  lazy val valueSeparatorLength = valueSeparator.length
+
   def apply(ia: InternetAddress): FromOption = {
     this(ia.getPersonal, Email(ia.getAddress))
   }
 
-  def apply(name: String, email: String) {
-    this(name, Email(email))
-  }
-
-  def apply(value: String) {
-    val nameEmail = value.splitAt(value.lastIndexOf(", "))
-    this(nameEmail._1, Email.fromView(nameEmail._2))
+  def apply(viewValue: String): FromOption = {
+    val nameEmail = viewValue.splitAt(viewValue.lastIndexOf(valueSeparator))
+    this(nameEmail._1, Email.fromView(nameEmail._2.substring(valueSeparatorLength)))
   }
 
 }
@@ -56,15 +57,17 @@ object Email {
 
 object Searcher {
   def search(req: SearchRequest): Page[Mail] = {
+
+    // TODO real search
     Page[Mail](
       (1 to 10) map ( i =>
         Mail(
           DateTime.now,
-          new InternetAddress("dummy@example.com", "dummy"),
+          new InternetAddress("dummy@example.com" + i, "dummy" + i),
           "タイトルが入ります" + i,
           "メール本文が入ります。メール本文が入ります。メール本文が入ります。",
           new URL("http://example.com"),
-          "MLタイトルが入ります",
+          "MLタイトルが入ります" + i,
           new URL("http://example.com/ml"))
       ) toList,
       31, 0, 10
