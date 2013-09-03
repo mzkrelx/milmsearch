@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, moreScripts: Html = Html(""))(content: Html)
 
 @import helper._
 
@@ -34,28 +34,37 @@
       <div id="searchnav">
         <div class="contentarea clearfix">
           <h2>メーリングリストを検索する</h2>
-          @form(action = routes.Application.search) {
-            <input type="text" id="keywords" name="keywords" placeholder="キーワード" />
-            <fieldset class="dateselect">
-              <legend>検索対象期間の指定</legend>
-              <input name="from" type="text" id="from" size="10" />
-              <p>〜</p>
-              <input type="text" id="to" name="to" size="10" />
-              <p>まで</p>
-            </fieldset>
-            <a rel="leanModal" href="#div787" class="arrowlink">詳細設定</a>
-            <div id="div787" class="modalbox">
-              <h3>詳細設定</h3>
-              <fieldset>
-                <legend>検索対象</legend>
-                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle">MLタイトル</label>
-                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle" checked="checked">メールタイトル</label>
-                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle" checked="checked">メール本文</label>
-                <label><input name="mltitle" type="checkbox" id="mltitle" value="mltitle">送信者</label>
+          @form(action = routes.MailSearch.search) {
+            @defining(MailSearch.searchForm) { searchForm => 
+              <input id="keywords" type="text" name="keywords" placeholder="キーワード" />
+              <fieldset class="dateselect">
+                <legend>検索対象期間の指定</legend>
+                <input id="from" type="text" name="fromDate" size="10" value="@Defaults.searchFrom"/>
+                <p>〜</p>
+                <input id="to" type="text" name="toDate" size="10" value="@Defaults.today" />
+                <p>まで</p>
               </fieldset>
-              <div class="btn modal_close"><a href="#">閉じる</a></div>
-            </div>
-            <button type="submit" class="btn decide">検索する</button>
+              <a rel="leanModal" href="#searchnavopt" class="arrowlink">詳細設定</a>
+              <div id="searchnavopt" class="modalbox">
+                <h3>詳細設定</h3>
+                <fieldset>
+                  <legend>検索対象</legend>
+                  
+                  <!-- デフォルトで、「メールタイトル」と「メール本文」がチェック済み -->
+                  
+                  <input id="mltitle_nav" name="fields[]" type="checkbox" value="mltitle">
+                  <label for="mltitle_nav">MLタイトル</label>
+                  <input id="subject_nav" name="fields[]" type="checkbox" value="subject" checked="checked">
+                  <label for="subject_nav">メールタイトル</label>
+                  <input id="body_nav" name="fields[]" type="checkbox" value="body" checked="checked">
+                  <label for="body_nav">メール本文</label>
+                  <input id="from_nav" name="fields[]" type="checkbox" value="from">
+                  <label for="from_nav">送信者</label>
+                </fieldset>
+                <div class="btn modal_close"><a href="#">閉じる</a></div>
+              </div>
+              <button type="submit" class="btn decide">検索する</button>
+            }
           }
         </div>
       </div>
@@ -88,6 +97,7 @@
     <script type="text/javascript" src="@routes.Assets.at("styles/html5shiv.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("styles/footerFixed.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("styles/jquery.leanModal.min.js")"></script>
+    
     <script type="text/javascript">
       $(function() {
         $( "#from" ).datepicker({
@@ -106,13 +116,31 @@
             $( "#from" ).datepicker( "option", "maxDate", selectedDate );
           }
         });
-        $( 'a[rel*=leanModal]' ).leanModal({
-          top: 50, // モーダルウィンドウの縦位置を指定
-          overlay : 0.5, // 背面の透明度
-          closeButton: ".modal_close" // 閉じるボタンのCSS classを指定
+        $( "#from2" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#to" ).datepicker( "option", "minDate", selectedDate );
+          }
+        });
+        $( "#to2" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+          }
         });
       });
+      $(function() {
+          $( 'a[rel*=leanModal]').leanModal({
+              top: 50,                     // モーダルウィンドウの縦位置を指定
+              overlay : 0.5,               // 背面の透明度 
+              closeButton: ".modal_close"  // 閉じるボタンのCSS classを指定
+          });
+      }); 
     </script>
-
+    @moreScripts
   </body>
 </html>

@@ -10,7 +10,7 @@ import scala.xml.Node
 import org.joda.time.DateTime
 
 import javax.mail.internet.InternetAddress
-import models.Indexer
+import models.mailsource.Indexer
 import models.ML
 import models.mailsource.CrawlingException
 import models.mailsource.Mail

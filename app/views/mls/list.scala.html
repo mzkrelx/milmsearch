@@ -22,7 +22,7 @@
     </table>
     
     <div class="row">
-      @helper.paginator(page, routes.MLs.list(_: Long, page.itemsPerPage))
+      @admin.helper.paginator(page, routes.MLs.list(_: Long, page.itemsPerPage))
     </div>
     
   }.getOrElse {
