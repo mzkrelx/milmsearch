@@ -9,14 +9,15 @@ import models._
 import utils.MatchableEnumeration
 
 case class SearchRequest(
-  keywords: String,
-  fromDate: DateTime,
-  toDate:   DateTime,
-  fields:   Set[MailSearchField.Value],
-  mlIDs:    Set[Long],
-  froms:    Set[FromOption],
-  order:    MailSearchOrder.Value,
-  page:     Long)
+  keywords:     String,
+  fromDate:     DateTime,
+  toDate:       DateTime,
+  fields:       Set[MailSearchField.Value],
+  mlIDs:        Set[Long],
+  froms:        Set[FromOption],
+  itemsPerPage: Integer,
+  order:        MailSearchOrder.Value,
+  page:         Long)
 
 object MailSearchOrder extends MatchableEnumeration {
   type MailSearchOrder = Value
@@ -81,7 +82,9 @@ object Searcher {
           "MLタイトルが入ります" + i,
           new URL("http://example.com/ml"))
       ) toList,
-      102, req.page * 10 - 10, 10
+      totalResultCount = 102,
+      startIndex = req.page * req.itemsPerPage - req.itemsPerPage,
+      itemsPerPage = req.itemsPerPage
     )
   }
 }

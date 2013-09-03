@@ -25,6 +25,7 @@ object MailSearch extends Controller {
           fields map { MailSearchField.withName(_) } toSet,
           mlIDs toSet,
           froms map { FromOption.apply(_) } toSet,
+          Defaults.ItemsPerPage,
           order.map(MailSearchOrder.withName(_)).getOrElse(MailSearchOrder.DateDesc),
           page.getOrElse(1L)
         )
