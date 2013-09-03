@@ -1,26 +1,24 @@
 @(page: Page[_])
 
-@if(page.totalResults > 0) {   
+@if(page.totalResultCount > 0) {   
   
-  @(page.start)〜@(page.end)件&ensp;/&ensp;@(page.totalResults)件<a href="#">&lt;&lt;</a>
+  @(page.start)〜@(page.end)件&ensp;/&ensp;@(page.totalResultCount)件
   
-  @page.prevIndex.map { idx =>
-    <a href="#">&gt;&gt;</a>
+  @page.previousPageNum.map { prePage =>
+    <a href="#" onclick="pageLink(@prePage)">&lt;&lt;</a>
   }.getOrElse {
   }
   
-  @for(pageNum <- 1L to page.totalPages) {
-    @defining((pageNum - 1) * page.itemsPerPage) { idx =>
-      @if(page.startIndex == idx) {
-        <a href="" class="current">@pageNum</a>
-      } else {
-        <a href="#">@pageNum</a>
-      }
+  @page.pagesInRange.map { pageNum =>
+    @if(page.currentPageNum == pageNum) {
+      <a href="" class="current">@pageNum</a>
+    } else {
+      <a href="#" onclick="pageLink(@pageNum)">@pageNum</a>
     }
   }
   
-  @page.nextIndex.map { idx =>
-    <a href="#">&gt;&gt;</a>
+  @page.nextPageNum.map { nextPage =>
+    <a href="#" onclick="pageLink(@nextPage)">&gt;&gt;</a>
   }.getOrElse {
   }  
 }

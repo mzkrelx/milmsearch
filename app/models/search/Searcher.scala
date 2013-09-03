@@ -12,10 +12,11 @@ case class SearchRequest(
   toDate:   DateTime,
   fields:   Set[MailSearchField.Value],
   mlIDs:    Set[Long],
-  froms:    Set[FromOption])
+  froms:    Set[FromOption],
+  page:     Long)
 
 case class SearchResult(
-  totalResults: Long,
+  totalResultCount: Long,
   startIndex: Long,
   itemsPerPage: Long,
   items: List[Mail])
@@ -71,7 +72,7 @@ object Searcher {
           "MLタイトルが入ります" + i,
           new URL("http://example.com/ml"))
       ) toList,
-      31, 0, 10
+      102, req.page * 10 - 10, 10
     )
   }
 }

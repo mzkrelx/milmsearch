@@ -1,7 +1,7 @@
 @(page: Page[_], navLink: Long => Call)
 
-@if(page.totalResults > 0) { 
-<div class="span2 tune_pagetotal">@{page.startIndex + 1}-@{page.startIndex + page.items.length} / @{page.totalResults}件</div>
+@if(page.totalResultCount > 0) { 
+<div class="span2 tune_pagetotal">@{page.startIndex + 1}-@{page.startIndex + page.items.length} / @{page.totalResultCount}件</div>
 <div class="span10">
   <nav class="pagination">
     <ul>
@@ -12,7 +12,7 @@
     }.getOrElse {
       <li class="disabled"><a href="">Prev</a></li>
     }
-    @for(pageNum <- 1L to page.totalPages) {
+    @for(pageNum <- 1L to page.totalPageNum) {
       @defining((pageNum - 1) * page.itemsPerPage) { idx =>
         @if(page.startIndex == idx) {
           <li class="active"><a href="">@pageNum</a></li>

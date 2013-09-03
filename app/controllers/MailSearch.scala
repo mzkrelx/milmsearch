@@ -16,12 +16,16 @@ object MailSearch extends Controller {
       "toDate"     -> jodaDate(Defaults.searchDateFormat),
       "fields"     -> list(text),
       "mlIDs"      -> list(longNumber),
-      "froms"      -> list(text)
+      "froms"      -> list(text),
+      "page"       -> optional(longNumber)
     ){
-      (keywords, fromDate, toDate, fields, mlIDs, froms) =>
+      (keywords, fromDate, toDate, fields, mlIDs, froms, page) =>
         SearchRequest(keywords, fromDate, toDate,
           fields map { MailSearchField.withName(_) } toSet,
-          mlIDs toSet, froms map { FromOption.apply(_) } toSet)
+          mlIDs toSet,
+          froms map { FromOption.apply(_) } toSet,
+          page.getOrElse(1L)
+        )
     }{
       (search: SearchRequest) => Some(
         search.keywords,
@@ -29,7 +33,9 @@ object MailSearch extends Controller {
         search.toDate,
         search.fields map { _.toString } toList,
         search.mlIDs toList,
-        search.froms map { _.value } toList)
+        search.froms map { _.value } toList,
+        Some(search.page)
+      )
     }
   )
 

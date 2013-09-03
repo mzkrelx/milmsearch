@@ -34,7 +34,19 @@
             $("#selected_sender").prepend(ul);
           }
         });
-    }); 
+    });
+    function pageLink(page) {
+      var url = document.URL;
+      var pageLink = "";
+      if (url.indexOf("&page=") >= 0) {
+        pageLink = url.split("&page=")[0] + "&page=" + page;
+      } else {
+        pageLink = url + "&page=" + page;
+      }
+      window.location.href = pageLink;
+      return false;
+    }
+    
   </script>
 }
 
@@ -154,11 +166,7 @@
   <div class="grid archive">
     <div class="pager row">
       <div class="column span-9">
-        1〜10件&ensp;/&ensp;30件<a href="#">&lt;&lt;</a>
-        <a href="" class="current">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">&gt;&gt;</a>
+        @helper.paginator(page)
       </div>
       <div class="column span-3">
         <a href="" class="current">新しい順</a>&ensp;/&ensp;<a href="#">古い順</a>
@@ -185,11 +193,7 @@
   
     <div class="pager">
       <div class="column span-9">
-        1〜10件&ensp;/&ensp;30件<a href="#">&lt;&lt;</a>
-        <a href="" class="current">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">&gt;&gt;</a>
+        @helper.paginator(page)
       </div>
     </div>
   
