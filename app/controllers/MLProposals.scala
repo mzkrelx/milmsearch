@@ -1,16 +1,14 @@
 package controllers
+import java.net.URL
 
+import org.joda.time.DateTime
+
+import anorm.NotAssigned
+import models._
 import play.api._
-import play.api.mvc._
-import models.MLProposal
 import play.api.data._
 import play.api.data.Forms._
-import anorm.Pk
-import anorm.NotAssigned
-import models.MLProposalStatus
-import org.joda.time.DateTime
-import models.MLArchiveType
-import java.net.URL
+import play.api.mvc._
 
 object MLProposals extends Controller {
 

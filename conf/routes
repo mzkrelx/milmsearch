@@ -8,7 +8,7 @@ GET    /inquiry                                  controllers.Application.inquiry
 GET    /rule                                     controllers.Application.rule
 GET    /poricy                                   controllers.Application.poricy
 GET    /help                                     controllers.Application.help
-GET    /search                                   controllers.Application.search
+GET    /search                                   controllers.MailSearch.search
 
 ## MLs list
 GET    /mls                                      controllers.MLs.list(startIndex:Long ?= 0, count:Int ?= 0)

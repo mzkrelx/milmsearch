@@ -1,6 +1,7 @@
-import java.util.concurrent.Executors
-import play.api._
 import models.executors.FirstCrawlingExecutor
+import play.api._
+import play.api.mvc._
+import play.api.mvc.Results._
 
 object Global extends GlobalSettings {
 
@@ -15,4 +16,15 @@ object Global extends GlobalSettings {
     Logger.info("MilmSearch shutdown...")
   }
 
+  override def onHandlerNotFound(request: RequestHeader): Result = {
+    NotFound(views.html.notFound())
+  }
+
+  override def onBadRequest(request: RequestHeader, error: String) = {
+    BadRequest("Bad Request: " + error)
+  }
+
+  override def onError(request: RequestHeader, ex: Throwable) = {
+    InternalServerError(views.html.error())
+  }
 }

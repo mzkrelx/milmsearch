@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-      @if(page.totalResults > 0) { 
+      @if(page.totalResultCount > 0) { 
         @page.items.map { mlp =>
           <tr>
             <td class="tune_table_date">@mlp.createdAt.toString("yyyy/MM/dd")</td>
@@ -43,7 +43,7 @@
       </tbody>
     </table>
     <div class="row">
-      @helper.paginator(page, routes.AdminMLProposals.list(status.toString, _: Long, page.itemsPerPage))
+      @admin.helper.paginator(page, routes.AdminMLProposals.list(status.toString, _: Long, page.itemsPerPage))
     </div>
   </section>
 }

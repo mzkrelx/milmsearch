@@ -9,7 +9,6 @@ import anorm.SQL
 import java.util.Date
 import java.net.URL
 import utils.MatchableEnumeration
-import controllers.Page
 import java.sql.Connection
 import models.mailsource.Crawler
 import MLProposalStatus._
@@ -101,13 +100,13 @@ object MLProposal {
             new DateTime(row[Date]("updated_at")))
         }
 
-      val totalResults =
+      val totalResultCount =
         SQL(s"""
           SELECT COUNT(*) AS "c" FROM ${DBTableName}
             WHERE status = {status}""").on(
               'status -> status.toString)().head[Long]("c")
 
-      Page(items.toList, totalResults, startIndex, itemsPerPage)
+      Page(items.toList, totalResultCount, startIndex, itemsPerPage)
     }
   }
 
