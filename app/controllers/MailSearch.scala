@@ -45,7 +45,7 @@ object MailSearch extends Controller {
   def search() = Action { implicit request =>
 
     searchForm.bindFromRequest.fold(
-      errorForm => BadRequest(views.html.index()),
+      errorForm => BadRequest(views.html.searchError(errorForm)),
       searchRequest => {
         Logger.debug("Search => " + searchRequest)
         val result = Searcher.search(searchRequest)
