@@ -39,9 +39,9 @@
               <input id="keywords" type="text" name="keywords" placeholder="キーワード" />
               <fieldset class="dateselect">
                 <legend>検索対象期間の指定</legend>
-                <input id="from" type="text" name="fromDate" size="10" />
+                <input id="from" type="text" name="fromDate" size="10" value="@Defaults.searchFrom"/>
                 <p>〜</p>
-                <input id="to" type="text" name="toDate" size="10" />
+                <input id="to" type="text" name="toDate" size="10" value="@Defaults.today" />
                 <p>まで</p>
               </fieldset>
               <a rel="leanModal" href="#searchnavopt" class="arrowlink">詳細設定</a>
