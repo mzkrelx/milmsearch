@@ -35,6 +35,19 @@
           }
         });
     });
+    
+    function orderLink(order) {
+      var url = document.URL;
+      var orderLink = "";
+      if (url.indexOf("&order=") >= 0) {
+        orderLink = url.split("&order=")[0] + "&order=" + order;
+      } else {
+        orderLink = url + "&order=" + order;
+      }
+      window.location.href = orderLink;
+      return false;
+    }
+
     function pageLink(page) {
       var url = document.URL;
       var pageLink = "";
@@ -169,7 +182,16 @@
         @helper.paginator(page)
       </div>
       <div class="column span-3">
-        <a href="" class="current">新しい順</a>&ensp;/&ensp;<a href="#">古い順</a>
+        @{
+          Html(List(("新しい順", MailSearchOrder.DateDesc), ("古い順", MailSearchOrder.DateAsc)).map {
+            case (label, orderValue) =>
+              if(request.order == orderValue) {
+                s"""<a href="" class="current">$label</a>"""
+              } else {
+                s"""<a href="#" onclick="orderLink('$orderValue')">$label</a>"""
+              }
+          }.mkString("&ensp;/&ensp;"))
+        }
       </div>
     </div>
   

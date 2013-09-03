@@ -1,10 +1,12 @@
 package models.search
 
-import org.joda.time.DateTime
-import models.Mail
-import javax.mail.internet.InternetAddress
 import java.net.URL
-import models.Page
+
+import org.joda.time.DateTime
+
+import javax.mail.internet.InternetAddress
+import models._
+import utils.MatchableEnumeration
 
 case class SearchRequest(
   keywords: String,
@@ -13,7 +15,14 @@ case class SearchRequest(
   fields:   Set[MailSearchField.Value],
   mlIDs:    Set[Long],
   froms:    Set[FromOption],
+  order:    MailSearchOrder.Value,
   page:     Long)
+
+object MailSearchOrder extends MatchableEnumeration {
+  type MailSearchOrder = Value
+  val DateAsc  = Value("date_asc")
+  val DateDesc = Value("date_desc")
+}
 
 case class SearchResult(
   totalResultCount: Long,

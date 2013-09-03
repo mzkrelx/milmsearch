@@ -17,13 +17,15 @@ object MailSearch extends Controller {
       "fields"     -> list(text),
       "mlIDs"      -> list(longNumber),
       "froms"      -> list(text),
+      "order"      -> optional(text),
       "page"       -> optional(longNumber)
     ){
-      (keywords, fromDate, toDate, fields, mlIDs, froms, page) =>
+      (keywords, fromDate, toDate, fields, mlIDs, froms, order, page) =>
         SearchRequest(keywords, fromDate, toDate,
           fields map { MailSearchField.withName(_) } toSet,
           mlIDs toSet,
           froms map { FromOption.apply(_) } toSet,
+          order.map(MailSearchOrder.withName(_)).getOrElse(MailSearchOrder.DateDesc),
           page.getOrElse(1L)
         )
     }{
@@ -34,6 +36,7 @@ object MailSearch extends Controller {
         search.fields map { _.toString } toList,
         search.mlIDs toList,
         search.froms map { _.value } toList,
+        Some(search.order.toString),
         Some(search.page)
       )
     }
