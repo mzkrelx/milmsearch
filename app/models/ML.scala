@@ -83,6 +83,35 @@ object ML {
     }
   }
 
+  def find(ids: List[Long]): List[ML] =
+    DB.withConnection { implicit conn =>
+      findWithConn(ids)
+    }
+
+  private[models] def findWithConn(ids: List[Long])(implicit conn: Connection): List[ML] = {
+
+    if (ids.length == 0) return Nil
+
+    SQL(s"""
+      SELECT * FROM ml_proposal
+        WHERE status = {status}
+        AND id IN (%s)
+    """ format ids.mkString(", ")
+    ).on(
+      'status -> MLProposalStatus.Accepted.toString
+    ).apply() map { row =>
+      val id = row[Long]("id")
+      lazy val lastMailedAt = this.lastMailedAt(id)
+      ML(
+        id,
+        row[String]("ml_title"),
+        MLArchiveType.withName(row[String]("archive_type")),
+        new URL(row[String]("archive_url")),
+        new DateTime(row[Date]("judged_at")),
+        lastMailedAt)
+    } toList
+  }
+
   /** Get the latest mailed datetime at the id's ML. */
   def lastMailedAt(id: Long): Option[DateTime] = {
     // TODO find by search engine.
