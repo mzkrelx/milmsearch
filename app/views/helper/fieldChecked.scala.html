@@ -2,4 +2,4 @@
 
 @import models.search.MailSearchField
 
-@{if(fields.contains(MailSearchField.withName(fieldName))) {"""checked="checked""""}} 
+@if(fields.contains(MailSearchField.withName(fieldName))) { checked="checked" } 

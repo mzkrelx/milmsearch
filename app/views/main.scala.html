@@ -36,12 +36,12 @@
           <h2>メーリングリストを検索する</h2>
           @form(action = routes.MailSearch.search) {
             @defining(MailSearch.searchForm) { searchForm => 
-              <input id="keywords" type="text" name="keywords" placeholder="キーワード" />
+              <input id="keywords_nav" type="text" name="keywords" placeholder="キーワード" />
               <fieldset class="dateselect">
                 <legend>検索対象期間の指定</legend>
-                <input id="from" type="text" name="fromDate" size="10" value="@Defaults.searchFrom"/>
+                <input id="from_date_nav" type="text" name="fromDate" size="10" value="@Defaults.searchFrom"/>
                 <p>〜</p>
-                <input id="to" type="text" name="toDate" size="10" value="@Defaults.today" />
+                <input id="to_date_nav" type="text" name="toDate" size="10" value="@Defaults.today" />
                 <p>まで</p>
               </fieldset>
               <a rel="leanModal" href="#searchnavopt" class="arrowlink">詳細設定</a>
@@ -100,36 +100,36 @@
     
     <script type="text/javascript">
       $(function() {
-        $( "#from" ).datepicker({
+        $( "#from_date_nav" ).datepicker({
           defaultDate: "+1w",
           changeMonth: true,
           numberOfMonths: 1,
           onClose: function( selectedDate ) {
-            $( "#to" ).datepicker( "option", "minDate", selectedDate );
+            $( "#to_date_nav" ).datepicker( "option", "minDate", selectedDate );
           }
         });
-        $( "#to" ).datepicker({
+        $( "#to_date_nav" ).datepicker({
           defaultDate: "+1w",
           changeMonth: true,
           numberOfMonths: 1,
           onClose: function( selectedDate ) {
-            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+            $( "#from_date_nav" ).datepicker( "option", "maxDate", selectedDate );
           }
         });
-        $( "#from2" ).datepicker({
+        $( "#from_date" ).datepicker({
           defaultDate: "+1w",
           changeMonth: true,
           numberOfMonths: 1,
           onClose: function( selectedDate ) {
-            $( "#to" ).datepicker( "option", "minDate", selectedDate );
+            $( "#to_date" ).datepicker( "option", "minDate", selectedDate );
           }
         });
-        $( "#to2" ).datepicker({
+        $( "#to_date" ).datepicker({
           defaultDate: "+1w",
           changeMonth: true,
           numberOfMonths: 1,
           onClose: function( selectedDate ) {
-            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+            $( "#from_date" ).datepicker( "option", "maxDate", selectedDate );
           }
         });
       });

@@ -74,9 +74,9 @@
         <input id="keywords" type="text" name="keywords" placeholder="キーワード" value="@request.keywords" />
         <fieldset class="dateselect">
           <legend>検索対象期間の指定</legend>
-          <input id="from2" type="text" name="fromDate" size="10" value="@request.fromDate.toString(Defaults.searchDateFormat)" />
+          <input id="from_date" type="text" name="fromDate" size="10" value="@request.fromDate.toString(Defaults.searchDateFormat)" />
           <p>〜</p>
-          <input id="to2" type="text" name="toDate" size="10" value="@request.toDate.toString(Defaults.searchDateFormat)" />
+          <input id="to_date" type="text" name="toDate" size="10" value="@request.toDate.toString(Defaults.searchDateFormat)" />
           <p>まで</p>
         </fieldset>
       </div>
@@ -197,7 +197,7 @@
   
     @page.items.map { mail =>
       <article>
-        <aside><a href="@mail.mlURL" tadget="_blank">ML:@mail.mlTitle</a></aside>
+        <aside><a href="@mail.mlURL" target="_blank">ML:@mail.mlTitle</a></aside>
         <div class="row">
           <div class="column span-9">
             <h3><a href="@mail.url" target="_blank">@mail.subject</a></h3>
