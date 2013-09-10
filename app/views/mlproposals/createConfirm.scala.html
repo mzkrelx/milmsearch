@@ -11,20 +11,12 @@
   <table class="table table-bordered">
     <tbody>
       <tr>
-        <th class="tune_th-250 tune_th-head">申請者のお名前</th>
-        <td>@mlpForm("proposerName").value</td>
-      </tr>
-      <tr>
         <th class="tune_th-250 tune_th-head">連絡先メールアドレス</th>
         <td>@mlpForm("proposerEmail").value</td>
       </tr>
       <tr>
         <th class="tune_th-250 tune_th-head">メーリングリストのタイトル</th>
         <td>@mlpForm("mlTitle").value</td>
-      </tr>
-      <tr>
-        <th class="tune_th-250 tune_th-head">メーリングリストのアーカイブソフトタイプ</th>
-        <td>@mlpForm("archiveType").value</td>
       </tr>
       <tr>
         <th class="tune_th-250 tune_th-head">メーリングリスト公開アーカイブのURL</th>
@@ -41,11 +33,9 @@
     @form(action = routes.MLProposals.modify, 'class -> "desidebtn") {
       <input type="submit" class="btn btn-large tune_btn-decide" name="modify" value="修正する">
       
-      @inputHidden(mlpForm("proposerName"))
       @inputHidden(mlpForm("proposerEmail"))
       @inputHidden(mlpForm("proposerEmail2"))
       @inputHidden(mlpForm("mlTitle"))
-      @inputHidden(mlpForm("archiveType"))
       @inputHidden(mlpForm("archiveURL"))
       @inputHidden(mlpForm("message"))
       @inputHidden(mlpForm("agreement"))
@@ -54,11 +44,9 @@
     @form(action = routes.MLProposals.save, 'class -> "desidebtn") {
       <input type="submit" class="btn btn-large btn-primary tune_btn-decide" value="申請する">
       
-      @inputHidden(mlpForm("proposerName"))
       @inputHidden(mlpForm("proposerEmail"))
       @inputHidden(mlpForm("proposerEmail2"))
       @inputHidden(mlpForm("mlTitle"))
-      @inputHidden(mlpForm("archiveType"))
       @inputHidden(mlpForm("archiveURL"))
       @inputHidden(mlpForm("message"))
       @inputHidden(mlpForm("agreement"))

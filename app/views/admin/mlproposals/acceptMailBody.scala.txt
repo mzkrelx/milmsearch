@@ -1,5 +1,4 @@
 @(mlp: MLProposal)
-[@mlp.proposerName] 様
 
 このたびは、MilmSearch へメーリングリスト登録をお申し込みいただきまして
 誠にありがとうございます。
@@ -10,7 +9,6 @@
 　● メーリングリスト登録情報
 ------------------------------------
 
-　申請者のお名前　　　　：[@mlp.proposerName]
 　メーリングリストタイトル：[@mlp.mlTitle]
 　公開アーカイブURL　　：[@mlp.archiveURL]
 
@@ -21,11 +19,11 @@
 登録内容に変更がありましたら、お問い合わせフォームよりご連絡ください。
 
 お問い合わせフォーム：
-http://stage.milmsearch.org//top/inquiry
+http://milmsearch.org/inquiry
 
 ★MilmSearch の使い方などについて、詳しくはこちら
 ヘルプ：
-http://stage.milmsearch.org//top/help
+http://milmsearch.org/help
 
 ***
 

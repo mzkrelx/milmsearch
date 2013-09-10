@@ -1,5 +1,4 @@
 @(mlp: MLProposal)
-[@mlp.proposerName] 様
 
 このたびは、MilmSearch へメーリングリスト登録をお申し込みいただきまして
 誠にありがとうございます。
@@ -14,7 +13,7 @@ MilmSearchでは今後、対応ソフトを増やしていく所存でござい�
 
 ★メーリングリストの登録や対応ソフト等に関してはこちら
 ヘルプ：
-http://stage.milmsearch.org//top/help
+http://milmsearch.org/help
 
 ***
 

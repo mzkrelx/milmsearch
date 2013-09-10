@@ -14,24 +14,20 @@ object MLProposals extends Controller {
 
   val mlpForm = Form(
     mapping(
-      "proposerName"    -> nonEmptyText(maxLength = 100),
-      "proposerEmail"   -> nonEmptyText(maxLength = 100),
-      "proposerEmail2"  -> nonEmptyText(maxLength = 100),
+      "proposerEmail"   -> optional(text(maxLength = 100)),
+      "proposerEmail2"  -> optional(text(maxLength = 100)),
       "mlTitle"         -> nonEmptyText(maxLength = 100),
-      "archiveType"     -> nonEmptyText(maxLength = 20),
       "archiveURL"      -> nonEmptyText(maxLength = 100),
       "message"         -> optional(text(maxLength = 200)),
       "agreement"       -> nonEmptyText(maxLength = 2) // Not checked type, because multilingual correspondence of error message is simple.
     ){
-      (proposerName, proposerEmail, _, mlTitle, archiveType,
-        archiveURL, message, _) =>
+      (proposerEmail, _, mlTitle, archiveURL, message, _) =>
           MLProposal(
             id = NotAssigned,
-            proposerName,
             proposerEmail,
             mlTitle,
             status = MLProposalStatus.New,
-            MLArchiveType.withName(archiveType),
+            MLArchiveType.Mailman,
             new URL(archiveURL),
             message.getOrElse(""),
             judgedAt = None,
@@ -39,11 +35,9 @@ object MLProposals extends Controller {
             updatedAt = DateTime.now())
     }{
       (mlp: MLProposal) => Some((
-        mlp.proposerName,
         mlp.proposerEmail,
         mlp.proposerEmail,
         mlp.mlTitle,
-        mlp.archiveType.toString,
         mlp.archiveURL.toString,
         Option(mlp.message),
         "on"))
