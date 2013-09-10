@@ -20,13 +20,7 @@
     <tbody>
     <tr>
       <th class="tune_th-250 tune_th-head">
-        <span class="text-error">【必須】</span>お名前（ニックネーム可）
-      </th>
-      <td>@inputText(mlpForm("proposerName"))</td>
-    </tr>
-    <tr>
-      <th class="tune_th-250 tune_th-head">
-        <span class="text-error">【必須】</span>連絡先メールアドレス
+        【任意】連絡先メールアドレス
       </th>
       <td>
         @inputText(mlpForm("proposerEmail"), 'type -> "email")
@@ -41,22 +35,6 @@
       </th>
       <td>
         @inputText(mlpForm("mlTitle"))
-      </td>
-    </tr>
-    <tr>
-      <th class="tune_th-250 tune_th-head">
-        <span class="text-error">【必須】</span>メーリングリストのアーカイブソフトタイプ
-      </th>
-      <td>
-        @select(mlpForm("archiveType"), options(
-          "" -> "選択してください",
-          MLArchiveType.Mailman.toString -> "Mailman",
-          MLArchiveType.SourceForgeJP.toString -> "SourceForgeJP",
-          MLArchiveType.Other.toString   -> "その他"))
-        <p><small>
-          「その他」のソフトをご利用の方は、コメント欄にソフト名をご記入ください。<br>
-          今後の参考にさせていただきます。わからない場合は「その他」を選択してください。
-        </small></p>
       </td>
     </tr>
     <tr>
