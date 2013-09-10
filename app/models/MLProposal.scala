@@ -18,8 +18,7 @@ import play.api.Logger
 
 case class MLProposal(
   id: Pk[Long],
-  proposerName:  String,
-  proposerEmail: String,
+  proposerEmail: Option[String],
   mlTitle:       String,
   status:        MLProposalStatus,
   archiveType:   MLArchiveType,
@@ -48,7 +47,6 @@ object MLProposal {
         INSERT INTO ${DBTableName}
           VALUES(
             nextval('ml_proposal_id_seq'),
-            {proposer_name},
             {proposer_email},
             {ml_title},
             {status},
@@ -59,7 +57,6 @@ object MLProposal {
             {created_at},
             {updated_at})"""
       ).on(
-        'proposer_name  -> mlp.proposerName,
         'proposer_email -> mlp.proposerEmail,
         'ml_title       -> mlp.mlTitle,
         'status         -> mlp.status.toString,
@@ -88,8 +85,7 @@ object MLProposal {
         ).apply() map { row =>
           MLProposal(
             row[Pk[Long]]("id"),
-            row[String]("proposer_name"),
-            row[String]("proposer_email"),
+            row[Option[String]]("proposer_email"),
             row[String]("ml_title"),
             MLProposalStatus.withName(row[String]("status")),
             MLArchiveType.withName(row[String]("archive_type")),
@@ -120,8 +116,7 @@ object MLProposal {
       .on('id -> id).singleOpt map { row =>
         MLProposal(
           row[Pk[Long]]("id"),
-          row[String]("proposer_name"),
-          row[String]("proposer_email"),
+          row[Option[String]]("proposer_email"),
           row[String]("ml_title"),
           MLProposalStatus.withName(row[String]("status")),
           MLArchiveType.withName(row[String]("archive_type")),

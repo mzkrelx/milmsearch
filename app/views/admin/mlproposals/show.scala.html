@@ -101,12 +101,8 @@
       <table class="table table-bordered">
       <tbody>
       <tr>
-        <th class="tune_th-250 tune_th-head">申請者名</th>
-        <td>@mlp.proposerName</td>
-      </tr>
-      <tr>
         <th class="tune_th-250 tune_th-head">連絡先メールアドレス</th>
-        <td>@mlp.proposerEmail</td>
+        <td>@mlp.proposerEmail.getOrElse("未入力")</td>
       </tr>
       <tr>
         <th class="tune_th-250 tune_th-head">申請時コメント</th>
