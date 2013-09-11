@@ -8,6 +8,7 @@ import models.MLArchiveType
 import models.MLArchiveType._
 import models.mailsource.crawlers._
 import play.api.UnexpectedException
+import play.api.Logger
 
 class CrawlingException(msg: String) extends Exception(msg)
 
@@ -24,10 +25,14 @@ object Crawler {
 
   def crawling(ml: ML) {
 
-    ml.archiveType match {
-      case Mailman => MailmanCrawler.crawling(ml)
-      case SourceForgeJP => SourceForgeJPCrawler.crawling(ml)
-      case irregular => throw new CrawlingException(s"irregular archive type.[${irregular}]")
+    try {
+      ml.archiveType match {
+        case Mailman => MailmanCrawler.crawling(ml)
+        case SourceForgeJP => SourceForgeJPCrawler.crawling(ml)
+        case irregular => throw new CrawlingException(s"irregular archive type.[${irregular}]")
+      }
+    } catch {
+      case e: Exception => Logger.error("Crawling Error => " + e.getMessage, e)
     }
   }
 
