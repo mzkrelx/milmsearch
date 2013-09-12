@@ -4,7 +4,22 @@
 
 @import helper._
 
-@main("登録申請 : MilmSearch") {
+@moreScripts = {
+  <script type="text/javascript">
+    $(function() {
+      $("#mlp_form").submit(function() {
+        $("#proposerEmail").val($.trim($("#proposerEmail").val()));
+        $("#proposerEmail2").val($.trim($("#proposerEmail2").val()));
+        $("#mlTitle").val($.trim($("#mlTitle").val()));
+        $("#archiveURL").val($.trim($("#archiveURL").val()));
+        $("#message").val($.trim($("#message").val()));
+        return true;
+      });
+    });
+  </script>
+}
+
+@main("登録申請 : MilmSearch", moreScripts) {
   <h1>メーリングリストの登録申請</h1>
   
   登録フローイメージが入ります@* TODO *@
@@ -15,7 +30,7 @@
     </p>
   </nav>
 
-  @form(action = routes.MLProposals.confirm) {
+  @form(action = routes.MLProposals.confirm, 'id -> "mlp_form") {
     <table class="table table-bordered">
     <tbody>
     <tr>
