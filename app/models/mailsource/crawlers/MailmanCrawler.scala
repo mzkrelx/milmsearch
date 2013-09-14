@@ -43,10 +43,10 @@ object MailmanCrawler {
         val firstMailHref = mailHrefs.headOption.getOrElse(
           throw MailmanCrawlingException("The mail href could not be found."))
 
-      val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
+        val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
 
-      createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
-        //val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
+        createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
+        // val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
         val mailHTMLNode = toNode(fetchHTML(firstMailURL))
 
         Mail(
