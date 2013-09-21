@@ -16,6 +16,7 @@ import models.mailsource.CrawlingException
 import models.mailsource.Mail
 import utils.HTMLUtil.fetchHTML
 import utils.HTMLUtil.toNode
+import java.io.FileNotFoundException
 
 case class MailmanCrawlingException(msg: String) extends CrawlingException(msg)
 
@@ -29,21 +30,26 @@ object MailmanCrawler {
   def crawlingTest(archiveURL: URL): Try[Mail] = {
 
     Try {
+      try {
+        val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
 
-      val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
+        val firstMonthHref = monthHrefs.reverse.headOption.getOrElse(
+          throw MailmanCrawlingException("The archive month href could not be found."))
 
-      val firstMonthHref = monthHrefs.reverse.headOption.getOrElse(
-        throw MailmanCrawlingException("The archive month href could not be found."))
+        val firstMonthURL = new URL(archiveURL + firstMonthHref)
+        val mailHrefs = collectMailHref(toNode(fetchHTML(firstMonthURL)))
 
-      val firstMonthURL = new URL(archiveURL + firstMonthHref)
-      val mailHrefs = collectMailHref(toNode(fetchHTML(firstMonthURL)))
-
-      val firstMailHref = mailHrefs.headOption.getOrElse(
+        val firstMailHref = mailHrefs.headOption.getOrElse(
           throw MailmanCrawlingException("The mail href could not be found."))
 
-      val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
+        val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
 
-      createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
+        createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
+      } catch {
+        case e: FileNotFoundException => {
+          throw MailmanCrawlingException("Not Found URL. => " + e.getMessage)
+        }
+      }
     }
   }
 

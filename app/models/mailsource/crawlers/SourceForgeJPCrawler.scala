@@ -3,19 +3,16 @@ package models.mailsource.crawlers
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
-
 import scala.util.Try
 import scala.xml.Node
-
 import org.joda.time.DateTime
-
 import javax.mail.internet.InternetAddress
 import models.mailsource.Indexer
 import models.ML
 import models.mailsource.CrawlingException
 import models.mailsource.Mail
-import utils.HTMLUtil.fetchHTML
-import utils.HTMLUtil.toNode
+import utils.HTMLUtil._
+import java.io.FileNotFoundException
 
 case class SourceForgeJPCrawlingException(msg: String) extends CrawlingException(msg)
 
@@ -30,26 +27,31 @@ object SourceForgeJPCrawler {
   def crawlingTest(archiveURL: URL): Try[Mail] = {
 
     Try {
+      try {
+        val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
 
-      val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
+        // e.g. 2011-August/date.html
+        val firstMonthHref = monthHrefs.reverse.headOption.getOrElse(
+          throw SourceForgeJPCrawlingException("The archive month href could not be found."))
 
-      // e.g. 2011-August/date.html
-      val firstMonthHref = monthHrefs.reverse.headOption.getOrElse(
-        throw SourceForgeJPCrawlingException("The archive month href could not be found."))
+        // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/date.html"
+        val firstMonthURL = new URL(archiveURL + firstMonthHref)
+        val mailHrefs = collectMailHref(toNode(fetchHTML(firstMonthURL)))
 
-      // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/date.html"
-      val firstMonthURL = new URL(archiveURL + firstMonthHref)
-      val mailHrefs = collectMailHref(toNode(fetchHTML(firstMonthURL)))
-
-      // e.g. "000000.html"
-      val firstMailHref = mailHrefs.headOption.getOrElse(
+        // e.g. "000000.html"
+        val firstMailHref = mailHrefs.headOption.getOrElse(
           throw SourceForgeJPCrawlingException("The mail href could not be found."))
 
-      // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/000000.html"
-      val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
-      val mailHTMLNode = toNode(fetchHTML(firstMailURL))
+        // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/000000.html"
+        val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
+        val mailHTMLNode = toNode(fetchHTML(firstMailURL))
 
-      createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
+        createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
+      } catch {
+        case e: FileNotFoundException => {
+          throw SourceForgeJPCrawlingException("Not Found URL. => " + e.getMessage)
+        }
+      }
     }
   }
 
