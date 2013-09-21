@@ -11,8 +11,6 @@ import models.mailsource.Indexer
 import models.ML
 import models.mailsource.CrawlingException
 import models.mailsource.Mail
-import utils.HTMLUtil.fetchHTML
-import utils.HTMLUtil.toNode
 import utils.HTMLUtil._
 import java.io.FileNotFoundException
 
@@ -44,22 +42,11 @@ object SourceForgeJPCrawler {
         val firstMailHref = mailHrefs.headOption.getOrElse(
           throw SourceForgeJPCrawlingException("The mail href could not be found."))
 
-      // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/000000.html"
-      val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
-      val mailHTMLNode = toNode(fetchHTML(firstMailURL))
-
-      createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
         // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/000000.html"
-        // val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
-        // val mailHTMLNode = toNode(fetchHTML(firstMailURL))
+        val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
+        val mailHTMLNode = toNode(fetchHTML(firstMailURL))
 
-        Mail(
-          findDate(mailHTMLNode),
-          new InternetAddress(findFromAddress(mailHTMLNode),
-            findFromName(mailHTMLNode)),
-          findSubject(mailHTMLNode),
-          findBody(mailHTMLNode),
-          firstMailURL)
+        createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
       } catch {
         case e: FileNotFoundException => {
           throw SourceForgeJPCrawlingException("Not Found URL. => " + e.getMessage)

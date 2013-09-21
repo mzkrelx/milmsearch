@@ -16,7 +16,6 @@ import models.mailsource.CrawlingException
 import models.mailsource.Mail
 import utils.HTMLUtil.fetchHTML
 import utils.HTMLUtil.toNode
-import java.sql.Connection
 import java.io.FileNotFoundException
 
 case class MailmanCrawlingException(msg: String) extends CrawlingException(msg)
@@ -46,16 +45,6 @@ object MailmanCrawler {
         val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
 
         createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
-        // val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
-        val mailHTMLNode = toNode(fetchHTML(firstMailURL))
-
-        Mail(
-          findDate(mailHTMLNode),
-          new InternetAddress(findFromAddress(mailHTMLNode),
-            findFromName(mailHTMLNode)),
-          findSubject(mailHTMLNode),
-          findBody(mailHTMLNode),
-          firstMailURL)
       } catch {
         case e: FileNotFoundException => {
           throw MailmanCrawlingException("Not Found URL. => " + e.getMessage)

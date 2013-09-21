@@ -2,6 +2,7 @@ package controllers
 
 import java.net.URL
 import java.rmi.UnexpectedException
+
 import Defaults.MaxItemsPerPage
 import anorm._
 import models._
