@@ -7,6 +7,20 @@ font-size:120%;
 font-weight:normal;
 line-height:170%;
 }
+p.right{
+  text-align: right;
+}
+p.lead{
+  padding: 1em 1em 1.5em;
+}
+strong.largetext{
+  font-size: 140%;
+  line-height: 200%;
+}
+span.att{
+  font-weight: bold;
+  color: #dd0000;
+}
 dt{
 color:#111;
 font-weight:bold;
@@ -39,7 +53,7 @@ text-decoration:none;
 a:hover{
 text-decoration:underline;
 }
-.btn{
+.btn,a.btn,a.btn:hover{
 	color:#fff;
 	font-weight:bold;
 	text-decoration:none;
@@ -48,8 +62,13 @@ text-decoration:underline;
 	border-radius: 6px;
 	background:#5bb3e6 url(../images/common/bg-bl.gif) repeat;
 }
-.decide{
+.decide,a.decide{
 	background:#ff7e00 url(../images/common/bg-or.gif) repeat;
+}
+.large,a.large{
+	padding:0.6em 1em !important;
+	font-size:160%;
+	line-height: 150%;
 }
 .btn:hover{
 	opacity: 0.7;
@@ -278,8 +297,6 @@ div#searchnav a.arrowlink:hover{
 	text-decoration:underline;
 }
 div#searchnav .btn.decide,aside.searcharea .btn.decide{
-	padding:0.5em 1em;
-	font-size:160%;
 	margin-left:0.5em;
 }
 aside.searcharea .btn.decide{
@@ -418,7 +435,7 @@ div#divml li, div#divsend li{
 	aside.searcharea,div.archive,div.archive article,div.archive article div.span-9,div.archive article div.span-3,aside.searcharea div.searchoption,aside.searcharea div.searchoption div.optselect{
 		box-sizing:border-box;
 	}
-	aside.searcharea,div.archive article{
+	aside.searcharea,div.archive article,div.content{
 		background:#fff;
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
@@ -517,6 +534,47 @@ div#divml li, div#divsend li{
 		pointer-events: none;
 	}
 	
+	
+  /* unique element -----------------------------------  */
+  div.img_flow{
+    padding: 1em 1em 0 !important;
+    margin-bottom: 0 !important;
+  }
+  div.img_flow h2{
+    color:#27aa4f;
+    font-size: 140%;
+    font-weight: bold;
+    padding-bottom: 1em;
+  }
+   div.img_flow div{
+    box-sizing: border-box;
+    padding: 0 7px 0 3px;
+    position: relative;
+   }
+  div.img_flow p{
+    color: #ff7e00;
+    text-align: center;
+    font-size: 160%;
+    font-weight: bold;
+    line-height: 150%;
+    display: block;
+    box-shadow: 2px 2px 0px 5px #a3dab4, 0 0 0 8px #d0ffde inset;
+    -webkit-box-shadow: 2px 2px 0px 5px #a3dab4, 0 0 0 8px #d0ffde inset;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+		margin-bottom:1em;
+		padding:1em;
+  }
+  div.img_flow div.f_arrow p:after{
+    content:" ";
+    right:-15px;
+    top:50%;
+    margin-top: -15px;
+    position:absolute;
+    width: 13px; height:20px;
+		background: url(../images/common/arrow_h3.png) no-repeat;
+  }
   
   /* Grid -----------------------------------  */
 
@@ -646,9 +704,77 @@ div#divml li, div#divsend li{
 
   }
 
+  /* table Element -----------------------------------  */
+
+div.contentarea table {
+  font-size: 120%;
+  line-height: 160%;
+  border-top: 1px solid #efefef; 
+  border-left: 1px solid #efefef;
+}
+div.contentarea tr{
+  border-bottom: 1px solid #efefef;
+}
+div.contentarea th,div.contentarea td{
+  border-right: 1px solid #efefef;
+  padding: 1em;
+}
+div.contentarea th,div.contentarea td span{
+  padding-left: 1em;
+}
+div.contentarea th {
+  font-weight: bold;
+  background: #fafafa;
+  width: 35%;
+}
+div.contentarea table.input th{
+  padding: 1.5em 1em;
+}
+div.contentarea td p{
+  font-size: 100%;
+  padding: 0.3em 0;
+}
 
   /* form Element -----------------------------------  */
-	
+  
+ div.contentarea td textarea{
+   width: 80%;
+   height:3em;
+   overflow-y: scroll;
+ }
+ div.check_rule{
+		background:#f5f5f5;
+		padding:1em 1.5em;
+		margin: 1em 0 0; 
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+ } 
+ div.check_rule a{
+   font-size: 140%;
+ }
+ div.check_rule input{
+   margin-right: 0.3em;
+ }
+ div.decidearea{
+   padding: 3em 0;
+   overflow: hidden;
+ }
+ div.decidearea .left{
+   float: left;
+ } 
+ div.decidearea .right{
+   float: right;
+ }
+ div.decidearea .right:after{     
+  clear : both;
+  content : ' ';
+  display : block;
+  font-size : 0;
+  height : 0;
+  visibility : hidden;
+}
+
 label,
 input,
 button,
