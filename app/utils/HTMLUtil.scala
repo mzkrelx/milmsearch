@@ -6,6 +6,9 @@ import scala.xml.parsing.NoBindingFactoryAdapter
 import org.xml.sax.InputSource
 import nu.validator.htmlparser.common.XmlViolationPolicy
 import nu.validator.htmlparser.sax.HtmlParser
+import java.io.InputStream
+import java.io.ByteArrayInputStream
+import play.api.Logger
 
 object HTMLUtil {
 
@@ -31,4 +34,14 @@ object HTMLUtil {
 
     contentHandler.rootElem
   }
+
+  /** Returns XML Node Object by parsing of HTML String.
+   *
+   * @param html String
+   * @param charset String
+   */
+  def toNode(html: String, charset: String): Node = {
+    toNode(new InputSource(new ByteArrayInputStream(html.getBytes(charset))))
+  }
+
 }
