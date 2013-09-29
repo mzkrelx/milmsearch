@@ -1,22 +1,29 @@
 package models.mailsource.crawlers
 
+import java.io.FileNotFoundException
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
+
+import scala.io.Codec
+import scala.io.Source
 import scala.util.Try
 import scala.xml.Node
+
 import org.joda.time.DateTime
+
 import javax.mail.internet.InternetAddress
-import models.mailsource.Indexer
 import models.ML
-import models.mailsource.CrawlingException
-import models.mailsource.Mail
+import models.mailsource._
+import play.api.Logger
 import utils.HTMLUtil._
-import java.io.FileNotFoundException
+import utils.Regex
 
 case class SourceForgeJPCrawlingException(msg: String) extends CrawlingException(msg)
 
 object SourceForgeJPCrawler {
+
+  val defaultCharset = "UTF-8"
 
   /** Crawling test to check archiveURL is valid.
    *
@@ -45,7 +52,7 @@ object SourceForgeJPCrawler {
         // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/000000.html"
         val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
 
-        createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
+        createMail(toMailHTMLNode(firstMailURL), firstMailURL)
       } catch {
         case e: FileNotFoundException => {
           throw SourceForgeJPCrawlingException("Not Found URL. => " + e.getMessage)
@@ -68,20 +75,12 @@ object SourceForgeJPCrawler {
       }
 
       mailURLs map { mailURL =>
-        Indexer.indexing(ml,createMail(toNode(fetchHTML(mailURL)), mailURL))
+        val mail = createMail(toMailHTMLNode(mailURL), mailURL)
+        Logger.debug("Crawled => " + mail.subject)
+
+        Indexer.indexing(ml, mail)
       }
     }
-  }
-
-  private def createMail(mailHTMLNode: Node, mailURL: URL) = {
-    Mail(
-      findDate(mailHTMLNode),
-      new InternetAddress(
-        findFromAddress(mailHTMLNode),
-        findFromName(mailHTMLNode)),
-      findSubject(mailHTMLNode),
-      findBody(mailHTMLNode),
-      mailURL)
   }
 
   private def collectMonthHref(node: Node): Seq[String] = {
@@ -95,6 +94,30 @@ object SourceForgeJPCrawler {
     node \\ "ul" \ "li" \ "a" \\ "@href" map { _.toString } collect {
       case regexp(str) => str
     }
+  }
+
+  private def toMailHTMLNode(mailURL: URL): Node =
+    try {
+      val source = Source.fromURL(mailURL)(Codec(defaultCharset))
+      val html = source.getLines map (Regex.ctrl.replaceAllIn(_, "")) mkString("\n")
+      source.close
+      toNode(html, defaultCharset)
+    } catch {
+      case e: Exception => {
+        Logger.error(s"Can't fetch HTML => [$mailURL]")
+        throw new CrawlingException(e.getMessage)
+      }
+    }
+
+  private def createMail(mailHTMLNode: Node, mailURL: URL) = {
+    Mail(
+      findDate(mailHTMLNode),
+      new InternetAddress(
+        findFromAddress(mailHTMLNode),
+        findFromName(mailHTMLNode)),
+      findSubject(mailHTMLNode),
+      findBody(mailHTMLNode),
+      mailURL)
   }
 
   private def findDate(mailHTMLNode: Node): DateTime = {

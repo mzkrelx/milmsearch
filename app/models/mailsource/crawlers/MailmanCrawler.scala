@@ -1,26 +1,29 @@
 package models.mailsource.crawlers
 
+import java.io.FileNotFoundException
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+import scala.io.Codec
+import scala.io.Source
 import scala.util.Try
 import scala.xml.Node
 
 import org.joda.time.DateTime
 
 import javax.mail.internet.InternetAddress
-import models.mailsource.Indexer
 import models.ML
-import models.mailsource.CrawlingException
-import models.mailsource.Mail
-import utils.HTMLUtil.fetchHTML
-import utils.HTMLUtil.toNode
-import java.io.FileNotFoundException
+import models.mailsource._
+import play.api.Logger
+import utils.HTMLUtil._
+import utils.Regex
 
 case class MailmanCrawlingException(msg: String) extends CrawlingException(msg)
 
 object MailmanCrawler {
+
+  val defaultCharset = "EUC-JP"
 
   /** Crawling test to check archiveURL is valid.
    *
@@ -44,7 +47,7 @@ object MailmanCrawler {
 
         val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
 
-        createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
+        createMail(toMailHTMLNode(firstMailURL), firstMailURL)
       } catch {
         case e: FileNotFoundException => {
           throw MailmanCrawlingException("Not Found URL. => " + e.getMessage)
@@ -67,7 +70,10 @@ object MailmanCrawler {
       }
 
       mailURLs map { mailURL =>
-        Indexer.indexing(ml,createMail(toNode(fetchHTML(mailURL)), mailURL))
+        val mail = createMail(toMailHTMLNode(mailURL), mailURL)
+        Logger.debug("Crawled => " + mail.subject)
+
+        Indexer.indexing(ml, mail)
       }
     }
   }
@@ -84,6 +90,19 @@ object MailmanCrawler {
       case regexp(str) => str
     }
   }
+
+  private def toMailHTMLNode(mailURL: URL): Node =
+    try {
+      val source = Source.fromURL(mailURL)(Codec(defaultCharset))
+      val html = source.getLines map (Regex.ctrl.replaceAllIn(_, "")) mkString("\n")
+      source.close
+      toNode(html, defaultCharset)
+    } catch {
+      case e: Exception => {
+        Logger.error(s"Can't fetch HTML => [$mailURL]")
+        throw new CrawlingException(e.getMessage)
+      }
+    }
 
   private def createMail(mailHTMLNode: Node, mailURL: URL) = {
     Mail(
