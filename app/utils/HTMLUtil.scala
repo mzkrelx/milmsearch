@@ -1,14 +1,15 @@
 package utils
 
+import java.io.ByteArrayInputStream
 import java.net.URL
+
 import scala.xml.Node
 import scala.xml.parsing.NoBindingFactoryAdapter
+
 import org.xml.sax.InputSource
+
 import nu.validator.htmlparser.common.XmlViolationPolicy
 import nu.validator.htmlparser.sax.HtmlParser
-import java.io.InputStream
-import java.io.ByteArrayInputStream
-import play.api.Logger
 
 object HTMLUtil {
 

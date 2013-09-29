@@ -1,26 +1,23 @@
 package models.mailsource.crawlers
 
-import java.io.InputStream
+import java.io.FileNotFoundException
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
+
+import scala.io.Codec
+import scala.io.Source
 import scala.util.Try
 import scala.xml.Node
+
 import org.joda.time.DateTime
+
 import javax.mail.internet.InternetAddress
 import models.ML
-import models.mailsource.CrawlingException
-import models.mailsource.Mail
+import models.mailsource._
 import play.api.Logger
-import utils.HTMLUtil.fetchHTML
-import utils.HTMLUtil.toNode
-import java.io.FileNotFoundException
-import scala.io.Source
-import scala.io.Codec
-import java.nio.charset.Charset
-import models.mailsource.CrawlingException
+import utils.HTMLUtil._
 import utils.Regex
-import models.mailsource.Indexer
 
 case class MailmanCrawlingException(msg: String) extends CrawlingException(msg)
 

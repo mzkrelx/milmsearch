@@ -1,22 +1,23 @@
 package models.mailsource.crawlers
 
+import java.io.FileNotFoundException
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
+
+import scala.io.Codec
+import scala.io.Source
 import scala.util.Try
 import scala.xml.Node
+
 import org.joda.time.DateTime
+
 import javax.mail.internet.InternetAddress
-import models.mailsource.Indexer
 import models.ML
-import models.mailsource.CrawlingException
-import models.mailsource.Mail
-import utils.HTMLUtil._
-import java.io.FileNotFoundException
+import models.mailsource._
 import play.api.Logger
-import scala.io.Source
+import utils.HTMLUtil._
 import utils.Regex
-import scala.io.Codec
 
 case class SourceForgeJPCrawlingException(msg: String) extends CrawlingException(msg)
 
