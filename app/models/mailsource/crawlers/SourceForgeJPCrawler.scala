@@ -44,7 +44,6 @@ object SourceForgeJPCrawler {
 
         // e.g. "http://sourceforge.jp/projects/milm-search/lists/archive/public/2011-August/000000.html"
         val firstMailURL = new URL(firstMonthURL.toString.replaceFirst("date.html", firstMailHref))
-        val mailHTMLNode = toNode(fetchHTML(firstMailURL))
 
         createMail(toNode(fetchHTML(firstMailURL)), firstMailURL)
       } catch {
