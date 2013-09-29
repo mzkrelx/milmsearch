@@ -52,12 +52,10 @@ object MailSearch extends Controller {
         val result = Searcher.search(searchRequest)
 
         // TODO dummy data -> real data
-        Ok(views.html.searchResult(searchRequest, result,
-          List(MLOption(1, "helo1"), MLOption(2, "helo2")),
-          List(FromOption(new InternetAddress("email@sample.com", "SAMPLE1")),
-              FromOption(new InternetAddress("email@sample.com", "SAMPLE2"))
-          )
-        ))
+        Ok(views.html.searchResult(searchRequest, result._1,
+          result._2,
+          result._3)
+        )
       }
     )
   }

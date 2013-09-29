@@ -1,10 +1,11 @@
 package models.mailsource
 
-import org.elasticsearch.common.xcontent.XContentFactory._
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.transport.InetSocketTransportAddress
-import utils.Utils.playConfig
+import org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder
+
 import models.ML
+import utils.Utils.playConfig
 
 case class IndexingException(msg: String) extends Exception(msg)
 object Indexer {

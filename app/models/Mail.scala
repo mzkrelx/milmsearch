@@ -8,7 +8,6 @@ case class Mail(
   date:     DateTime,
   fromAddr: InternetAddress,
   subject:  String,
-  body:     String,
   snippet:  String,
   url:      URL,
   mlTitle:  String,
