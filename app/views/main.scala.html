@@ -1,15 +1,146 @@
-@(title: String)(content: Html)
+@(title: String, moreScripts: Html = Html(""))(content: Html)
 
-<!DOCTYPE html>
+@import helper._
 
-<html>
-    <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
-    </head>
-    <body>
-        @content
-    </body>
+<!DOCTYPE HTML>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>@title</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="@routes.Assets.at("images/favicon.ico")" rel="shortcut icon" />
+    <link href="@routes.Assets.at("styles/base.css")" media="all" rel="stylesheet" />
+    <link href="@routes.Assets.at("styles/style.css")" media="all" rel="stylesheet" />
+    <link href="@routes.Assets.at("styles/south-street/jquery-ui.css")" media="all" rel="stylesheet" />
+  </head>
+
+  <body>
+  
+    <header>
+      <div class="contentarea">
+        <h1><a href="@routes.Application.index">Milm Search ver.0.2</a></h1>
+        <nav class="clearfix">
+          <ul class="sub">
+            <li><a href="@routes.Application.help">ヘルプ</a></li>
+            <li><a href="@routes.Application.inquiry">お問い合わせ</a></li>
+          </ul>
+          <ul>
+            <li class="btn"><a href="@routes.MLProposals.create">MLを登録する</a></li>
+            <li class="btn"><a href="@routes.MLs.list(0, 10)">MLを探す・見る</a></li>
+          </ul>
+        </nav>
+      </div>  
+      <div id="searchnav">
+        <div class="contentarea clearfix">
+          <h2>メーリングリストを検索する</h2>
+          @form(action = routes.MailSearch.search) {
+            @defining(MailSearch.searchForm) { searchForm => 
+              <input id="keywords_nav" type="text" name="keywords" placeholder="キーワード" />
+              <fieldset class="dateselect">
+                <legend>検索対象期間の指定</legend>
+                <input id="from_date_nav" type="text" name="fromDate" size="10" value="@Defaults.searchFrom"/>
+                <p>〜</p>
+                <input id="to_date_nav" type="text" name="toDate" size="10" value="@Defaults.today" />
+                <p>まで</p>
+              </fieldset>
+              <a rel="leanModal" href="#searchnavopt" class="arrowlink">詳細設定</a>
+              <div id="searchnavopt" class="modalbox">
+                <h3>詳細設定</h3>
+                <fieldset>
+                  <legend>検索対象</legend>
+                  
+                  <!-- デフォルトで、「メールタイトル」と「メール本文」がチェック済み -->
+                  
+                  <input id="mltitle_nav" name="fields[]" type="checkbox" value="mltitle">
+                  <label for="mltitle_nav">MLタイトル</label>
+                  <input id="subject_nav" name="fields[]" type="checkbox" value="subject" checked="checked">
+                  <label for="subject_nav">メールタイトル</label>
+                  <input id="body_nav" name="fields[]" type="checkbox" value="body" checked="checked">
+                  <label for="body_nav">メール本文</label>
+                  <input id="from_nav" name="fields[]" type="checkbox" value="from">
+                  <label for="from_nav">送信者</label>
+                </fieldset>
+                <div class="btn modal_close"><a href="#">閉じる</a></div>
+              </div>
+              <button type="submit" class="btn decide">検索する</button>
+            }
+          }
+        </div>
+      </div>
+    </header>
+
+    <div class="contentarea">
+      <section>
+      @content
+      </section>
+    </div>
+    
+    <footer id="footer" class="clearfix">
+      <div class="contentarea">
+        <div class="pagetop"><a href="#">pagetop</a></div>
+        <nav>
+          <ul>
+            <li><a href="@routes.Application.inquiry">お問い合わせ</a></li>
+            <li><a href="@routes.Application.rule">利用規約</a></li>
+            <li><a href="@routes.Application.poricy">プライバシーポリシー</a></li>
+          </ul>
+        </nav>
+        <p>&copy;Milm Search</p>
+      </div>
+    </footer>
+
+    <script src="@routes.Assets.at("js/jquery-latest.js")"></script>
+    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="@routes.Assets.at("styles/html5shiv.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("styles/footerFixed.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("styles/jquery.leanModal.min.js")"></script>
+    
+    <script type="text/javascript">
+      $(function() {
+        $( "#from_date_nav" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#to_date_nav" ).datepicker( "option", "minDate", selectedDate );
+          }
+        });
+        $( "#to_date_nav" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#from_date_nav" ).datepicker( "option", "maxDate", selectedDate );
+          }
+        });
+        $( "#from_date" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#to_date" ).datepicker( "option", "minDate", selectedDate );
+          }
+        });
+        $( "#to_date" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#from_date" ).datepicker( "option", "maxDate", selectedDate );
+          }
+        });
+      });
+      $(function() {
+          $( 'a[rel*=leanModal]').leanModal({
+              top: 50,                     // モーダルウィンドウの縦位置を指定
+              overlay : 0.5,               // 背面の透明度 
+              closeButton: ".modal_close"  // 閉じるボタンのCSS classを指定
+          });
+      }); 
+    </script>
+    @moreScripts
+  </body>
 </html>

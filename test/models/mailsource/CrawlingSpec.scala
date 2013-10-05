@@ -1,8 +1,8 @@
 package models.mailsource
 
 import java.net.URL
-
 import org.specs2.Specification
+import models.mailsource.crawlers.MailmanCrawler
 
 class CrawlingSpecSuite extends Specification { def is = skipped // only when network is fine
   s2"""

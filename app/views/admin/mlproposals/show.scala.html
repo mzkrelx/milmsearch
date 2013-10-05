@@ -2,7 +2,41 @@
 
 @import MLProposalStatus._
 
-@admin.main(Some(mlp.status)) {
+@moreScripts = {
+  <script type="text/javascript">
+    function testCrawling() {
+      $('.btn-mini').hide();
+
+      jsRouter.controllers.AdminMLProposals.testCrawling(@mlp.id.get).ajax({
+        success: function(data) {
+          var okButton = document.createElement('i');
+          okButton.innerHTML = "<i class='tune_icon-ok pull-right'></i>";
+          document.getElementById("testButton").appendChild(okButton);
+        },
+        error: function(xhr, status, err) {
+          var archiveURLRow = document.getElementById("testButton");
+          
+          var ngButton = document.createElement('i');
+          ngButton.innerHTML = "<i class='tune_icon-ng pull-right'></i>";
+          archiveURLRow.appendChild(ngButton);
+          
+          var warningRow = document.createElement('p');
+          archiveURLRow.appendChild(warningRow);
+          
+          var warningSign = document.createElement('i');
+          warningSign.innerHTML = "<i class='icon-warning-sign'></i>";
+          warningRow.appendChild(warningSign);
+          
+          var warningMessage = document.createElement('i');
+          warningMessage.innerHTML = xhr.responseText;
+          warningRow.appendChild(warningMessage);
+        }
+      });
+    }
+  </script>
+}
+
+@admin.main(Some(mlp.status), moreScripts) {
   <section>
     <header class="page-header">
       <h1>@mlp.mlTitle</h1>
@@ -45,15 +79,17 @@
       <tbody>
       <tr>
         <th class="tune_th-250 tune_th-head">MLタイトル</th>
-        <td>@mlp.mlTitle<i class="tune_icon-ok pull-right"></i></td>
+        <td>@mlp.mlTitle</td>
       </tr>
       <tr>
         <th class="tune_th-250 tune_th-head">公開アーカイブURL</th>
-        <td><a href="@mlp.archiveURL">@mlp.archiveURL</a><i class="tune_icon-ng pull-right"></i></td>
+        <!--  <td><a href="@mlp.archiveURL">@mlp.archiveURL</a><i class="tune_icon-ng pull-right"></i></td>
+        -->
+        <td id="testButton"><a href="@mlp.archiveURL">@mlp.archiveURL</a><button class="btn btn-mini btn-primary pull-right" type="button" onclick="testCrawling()">テストする</button></td>
       </tr>
       <tr>
         <th class="tune_th-250 tune_th-head">アーカイブソフトタイプ</th>
-        <td>@mlp.archiveType<i class="tune_icon-ok pull-right"></i></td>
+        <td>@mlp.archiveType</td>
       </tr>
       </tbody>
       </table>
@@ -65,12 +101,8 @@
       <table class="table table-bordered">
       <tbody>
       <tr>
-        <th class="tune_th-250 tune_th-head">申請者名</th>
-        <td>@mlp.proposerName</td>
-      </tr>
-      <tr>
         <th class="tune_th-250 tune_th-head">連絡先メールアドレス</th>
-        <td>@mlp.proposerEmail</td>
+        <td>@mlp.proposerEmail.getOrElse("未入力")</td>
       </tr>
       <tr>
         <th class="tune_th-250 tune_th-head">申請時コメント</th>
