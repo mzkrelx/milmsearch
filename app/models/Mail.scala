@@ -12,3 +12,13 @@ case class Mail(
   url:      URL,
   mlTitle:  String,
   mlURL:    URL)
+
+case class MailAddress(mailAddress: String) {
+  def toView = mailAddress.replaceFirst("@", " ＠ ")
+  override def toString = mailAddress
+}
+
+object MailAddress {
+  def fromView(viewMailAddress: String): MailAddress =
+    MailAddress(viewMailAddress.replaceFirst(" ＠ ", "@"))
+}

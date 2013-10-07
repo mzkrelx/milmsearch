@@ -50,12 +50,7 @@ object MailSearch extends Controller {
       searchRequest => {
         Logger.debug("Search => " + searchRequest)
         val result = Searcher.search(searchRequest)
-
-        // TODO dummy data -> real data
-        Ok(views.html.searchResult(searchRequest, result._1,
-          result._2,
-          result._3)
-        )
+        Ok(views.html.searchResult(searchRequest, result))
       }
     )
   }
