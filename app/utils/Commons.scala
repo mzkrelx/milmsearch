@@ -2,6 +2,7 @@ package utils
 
 import play.api.Play
 
+case class ConfigException(msg: String) extends Exception(msg)
 
 /**
  * pattern matchable enumeration
