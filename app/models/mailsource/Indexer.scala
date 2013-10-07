@@ -5,16 +5,13 @@ import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import utils.Utils.playConfig
 import models.ML
+import models.ElasticSearch
 
 case class IndexingException(msg: String) extends Exception(msg)
 object Indexer {
   def indexing(ml:ML, mail:Mail) {
 
-    val hostname = playConfig.getString("elasticsearch.hostName").getOrElse(throw IndexingException("elasticsearch hostname error"))
-    val port = playConfig.getInt("elasticsearch.port").getOrElse(throw IndexingException("elasticsearch port error"))
-    val client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(hostname, port))
-
-    client.prepareIndex("milmsearch", "mailInfo")
+    ElasticSearch.client.prepareIndex("milmsearch", "mailInfo")
       .setSource(jsonBuilder().startObject()
         .field("date", mail.date.toString())
         .field("fromAddr", mail.fromAddr.toString())

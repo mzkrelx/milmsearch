@@ -1,4 +1,4 @@
-@(request: search.SearchRequest, page: Page[Mail], mlOptions: List[search.MLOption], fromOptions: List[search.FromOption])
+@(request: search.SearchRequest, result: search.MailSearchResult)
 
 @import helper._
 @import models.search._
@@ -103,7 +103,7 @@
           <div id="selected_mltitle" class="optselect column span-5">
             @if(request.mlIDs.size > 0) {
               <ul id="mltitle_list">
-                @mlOptions.collect { 
+                @result.mlOptions.collect { 
                   case MLOption(id, title) if request.mlIDs.contains(id) => {
                     <li>@title</li>
                     <input type="hidden" name="mlIDs[]" value="@id">
@@ -116,7 +116,7 @@
           <div id="selected_sender" class="optselect column span-5">
             @if(request.froms.size > 0) {
               <ul id="sender_list">
-                @fromOptions.collect { 
+                @result.fromOptions.collect { 
                   case from if request.froms.contains(FromOption(from.value)) => {
                     <li>@from.label</li>
                     <input type="hidden" name="froms[]" value="@from.value">
@@ -139,7 +139,7 @@
         <fieldset>
           <legend>MLタイトルの指定</legend>
           <ul>
-            @mlOptions.zipWithIndex.map { case (mlOpt, i) =>
+            @result.mlOptions.zipWithIndex.map { case (mlOpt, i) =>
               <li>
                 <input id="optmltitle_@i" class="mlOptions" name="mlOptions[]" type="checkbox" value="@mlOpt.id"
                   @if(request.mlIDs.contains(mlOpt.id)) { checked="checked" } />
@@ -160,7 +160,7 @@
         <fieldset>
           <legend>送信者の指定</legend>
           <ul>
-            @fromOptions.zipWithIndex.map { case (fromOpt, i) =>
+            @result.fromOptions.zipWithIndex.map { case (fromOpt, i) =>
               <li>
                 <input id="optsender_@i" class="fromOptions" name="fromOptions[]" type="checkbox" value="@fromOpt.value"
                   @if(request.froms.contains(FromOption(fromOpt.value))) { checked="checked" } />
@@ -179,7 +179,7 @@
   <div class="grid archive">
     <div class="pager row">
       <div class="column span-9">
-        @helper.paginator(page)
+        @helper.paginator(result.page)
       </div>
       <div class="column span-3">
         @{
@@ -195,7 +195,7 @@
       </div>
     </div>
   
-    @page.items.map { mail =>
+    @result.page.items.map { mail =>
       <article>
         <aside><a href="@mail.mlURL" target="_blank">ML:@mail.mlTitle</a></aside>
         <div class="row">
@@ -215,7 +215,7 @@
   
     <div class="pager">
       <div class="column span-9">
-        @helper.paginator(page)
+        @helper.paginator(result.page)
       </div>
     </div>
   
