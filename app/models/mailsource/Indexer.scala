@@ -1,16 +1,42 @@
 package models.mailsource
+import org.elasticsearch.action.search.SearchRequestBuilder
 
 import org.elasticsearch.common.xcontent.XContentFactory._
-import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.common.transport.InetSocketTransportAddress
-import utils.Utils.playConfig
-import models.ML
+import org.elasticsearch.index.query.QueryBuilders
+
 import models.ElasticSearch
+import models.ML
+import play.api.Logger
 
 case class IndexingException(msg: String) extends Exception(msg)
-object Indexer {
-  def indexing(ml:ML, mail:Mail) {
 
+object Indexer {
+
+  def indexing(ml:ML, mail:Mail) {
+    if (!isIndexed(mail)) {
+      executeIndex(ml, mail)
+    } else {
+      Logger.warn(s"Already indexed.[$mail.srcURL]")
+    }
+  }
+
+  private def isIndexed(mail: Mail) = {
+    val hits = new SearchRequestBuilder(ElasticSearch.client)
+      .setIndices("milmsearch")
+      .setTypes("mailInfo")
+      .setQuery(QueryBuilders.termQuery("srcURL", mail.srcURL))
+      .setFrom(0).setSize(1)
+      .execute
+      .actionGet
+      .getHits.getHits.toList
+
+    hits headOption match {
+      case Some(doc) => true
+      case None      => false
+    }
+  }
+
+  private def executeIndex(ml: ML, mail: Mail) =
     ElasticSearch.client.prepareIndex("milmsearch", "mailInfo")
       .setSource(jsonBuilder().startObject()
         .field("date", mail.date.toString())
@@ -24,5 +50,5 @@ object Indexer {
       .setOperationThreaded(false)
       .execute()
       .actionGet()
-  }
+
 }

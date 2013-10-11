@@ -4,20 +4,18 @@ import java.io.FileNotFoundException
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
-
 import scala.io.Codec
 import scala.io.Source
 import scala.util.Try
 import scala.xml.Node
-
 import org.joda.time.DateTime
-
 import javax.mail.internet.InternetAddress
 import models.ML
 import models.mailsource._
 import play.api.Logger
 import utils.HTMLUtil._
 import utils.Regex
+import scala.collection.mutable.ListBuffer
 
 case class MailmanCrawlingException(msg: String) extends CrawlingException(msg)
 
@@ -58,23 +56,24 @@ object MailmanCrawler {
 
   def crawling(ml: ML) {
 
-    val monthHrefs = collectMonthHref(toNode(fetchHTML(ml.archiveURL)))
-    val monthURLs = monthHrefs.reverse.map { href =>
-      new URL(ml.archiveURL + href)
+    val mailURLs = createMailURLs(createMonthURLs(ml.archiveURL))
+    val stopURL = ML.findLastMail(ml.id).map(_.url.toString).getOrElse("NON-STOP")
+    Logger.info(s"Crawling stop URL = [$stopURL]")
+
+    val crawlingURLs = mailURLs takeWhile { !_.toString.equals(stopURL) }
+
+    crawlingURLs foreach { mailURL =>
+      val mail = createMail(toMailHTMLNode(mailURL), mailURL)
+      Logger.debug("Crawled => " + mail.subject)
+
+      Indexer.indexing(ml, mail)
     }
+  }
 
-    monthURLs foreach { monthURL =>
-      val mailHrefs = collectMailHref(toNode(fetchHTML(monthURL)))
-      val mailURLs = mailHrefs map { href =>
-        new URL(monthURL.toString.replaceFirst("date.html", href))
-      }
-
-      mailURLs map { mailURL =>
-        val mail = createMail(toMailHTMLNode(mailURL), mailURL)
-        Logger.debug("Crawled => " + mail.subject)
-
-        Indexer.indexing(ml, mail)
-      }
+  private def createMonthURLs(archiveURL: URL): Seq[URL] = {
+    val monthHrefs = collectMonthHref(toNode(fetchHTML(archiveURL)))
+    monthHrefs.map { href =>
+      new URL(archiveURL + href)
     }
   }
 
@@ -82,6 +81,19 @@ object MailmanCrawler {
     node \\ "table" \\ "td" \\ "a" \\ "@href" map { _.toString } collect {
       case href if href.endsWith("/date.html") => href
     } distinct
+  }
+
+  /** Get all mail URLs order by date DESC */
+  private def createMailURLs(monthURLs: Seq[URL]): Seq[URL] = {
+    val mailURLs = ListBuffer[URL]()
+    monthURLs foreach { monthURL =>
+      val mailHrefs = collectMailHref(toNode(fetchHTML(monthURL)))
+      val monthlyMailURLs = mailHrefs.map { href =>
+        new URL(monthURL.toString.replaceFirst("date.html", href))
+      }.reverse
+      mailURLs ++= monthlyMailURLs
+    }
+    mailURLs.toList
   }
 
   private def collectMailHref(node: Node): Seq[String] = {

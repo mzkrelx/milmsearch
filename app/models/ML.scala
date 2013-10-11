@@ -8,6 +8,7 @@ import java.net.URL
 import MLArchiveType._
 import java.util.Date
 import java.sql.Connection
+import models.search.Searcher
 
 case class ML(
   id: Long,
@@ -18,6 +19,8 @@ case class ML(
   lastMailedAt:  Option[DateTime])
 
 object ML {
+
+  def findLastMail(mlID: Long): Option[Mail] = Searcher.searchLastMail(mlID)
 
   def list(startIndex: Long, itemsPerPage: Int): List[ML] = {
 
