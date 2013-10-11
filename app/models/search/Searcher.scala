@@ -1,14 +1,13 @@
 package models.search
 import java.net.URL
-
 import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.index.query._
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.sort.SortOrder
 import org.joda.time.DateTime
-
 import javax.mail.internet.InternetAddress
 import models._
+import org.apache.lucene.search.TermQuery
 
 case class SearchException(msg: String) extends Exception(msg)
 
@@ -154,4 +153,29 @@ object Searcher {
     ML.find(mlIDs)
   }
 
+  def searchLastMail(mlID: Long): Option[Mail] = {
+    val response  = new SearchRequestBuilder(ElasticSearch.client)
+      .setIndices("milmsearch")
+      .setTypes("mailInfo")
+      .setQuery(QueryBuilders.termQuery("MLID", mlID))
+      .addSort("date", SortOrder.DESC)
+      .setFrom(0).setSize(1)
+      .execute
+      .actionGet
+
+    val hits = response.getHits.getHits.toList
+
+    hits map { doc =>
+      Mail(
+        DateTime.parse(doc.getSource.get("date").toString),
+        new InternetAddress(doc.getSource.get("fromAddr").toString),
+        doc.getSource.get("subject").toString,
+        doc.getSource.get("body").toString.slice(0, 300), // TODO highlight
+        new URL(doc.getSource.get("srcURL").toString),
+        doc.getSource.get("MLTitle").toString,
+        new URL(findMLs(hits).find(_.id.toString == doc.getSource.get("MLID").toString)
+          .get.archiveURL.toString)
+      )
+    } headOption
+  }
 }
