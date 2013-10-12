@@ -30,24 +30,21 @@ object Searcher {
     val hits = response.getHits.getHits.toList
 
     Page[Mail](
-      hits map ( doc =>
+      hits map (doc =>
         Mail(
           DateTime.parse(doc.getSource.get("date").toString),
-          new InternetAddress(doc.getSource.get("fromAddr").toString,doc.getSource.get("fromPersonal").toString),
+          new InternetAddress(doc.getSource.get("fromAddr").toString, doc.getSource.get("fromPersonal").toString),
           doc.getSource.get("subject").toString,
           doc.getSource.get("body").toString.slice(0, 300), // TODO highlight
           new URL(doc.getSource.get("srcURL").toString),
           doc.getSource.get("MLTitle").toString,
           new URL(findMLs(hits).find(_.id.toString == doc.getSource.get("MLID").toString)
-            .get.archiveURL.toString)
-        )
-      ),
-      response.getHits.getTotalHits, req.startIndex, req.itemsPerPage
-    )
+            .get.archiveURL.toString))),
+      response.getHits.getTotalHits, req.startIndex, req.itemsPerPage)
   }
 
   private def searchByKeyword(req: SearchRequest, query: QueryBuilder) = {
-    val searchRequest  = new SearchRequestBuilder(ElasticSearch.client)
+    val searchRequest = new SearchRequestBuilder(ElasticSearch.client)
       .setIndices("milmsearch")
       .setTypes("mailInfo")
       .setQuery(query)
@@ -105,29 +102,27 @@ object Searcher {
       case froms if froms nonEmpty => Some(FilterBuilders.orFilter(
         FilterBuilders.queryFilter(QueryBuilders.fieldQuery(
           "fromAddr",
-          froms.map(_.email.toString).mkString(",")
-        ))
-      ))
+          froms.map(_.email.toString).mkString(",")))))
       case _ => None
     }
   }
 
   private def extractField(order: MailSearchOrder.Value): String = {
     order match {
-      case MailSearchOrder.DateAsc  => "date"
+      case MailSearchOrder.DateAsc => "date"
       case MailSearchOrder.DateDesc => "date"
     }
   }
 
   private def extractOrder(order: MailSearchOrder.Value): SortOrder = {
     order match {
-      case MailSearchOrder.DateAsc  => SortOrder.ASC
+      case MailSearchOrder.DateAsc => SortOrder.ASC
       case MailSearchOrder.DateDesc => SortOrder.DESC
     }
   }
 
   private def createOptions(req: SearchRequest): (List[MLOption], List[FromOption]) = {
-    val searchRequest  = new SearchRequestBuilder(ElasticSearch.client)
+    val searchRequest = new SearchRequestBuilder(ElasticSearch.client)
       .setIndices("milmsearch")
       .setTypes("mailInfo")
       .setQuery(makeQuery(req.fields, req.keywords))
@@ -140,7 +135,7 @@ object Searcher {
 
   private def makeMLOptions(hits: List[SearchHit]): List[MLOption] = {
     findMLs(hits).map { ml =>
-        MLOption(ml.id, ml.mlTitle)
+      MLOption(ml.id, ml.mlTitle)
     } distinct
   }
 
