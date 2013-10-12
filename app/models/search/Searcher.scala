@@ -8,6 +8,8 @@ import org.joda.time.DateTime
 import javax.mail.internet.InternetAddress
 import models._
 import org.apache.lucene.search.TermQuery
+import play.api.Logger
+import org.elasticsearch.action.search.SearchPhaseExecutionException
 
 case class SearchException(msg: String) extends Exception(msg)
 
