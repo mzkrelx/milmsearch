@@ -177,7 +177,8 @@ object Searcher {
 
     Mail(
       DateTime.parse(doc.getSource.get("date").toString),
-      new InternetAddress(doc.getSource.get("fromAddr").toString),
+      new InternetAddress(doc.getSource.get("fromAddr").toString,
+        doc.getSource.get("fromPersonal").toString),
       subject,
       body,
       new URL(doc.getSource.get("srcURL").toString),
@@ -205,17 +206,7 @@ object Searcher {
     }
 
     val hits = response.getHits.getHits.toList
-    hits map { doc =>
-      Mail(
-        DateTime.parse(doc.getSource.get("date").toString),
-        new InternetAddress(doc.getSource.get("fromAddr").toString),
-        doc.getSource.get("subject").toString,
-        doc.getSource.get("body").toString.slice(0, 300), // TODO highlight
-        new URL(doc.getSource.get("srcURL").toString),
-        doc.getSource.get("MLTitle").toString,
-        new URL(findMLs(hits).find(_.id.toString == doc.getSource.get("MLID").toString)
-          .get.archiveURL.toString)
-      )
-    } headOption
+    val mls = findMLs(hits)
+    hits map { toMail(_, mls) } headOption
   }
 }
