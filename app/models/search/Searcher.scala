@@ -10,6 +10,8 @@ import models._
 import org.apache.lucene.search.TermQuery
 import play.api.Logger
 import org.elasticsearch.action.search.SearchPhaseExecutionException
+import org.elasticsearch.search.highlight.HighlightField
+import scala.xml.Utility
 
 case class SearchException(msg: String) extends Exception(msg)
 
@@ -28,19 +30,11 @@ object Searcher {
   private def createMailPage(req: SearchRequest): Page[Mail] = {
     val response = searchByKeyword(req, makeQuery(req.fields, req.keywords))
     val hits = response.getHits.getHits.toList
-
+    val mls = findMLs(hits)
     Page[Mail](
-      hits map (doc =>
-        Mail(
-          DateTime.parse(doc.getSource.get("date").toString),
-          new InternetAddress(doc.getSource.get("fromAddr").toString, doc.getSource.get("fromPersonal").toString),
-          doc.getSource.get("subject").toString,
-          doc.getSource.get("body").toString.slice(0, 300), // TODO highlight
-          new URL(doc.getSource.get("srcURL").toString),
-          doc.getSource.get("MLTitle").toString,
-          new URL(findMLs(hits).find(_.id.toString == doc.getSource.get("MLID").toString)
-            .get.archiveURL.toString))),
-      response.getHits.getTotalHits, req.startIndex, req.itemsPerPage)
+      hits map { toMail(_, mls) },
+      response.getHits.getTotalHits, req.startIndex, req.itemsPerPage
+    )
   }
 
   private def searchByKeyword(req: SearchRequest, query: QueryBuilder) = {
@@ -50,6 +44,8 @@ object Searcher {
       .setQuery(query)
       .setFilter(makeFilter(req))
       .addSort(extractField(req.order), extractOrder(req.order))
+      .addHighlightedField("body", 0, 0)
+      .addHighlightedField("subject", 0, 0)
       .setFrom(req.startIndex.toInt)
       .setSize(req.itemsPerPage)
 
@@ -152,6 +148,46 @@ object Searcher {
     ML.find(mlIDs)
   }
 
+  private def toMail(doc: SearchHit, mls: List[ML]) = {
+    val subject = doc.highlightFields.get("subject") match {
+      case f: HighlightField => {
+        val subject = f.fragments.apply(0).toString
+        Utility.escape(subject).replaceAll(Utility.escape("<em>"), "<em>")
+          .replaceAll(Utility.escape("</em>"), "</em>")
+      }
+      case null => doc.getSource.get("subject").toString
+    }
+    val body = doc.highlightFields.get("body") match {
+      case f: HighlightField => {
+        val highlightBody = f.fragments.apply(0).toString
+        val bodyBeginPosition = highlightBody.indexOf("<em>") - 5 max 0
+        val bodyEndPosition = highlightBody.indexOf("</em>") + 5 +
+          ((highlightBody.length * 0.1).toInt min 150)
+        val sliced = highlightBody.slice(bodyBeginPosition, bodyEndPosition)
+        Utility.escape(sliced).replaceAll(Utility.escape("<em>"), "<em>")
+          .replaceAll(Utility.escape("</em>"), "</em>")
+      }
+      case null => {
+        val normalBody = doc.getSource.get("body").toString
+        val bodyBeginPosition = 0
+        val bodyEndPosition = (normalBody.length * 0.1).toInt min 150
+        normalBody.slice(bodyBeginPosition, bodyEndPosition)
+      }
+    }
+
+    Mail(
+      DateTime.parse(doc.getSource.get("date").toString),
+      new InternetAddress(doc.getSource.get("fromAddr").toString,
+        doc.getSource.get("fromPersonal").toString),
+      subject,
+      body,
+      new URL(doc.getSource.get("srcURL").toString),
+      doc.getSource.get("MLTitle").toString,
+      new URL(mls.find(_.id.toString == doc.getSource.get("MLID").toString)
+        .get.archiveURL.toString)
+    )
+  }
+
   def searchLastMail(mlID: Long): Option[Mail] = {
     val response  = try {
       new SearchRequestBuilder(ElasticSearch.client)
@@ -162,26 +198,15 @@ object Searcher {
         .setFrom(0).setSize(1)
         .execute
         .actionGet
-      } catch {
-        case e: SearchPhaseExecutionException => {
-          Logger.error("Failed to search last mail. Return None.", e)
-          return None
-        }
+    } catch {
+      case e: SearchPhaseExecutionException => {
+        Logger.error("Failed to search last mail. Return None.", e)
+        return None
       }
+    }
 
     val hits = response.getHits.getHits.toList
-
-    hits map { doc =>
-      Mail(
-        DateTime.parse(doc.getSource.get("date").toString),
-        new InternetAddress(doc.getSource.get("fromAddr").toString),
-        doc.getSource.get("subject").toString,
-        doc.getSource.get("body").toString.slice(0, 300), // TODO highlight
-        new URL(doc.getSource.get("srcURL").toString),
-        doc.getSource.get("MLTitle").toString,
-        new URL(findMLs(hits).find(_.id.toString == doc.getSource.get("MLID").toString)
-          .get.archiveURL.toString)
-      )
-    } headOption
+    val mls = findMLs(hits)
+    hits map { toMail(_, mls) } headOption
   }
 }
