@@ -13,18 +13,18 @@ case class IndexingException(msg: String) extends Exception(msg)
 object Indexer {
 
   def indexing(ml:ML, mail:Mail) {
-    if (!isIndexed(mail)) {
+    if (!isIndexed(mail.srcURL.toString)) {
       executeIndex(ml, mail)
     } else {
       Logger.warn(s"Already indexed.[$mail.srcURL]")
     }
   }
 
-  private def isIndexed(mail: Mail) = {
+  private def isIndexed(srcURL: String) = {
     val hits = new SearchRequestBuilder(ElasticSearch.client)
       .setIndices("milmsearch")
       .setTypes("mailInfo")
-      .setQuery(QueryBuilders.termQuery("srcURL", mail.srcURL))
+      .setQuery(QueryBuilders.queryString("\""+srcURL+"\""))
       .setFrom(0).setSize(1)
       .execute
       .actionGet
