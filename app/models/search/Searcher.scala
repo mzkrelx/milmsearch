@@ -154,14 +154,21 @@ object Searcher {
   }
 
   def searchLastMail(mlID: Long): Option[Mail] = {
-    val response  = new SearchRequestBuilder(ElasticSearch.client)
-      .setIndices("milmsearch")
-      .setTypes("mailInfo")
-      .setQuery(QueryBuilders.termQuery("MLID", mlID))
-      .addSort("date", SortOrder.DESC)
-      .setFrom(0).setSize(1)
-      .execute
-      .actionGet
+    val response  = try {
+      new SearchRequestBuilder(ElasticSearch.client)
+        .setIndices("milmsearch")
+        .setTypes("mailInfo")
+        .setQuery(QueryBuilders.termQuery("MLID", mlID))
+        .addSort("date", SortOrder.DESC)
+        .setFrom(0).setSize(1)
+        .execute
+        .actionGet
+      } catch {
+        case e: SearchPhaseExecutionException => {
+          Logger.error("Failed to search last mail. Return None.", e)
+          return None
+        }
+      }
 
     val hits = response.getHits.getHits.toList
 
