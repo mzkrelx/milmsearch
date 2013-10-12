@@ -33,7 +33,7 @@ object Searcher {
       hits map ( doc =>
         Mail(
           DateTime.parse(doc.getSource.get("date").toString),
-          new InternetAddress(doc.getSource.get("fromAddr").toString),
+          new InternetAddress(doc.getSource.get("fromAddr").toString,doc.getSource.get("fromPersonal").toString),
           doc.getSource.get("subject").toString,
           doc.getSource.get("body").toString.slice(0, 300), // TODO highlight
           new URL(doc.getSource.get("srcURL").toString),
@@ -60,16 +60,18 @@ object Searcher {
   }
 
   private def makeQuery(fields: Set[MailSearchField.Value], keywords: String): MultiMatchQueryBuilder = {
-    val fieldsSeq = fields.map( field =>
-      field match {
-        case MailSearchField.Body => "body"
-        case MailSearchField.From => "fromAddr"
-        case MailSearchField.Subject => "subject"
-        case MailSearchField.MLTitle => "MLTitle"
+    def r(fieldsSeq: List[String], fields: List[MailSearchField.Value]): List[String] = {
+      import MailSearchField._
+      fields match {
+        case Nil => fieldsSeq
+        case Body :: xs => r("body" :: fieldsSeq, xs)
+        case From :: xs => r("fromPersonal" :: "fromAddr" :: fieldsSeq, xs)
+        case Subject :: xs => r("subject" :: fieldsSeq, xs)
+        case MLTitle :: xs => r("MLTitle" :: fieldsSeq, xs)
+        case other :: xs => throw SearchException(s"Illegal Field Error[$other]")
       }
-    ).toSeq
-
-    QueryBuilders.multiMatchQuery(keywords, fieldsSeq: _*)
+    }
+    QueryBuilders.multiMatchQuery(keywords, r(Nil, fields.toList): _*)
   }
 
   private def makeFilter(req: SearchRequest) = {
@@ -145,8 +147,8 @@ object Searcher {
   private def makeFromOptions(hits: List[SearchHit]): List[FromOption] = {
     hits map { doc =>
       FromOption(
-        new InternetAddress(doc.getSource.get("fromAddr").toString).getPersonal,  // TODO 名前とアドレス別々にインデクシング(#85)を修正後、InternetAddress介さないように直す
-        MailAddress(new InternetAddress(doc.getSource.get("fromAddr").toString).getAddress))
+        doc.getSource.get("fromPersonal").toString,
+        MailAddress(doc.getSource.get("fromAddr").toString))
     } distinct
   }
 
