@@ -204,9 +204,11 @@ object Searcher {
         return None
       }
     }
-
     val hits = response.getHits.getHits.toList
-    val mls = findMLs(hits)
-    hits map { toMail(_, mls) } headOption
+    Logger.debug(hits.toString)
+    hits match { 
+      case Nil => None
+      case _ => Some(toMail(hits.last, findMLs(hits)))
+    }
   }
 }
