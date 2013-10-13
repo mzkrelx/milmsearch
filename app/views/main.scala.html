@@ -1,4 +1,4 @@
-@(title: String, moreScripts: Html = Html(""))(content: Html)
+@(title: String, moreScripts: Html = Html(""), pageHome: Html = Html(""))(content: Html)
 
 @import helper._
 
@@ -70,10 +70,10 @@
       </div>
     </header>
 
+    @pageHome
+    
     <div class="contentarea">
-      <section>
       @content
-      </section>
     </div>
     
     <footer id="footer" class="clearfix">

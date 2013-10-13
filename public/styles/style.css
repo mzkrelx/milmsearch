@@ -575,7 +575,44 @@ div#divml li, div#divsend li{
     width: 13px; height:20px;
 		background: url(../images/common/arrow_h3.png) no-repeat;
   }
-  
+  div#top_keyv{
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+  }
+  div.top_gradient{
+    width: 100%;
+    background: 
+      -moz-linear-gradient(left top, #f3fbc5, #f6c3a5);　/* Firefox用 */
+  }
+  div.top_gradient2{
+    width: 100%;
+    background: 
+      -webkit-gradient(linear, left top, left bottom, from(#f3fbc5), to(#f6c3a5));　/* Safari,Google Chrome用 */
+  }
+  h1.caption{
+    font-size: 400%;
+    line-height: 80%;
+    padding-top: 0.6em;
+    padding-bottom: 0.3em;
+  }
+  h2.caption{
+    font-size: 180%;
+    line-height: 150%;
+    margin: 1.5em 0 1.2em;
+    border-left: #27aa4f 4px solid;
+    padding-left: 0.6em;
+  }
+  nav.top_nav{
+    font-size: 150%;
+    padding-top: 1em;
+    padding-bottom: 3em;
+  }
+  nav a.btn{
+    margin-left: 7px;
+    margin-right: 7px;
+  }
+ 
   /* Grid -----------------------------------  */
 
     
@@ -664,8 +701,8 @@ div#divml li, div#divsend li{
 
     div.grid div.row div.column.span-1  { width: 6.5%;  } /* 1 x col */
     div.grid div.row div.column.span-2  { width: 15%;   } /* (2 x col) + (1 x gutter) */
-    div.grid div.row div.column.span-3  { width: 23.5%; } /* (3 x col) + (2 x gutter) */
-    div.grid div.row div.column.span-4  { width: 32%;   } /* (4 x col) + (3 x gutter) */
+    div.grid div.row div.column.span-3  { width: 22%;   } /* (3 x col) + (2 x gutter) */
+    div.grid div.row div.column.span-4  { width: 30%;   } /* (4 x col) + (3 x gutter) */
     div.grid div.row div.column.span-5  { width: 40.5%; } /* (5 x col) + (4 x gutter) */
     div.grid div.row div.column.span-6  { width: 49%;   } /* (6 x col) + (5 x gutter) */
     div.grid div.row div.column.span-7  { width: 57.5%; } /* (7 x col) + (6 x gutter) */
