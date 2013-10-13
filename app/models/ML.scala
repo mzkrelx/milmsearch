@@ -19,7 +19,7 @@ case class ML(
   judgedAt:      DateTime) {
   
   /** Get the latest mailed datetime at the id's ML. */
-  def lastMailedAt(id: Long): Option[DateTime] = {
+  def lastMailedAt: Option[DateTime] = {
     Searcher.searchLastMail(id) match {
       case None => None
       case Some(mail) => Some(DateTime.parse(mail.date.toString))

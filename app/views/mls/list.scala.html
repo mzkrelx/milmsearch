@@ -14,7 +14,7 @@
             <h5><a href="@ml.archiveURL">@ml.mlTitle</a></h5>
             <a href="@ml.archiveURL">@ml.archiveURL</a>
           </td>
-          <td class="tune_table_date">@ml.lastMailedAt(ml.id).map(_.toString("yyyy/MM/dd 更新")).getOrElse("更新なし")</td>
+          <td class="tune_table_date">@ml.lastMailedAt.map(_.toString("yyyy/MM/dd 更新")).getOrElse("更新なし")</td>
         </tr>
       }
       
