@@ -33,6 +33,20 @@
         }
       });
     }
+    function startReArchiving() {
+      @** ML の ID を渡すべきだが、現在 MLProposal と ML の ID は同一なので **@
+      jsRouter.controllers.AdminMLProposals.startReArchiving(@mlp.id.get).ajax({
+        success: function(data) {
+          $('#startReArchiving').button('loading');
+        },
+        error: function(xhr, status, err) {
+          alert('Error: ' + err);
+        }
+      });
+    }
+    $(function() {
+      $('#startReArchiving').on('click', startReArchiving);
+    });
   </script>
 }
 
@@ -91,6 +105,17 @@
         <th class="tune_th-250 tune_th-head">アーカイブソフトタイプ</th>
         <td>@mlp.archiveType</td>
       </tr>
+      @if(mlp.status == Accepted) {
+        <tr>
+          <th class="tune_th-250 tune_th-head">アーカイブ状況</th>
+          <td>
+            <span class="label">不明</span>
+            <button id="startReArchiving" class="btn btn-mini btn-warning pull-right"
+                    type="button" autocomplete="off"
+                    data-loading-text="再アーカイブ中...">アーカイブを作り直す</button>
+          </td>
+        </tr>
+      }
       </tbody>
       </table>
     </section>

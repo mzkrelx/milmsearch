@@ -61,6 +61,17 @@ object ML {
       )().head[Long]("c")
     }
   }
+  
+  /**
+   * Find ML by id.
+   * 
+   * @param id ML's id
+   * @return ML
+   */
+  def find(id: Long) =
+    DB.withConnection { implicit conn =>
+      findWithConn(id)
+    }
 
   def findWithConn(id: Long)(implicit conn: Connection): Option[ML] = {
 
