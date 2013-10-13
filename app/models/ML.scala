@@ -9,15 +9,24 @@ import MLArchiveType._
 import java.util.Date
 import java.sql.Connection
 import models.search.Searcher
+import play.api.Logger
 
 case class ML(
   id: Long,
   mlTitle:       String,
   archiveType:   MLArchiveType,
   archiveURL:    URL,
-  judgedAt:      DateTime,
-  lastMailedAt:  Option[DateTime])
-
+  judgedAt:      DateTime) {
+  
+  /** Get the latest mailed datetime at the id's ML. */
+  def lastMailedAt(id: Long): Option[DateTime] = {
+    Searcher.searchLastMail(id) match {
+      case None => None
+      case Some(mail) => Some(DateTime.parse(mail.date.toString))
+    }
+  }
+}
+  
 object ML {
 
   def findLastMail(mlID: Long): Option[Mail] = Searcher.searchLastMail(mlID)
@@ -37,14 +46,12 @@ object ML {
           'limit  -> itemsPerPage
         ).apply() map { row =>
           val id = row[Long]("id")
-          lazy val lastMailedAt = this.lastMailedAt(id)
           ML(
             id,
             row[String]("ml_title"),
             MLArchiveType.withName(row[String]("archive_type")),
             new URL(row[String]("archive_url")),
-            new DateTime(row[Date]("judged_at")),
-            lastMailedAt)
+            new DateTime(row[Date]("judged_at")))
         }
       items.toList
     }
@@ -75,14 +82,12 @@ object ML {
       'status -> MLProposalStatus.Accepted.toString
     ).apply.headOption map { row =>
       val id = row[Long]("id")
-      lazy val lastMailedAt = this.lastMailedAt(id)
       ML(
         id,
         row[String]("ml_title"),
         MLArchiveType.withName(row[String]("archive_type")),
         new URL(row[String]("archive_url")),
-        new DateTime(row[Date]("judged_at")),
-        lastMailedAt)
+        new DateTime(row[Date]("judged_at")))
     }
   }
 
@@ -103,21 +108,13 @@ object ML {
     ).on(
       'status -> MLProposalStatus.Accepted.toString
     ).apply() map { row =>
-      val id = row[Long]("id")
-      lazy val lastMailedAt = this.lastMailedAt(id)
+      val id = row[Long]("id") 
       ML(
         id,
         row[String]("ml_title"),
         MLArchiveType.withName(row[String]("archive_type")),
         new URL(row[String]("archive_url")),
-        new DateTime(row[Date]("judged_at")),
-        lastMailedAt)
+        new DateTime(row[Date]("judged_at")))
     } toList
-  }
-
-  /** Get the latest mailed datetime at the id's ML. */
-  def lastMailedAt(id: Long): Option[DateTime] = {
-    // TODO find by search engine.
-    Some(DateTime.now)
   }
 }

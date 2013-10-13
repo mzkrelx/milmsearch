@@ -204,9 +204,10 @@ object Searcher {
         return None
       }
     }
-
-    val hits = response.getHits.getHits.toList
-    val mls = findMLs(hits)
-    hits map { toMail(_, mls) } headOption
+    val hits = response.getHits.getHits.toList 
+    hits.last match { 
+      case null => None
+      case hit => Some(toMail(hit, findMLs(hits)))
+    }
   }
 }
