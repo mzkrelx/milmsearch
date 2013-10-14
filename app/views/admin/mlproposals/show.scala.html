@@ -5,16 +5,16 @@
 @moreScripts = {
   <script type="text/javascript">
     function testCrawling() {
-      $('.btn-mini').hide();
+      $('#testCrawling').hide();
 
       jsRouter.controllers.AdminMLProposals.testCrawling(@mlp.id.get).ajax({
         success: function(data) {
           var okButton = document.createElement('i');
           okButton.innerHTML = "<i class='tune_icon-ok pull-right'></i>";
-          document.getElementById("testButton").appendChild(okButton);
+          document.getElementById("archiveURL").appendChild(okButton);
         },
         error: function(xhr, status, err) {
-          var archiveURLRow = document.getElementById("testButton");
+          var archiveURLRow = document.getElementById("archiveURL");
           
           var ngButton = document.createElement('i');
           ngButton.innerHTML = "<i class='tune_icon-ng pull-right'></i>";
@@ -33,6 +33,20 @@
         }
       });
     }
+    function startReArchiving() {
+      @** ML の ID を渡すべきだが、現在 MLProposal と ML の ID は同一なので **@
+      jsRouter.controllers.AdminMLProposals.startReArchiving(@mlp.id.get).ajax({
+        success: function(data) {
+          $('#startReArchiving').button('loading');
+        },
+        error: function(xhr, status, err) {
+          alert('Error: ' + err);
+        }
+      });
+    }
+    $(function() {
+      $('#startReArchiving').on('click', startReArchiving);
+    });
   </script>
 }
 
@@ -85,12 +99,27 @@
         <th class="tune_th-250 tune_th-head">公開アーカイブURL</th>
         <!--  <td><a href="@mlp.archiveURL">@mlp.archiveURL</a><i class="tune_icon-ng pull-right"></i></td>
         -->
-        <td id="testButton"><a href="@mlp.archiveURL">@mlp.archiveURL</a><button class="btn btn-mini btn-primary pull-right" type="button" onclick="testCrawling()">テストする</button></td>
+        <td id="archiveURL">
+          <a href="@mlp.archiveURL">@mlp.archiveURL</a>
+          <button id="testCrawling" class="btn btn-mini btn-primary pull-right"
+                  type="button" onclick="testCrawling()">テストする</button>
+        </td>
       </tr>
       <tr>
         <th class="tune_th-250 tune_th-head">アーカイブソフトタイプ</th>
         <td>@mlp.archiveType</td>
       </tr>
+      @if(mlp.status == Accepted) {
+        <tr>
+          <th class="tune_th-250 tune_th-head">アーカイブ状況</th>
+          <td>
+            <span class="label">不明</span>
+            <button id="startReArchiving" class="btn btn-mini btn-warning pull-right"
+                    type="button" autocomplete="off"
+                    data-loading-text="再アーカイブ開始済み">アーカイブを作り直す</button>
+          </td>
+        </tr>
+      }
       </tbody>
       </table>
     </section>
