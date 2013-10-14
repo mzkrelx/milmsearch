@@ -52,6 +52,13 @@ object AdminMLProposals extends Controller {
     } getOrElse NotFound
   }
 
+  def startReArchiving(id: Long) = Action {
+    ML.find(id) map { ml =>
+      Logger.debug("starting re archiving.")
+      Crawler.crawling(ml)
+      Ok
+    } getOrElse NotFound
+  }
 
   def list(statusParam: String, startIndex: Long, count: Int) = TryCatch4xx {
     Action { implicit request =>
