@@ -30,6 +30,7 @@
       case Rejected => ("却下", views.txt.admin.mlproposals.rejectMailBody(mlp))
       case _ => ("", "")
     }) { case (actionName, mailBody) =>
+      <h4 class="alert">現在メール送信機能は停止中!!!</h4>
       <p>このML登録申請を@{actionName}し、申請者に下記のご案内メールを送信します。</p>
       <h2>ご案内メール</h2>
       <div class="tune_mailtext">
