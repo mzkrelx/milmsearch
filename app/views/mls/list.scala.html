@@ -1,34 +1,36 @@
 @(page: Page[ML])
 
 @main("MilmSearch") {
-  <h1>登録メーリングリスト一覧</h1>
-        
+  <h1 id="pagetitle">登録メーリングリスト一覧</h1>
+
+  <div class="grid archive">
   @Option(page.items).filterNot(_.isEmpty).map { mls =>
-  
-    <table class="table table-bordered">
-      <tbody>
-  
-      @mls.map { ml =>
-        <tr>
-          <td>
-            <h5><a href="@ml.archiveURL">@ml.mlTitle</a></h5>
-            <a href="@ml.archiveURL">@ml.archiveURL</a>
-          </td>
-          <td class="tune_table_date">@ml.lastMailedAt.map(_.toString("yyyy/MM/dd 更新")).getOrElse("更新なし")</td>
-        </tr>
-      }
-      
-      </tbody>
-    </table>
+
+    @mls.map { ml =>
+    <article>
+      <aside><a href="@ml.archiveURL">@ml.mlTitle</a></aside>
+      <div class="row">
+        <div class="column span-9">
+          <h3><a href="@ml.archiveURL">@ml.archiveURL</a></h3>
+        </div>
+        <div class="clum span-3">
+          <p>@ml.lastMailedAt.map(_.toString("yyyy/MM/dd 更新")).getOrElse("更新なし")</p>
+        </div>
+      </div>
+    </article>
+    }
     
-    <div class="row">
-      @admin.helper.paginator(page, routes.MLs.list(_: Long, page.itemsPerPage))
+    <div class="pager">
+      <div class="column span-9">
+        @admin.helper.paginator(page, routes.MLs.list(_: Long, page.itemsPerPage))
+      </div>
     </div>
     
+  
   }.getOrElse {
   
     <p>登録メーリングリストはありません。</p>
   
   }
-        
+  </div>
 }

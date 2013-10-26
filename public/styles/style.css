@@ -112,6 +112,43 @@ text-decoration:underline;
 	border-radius: 6px;
 	box-sizing:border-box;
  }
+ 
+ .radius {
+  background-color: #fdedc9;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  width: 100px;
+  height: 90px;
+  display: table;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: -100px;
+  padding-top: 10px;
+}
+
+ .radius1 {
+	left: -250px;
+	top: 50px;
+}
+
+ .radius2 {
+  left: 100px;
+  top: -40px;
+}
+
+ .radius3 {
+  left: 200px;
+  top: 0px;
+}
+
+ .radius4 {
+  left: 270px;
+  top: -70px;
+}
 
   /* basic area -----------------------------------  */
  
