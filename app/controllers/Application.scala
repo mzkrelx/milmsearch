@@ -16,8 +16,8 @@ object Application extends Controller {
     Ok(views.html.rule())
   }
 
-  def poricy = Action {
-    Ok(views.html.poricy())
+  def policy = Action {
+    Ok(views.html.policy())
   }
 
   def help = Action {

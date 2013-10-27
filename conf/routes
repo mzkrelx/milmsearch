@@ -6,7 +6,7 @@
 GET    /                                         controllers.Application.index
 GET    /inquiry                                  controllers.Application.inquiry
 GET    /rule                                     controllers.Application.rule
-GET    /poricy                                   controllers.Application.poricy
+GET    /policy                                   controllers.Application.policy
 GET    /help                                     controllers.Application.help
 GET    /search                                   controllers.MailSearch.search
 
