@@ -3,55 +3,47 @@
 @import helper._
 
 @main("ML登録申請内容の確認 : MilmSearch") {
-      <h1 id="pagetitle">メーリングリストの登録申請</h1>
-  	  <div class="grid archive">
-          <div class="content">
-            <p class="lead">
-              以下の内容でよろしいですか？<br>
-              問題なければ、「申請する」ボタンを押して登録申請は完了です。
-            </p>
-            <table>
-              <tbody>
-              <tr>
-                <th>連絡先メールアドレス</th>
-                <td>@mlpForm("proposerEmail").value</td>
-              </tr>
-              <tr>
-                <th>メーリングリストのタイトル</th>
-                <td>@mlpForm("mlTitle").value</td>
-              </tr>
-              <tr>
-                <th>メーリングリスト公開アーカイブのURL</th>
-                <td>@mlpForm("archiveURL").value</td>
-              </tr>
-              <tr>
-                <th>ご質問やコメント</th>
-                <td>@mlpForm("message").value</td>
-              </tr>
-              </tbody>
-            </table>
-
-            <div class="decidearea">
-              @form(action = routes.MLProposals.modify, 'class -> "desidebtn") {
-                <input type="submit" class="btn large left" name="modify" value="修正する">    
-                @inputHidden(mlpForm("proposerEmail"))
-                @inputHidden(mlpForm("proposerEmail2"))
-                @inputHidden(mlpForm("mlTitle"))
-                @inputHidden(mlpForm("archiveURL"))
-                @inputHidden(mlpForm("message"))
-                @inputHidden(mlpForm("agreement"))
-              }
-              @form(action = routes.MLProposals.save, 'class -> "desidebtn") {
-                <input type="submit" class="btn decide large right" value="申請する">
-                @inputHidden(mlpForm("proposerEmail"))
-                @inputHidden(mlpForm("proposerEmail2"))
-                @inputHidden(mlpForm("mlTitle"))
-                @inputHidden(mlpForm("archiveURL"))
-                @inputHidden(mlpForm("message"))
-                @inputHidden(mlpForm("agreement"))
-              }
-            </div>
-            
-          </div>
+  <h1 id="pagetitle">メーリングリストの登録申請</h1>
+  <div class="grid archive">
+    <div class="content">
+      <p class="lead">
+        以下の内容でよろしいですか？<br>
+        問題なければ、「申請する」ボタンを押して登録申請は完了です。
+      </p>
+      <table>
+        <tbody>
+        <tr>
+          <th>メーリングリストのタイトル</th>
+          <td>@mlpForm("mlTitle").value</td>
+        </tr>
+        <tr>
+          <th>メーリングリスト公開アーカイブのURL</th>
+          <td>@mlpForm("archiveURL").value</td>
+        </tr>
+        <tr>
+          <th>ご質問やコメント</th>
+          <td>@mlpForm("message").value</td>
+        </tr>
+        </tbody>
+      </table>
+  
+      <div class="decidearea">
+        @form(action = routes.MLProposals.modify, 'class -> "desidebtn") {
+          <input type="submit" class="btn large left" name="modify" value="修正する">    
+          @inputHidden(mlpForm("mlTitle"))
+          @inputHidden(mlpForm("archiveURL"))
+          @inputHidden(mlpForm("message"))
+          @inputHidden(mlpForm("agreement"))
+        }
+        @form(action = routes.MLProposals.save, 'class -> "desidebtn") {
+          <input type="submit" class="btn decide large right" value="申請する">
+          @inputHidden(mlpForm("mlTitle"))
+          @inputHidden(mlpForm("archiveURL"))
+          @inputHidden(mlpForm("message"))
+          @inputHidden(mlpForm("agreement"))
+        }
       </div>
+      
+    </div>
+  </div>
 }

@@ -8,8 +8,6 @@
   <script type="text/javascript">
     $(function() {
       $("#mlp_form").submit(function() {
-        $("#proposerEmail").val($.trim($("#proposerEmail").val()));
-        $("#proposerEmail2").val($.trim($("#proposerEmail2").val()));
         $("#mlTitle").val($.trim($("#mlTitle").val()));
         $("#archiveURL").val($.trim($("#archiveURL").val()));
         $("#message").val($.trim($("#message").val()));
@@ -20,63 +18,54 @@
 }
 
 @main("ML登録申請 : MilmSearch", moreScripts) {
-      <h1 id="pagetitle">メーリングリストの登録申請</h1>
-  	  <div class="grid archive">
-          <div class="content">
-            <div class="img_flow row">
-              <h2>登録の流れ</h2>
-              <div class="f_arrow column span-4"><p>フォームから登録申請</p></div>
-              <div class="f_arrow column span-4"><p>運営チームによるML審査</p></div>
-              <div class="column span-4"><p>問題がなければ登録</p></div>
-            </div>
-            <p class="lead right">
-              <small>メーリングリスト登録の注意点について詳しくは…</small>
-              <a class="btn" href="@routes.Application.help" target="_blank">ヘルプ</a>
-            </p>
-
-            @form(action = routes.MLProposals.confirm, 'id -> "mlp_form") {
-              <table class="input">
-                <tbody>
-                <tr>
-                  <th>連絡先メールアドレス</th>
-                  <td>
-                    <p>審査後のご連絡が必要な方はご入力ください。</p>
-                    @inputText(mlpForm("proposerEmail"), 'type -> "email")
-                    <p>確認のため、再度ご入力ください。</p>
-                    @inputText(mlpForm("proposerEmail2"), 'type -> "email")
-                  </td>
-                </tr>
-                <tr>
-                  <th><span class="att">【必須】</span>メーリングリストのタイトル</th>
-                  <td>
-                   @inputText(mlpForm("mlTitle"))
-                  </td>
-                </tr>
-                <tr>
-                  <th><span class="att">【必須】</span>メーリングリスト公開アーカイブのURL</th>
-                  <td>
-                    @inputText(mlpForm("archiveURL"), 'type -> "url")
-                  </td>
-                </tr>
-                <tr>
-                  <th>ご質問やコメントをどうぞ</th>
-                  <td>
-                    @textarea(mlpForm("message"))
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-              <div class="check_rule">
-                <label>
-                  @checkbox(mlpForm("agreement"), '_text -> "利用規約に同意する", 'value -> "on")
-                </label>
-                <a href="@routes.Application.rule" target="_blank">…利用規約</a>
-              </div>
-              <div class="decidearea">
-                <a class="btn large left" href="@routes.Application.index">トップページへ</a>
-                <input class="btn decide large right" type="submit" value="確認する">
-              </div>    
-            }
-          </div>
+  <h1 id="pagetitle">メーリングリストの登録申請</h1>
+  <div class="grid archive">
+    <div class="content">
+      <div class="img_flow row">
+        <h2>登録の流れ</h2>
+        <div class="f_arrow column span-4"><p>フォームから登録申請</p></div>
+        <div class="f_arrow column span-4"><p>運営チームによるML審査</p></div>
+        <div class="column span-4"><p>問題がなければ登録</p></div>
       </div>
+      <p class="lead right">
+        <small>メーリングリスト登録の注意点について詳しくは…</small>
+        <a class="btn" href="@routes.Application.help" target="_blank">ヘルプ</a>
+      </p>
+  
+      @form(action = routes.MLProposals.confirm, 'id -> "mlp_form") {
+        <table class="input">
+          <tbody>
+          <tr>
+            <th><span class="att">【必須】</span>メーリングリストのタイトル</th>
+            <td>
+             @inputText(mlpForm("mlTitle"))
+            </td>
+          </tr>
+          <tr>
+            <th><span class="att">【必須】</span>メーリングリスト公開アーカイブのURL</th>
+            <td>
+              @inputText(mlpForm("archiveURL"), 'type -> "url")
+            </td>
+          </tr>
+          <tr>
+            <th>ご質問やコメントをどうぞ</th>
+            <td>
+              @textarea(mlpForm("message"))
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="check_rule">
+          <label>
+            @checkbox(mlpForm("agreement"), '_text -> "利用規約に同意する", 'value -> "on")
+          </label>
+          <a href="@routes.Application.rule" target="_blank">…利用規約</a>
+        </div>
+        <div class="decidearea">
+          <a class="btn large left" href="@routes.Application.index">トップページへ</a>
+          <input class="btn decide large right" type="submit" value="確認する">
+        </div>    
+      }
+    </div>
+  </div>
 }
