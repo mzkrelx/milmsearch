@@ -1,0 +1,4 @@
+@(elements: helper.FieldElements)
+
+@elements.input
+<span class="att">@if(elements.hasErrors) { @elements.errors.mkString("※", ", ", "") }</span>

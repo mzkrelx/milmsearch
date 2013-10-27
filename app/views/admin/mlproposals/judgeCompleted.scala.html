@@ -1,0 +1,22 @@
+@(mlp: MLProposal, statusTo: MLProposalStatus.Value)
+
+@import MLProposalStatus._
+
+@admin.main(None) {
+  <section>
+  @defining(statusTo match {
+    case Accepted => "承認"
+    case Rejected => "却下"
+    case _ => ""
+  }) { actionName =>
+    <header class="page-header">
+      <h1>登録申請を@{actionName}しました</h1>
+    </header>
+    <p>
+      <strong>「@{mlp.mlTitle}」</strong>の登録申請を@{actionName}し、<br>
+      申請者にご案内メールを送信しました。
+    </p>
+  }
+    <a class="btn" href="@routes.Admin.index">トップページへ</a>
+  </section>
+}

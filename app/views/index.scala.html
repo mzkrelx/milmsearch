@@ -1,0 +1,74 @@
+@pageHome = {
+  <div id="top_keyv">
+    <div class="top_gradient top_gradient2">
+      <h1 class="caption">オススメの<br /><strong class="largetext">メーリングリスト、</strong><br>教えてください！</h1>
+      <p class="lead">
+        あなたがいつもチェックしているそのML、<br />
+        MilmSearchでまとめて検索できるようにしませんか?<br />
+        Web上でアーカイブが公開されている、<br />
+        お気に入りのMLを私たちに教えてください。
+      </p>
+    </div>
+    <div>
+      <p class="lead">ご利用のアーカイブソフトがわからない場合も登録はお気軽に。<br />
+         対応ソフトのリクエストも受け付けています。</p>
+      <p class="radius radius1"><strong class="largetext">Mailman</strong><br />を利用したMLに<br />対応しています</p>
+      <nav class="top_nav">
+        <a class="btn large" 
+           href="@routes.MLProposals.create">MLを登録する</a>
+        <a class="btn large" 
+           href="@routes.MLs.list(0, 10)">MLを見る・探す</a>
+      </nav>
+    </div>
+  </div>
+}
+
+@main("MilmSearch", Html(""), pageHome) {
+  <div class="topmainArea archive">
+    <div class="container">
+      <section class="top-sec">
+        <h2 class="caption">メーリングリスト登録の流れ</h2>
+        <div class="grid">
+          <div id="top-flowparent" class="content img_flow row">
+            <div class="f_arrow column span-3">
+              <p>1.登録申請</p>
+              <small>普段購読しているMLを、<br />登録フォームから教えてください！</small>
+            </div>
+            <div class="f_arrow column span-3">
+              <p>２.審査</p>
+              <small>MilmSearchに登録できる<br />タイプのMLかどうか調べます</small>
+            </div>
+            <div class="f_arrow column span-3">
+              <p>3.登録完了</p>
+              <small>登録したMLの過去のメールが<br />MilmSearchで読み込まれます</small>
+            </div>
+            <div class="column span-3">
+              <p>4.MLを見る</p>
+              <small>MLや過去のメールが<br />MilmSearchで閲覧・<br />検索できるように!</small>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="top-sec">
+        <h2 class="caption">MilmSearchは、これから育っていくオープンソースプロジェクトです。</h2>
+
+        <div class="content">
+          <p>
+            メーリングリストのアーカイブには多くの有益な情報が眠っているのに、<br />
+            探し出すのは大変…<br />
+            簡単にメーリングリストを検索できる方法って作れないのかな？
+          </p>
+          <p>
+            とあるエンジニアのこんな思いつきから、<br>
+            MilmSearchプロジェクトはスタートしました。<br>
+            これからどんどんバージョンアップしていきますのでお楽しみに！
+          </p>
+          <p>これからできることが増えていきます！</p>
+          <p class="radius radius2">MLを<br />カテゴリで<br />分類・管理！<p/>
+          <p class="radius radius3">お気に入り<br />MLをまとめて<br />チェック！</p>
+          <p class="radius radius4">活動状況を<br />解析してホットな<br />MLをオススメ！</p>
+        </div>
+      </section>
+    </div>
+  </div>   
+}

@@ -1,0 +1,49 @@
+@(page: Page[MLProposal], status: MLProposalStatus.Value)
+
+@import MLProposalStatus._
+
+@admin.main(Some(status)) {
+  <section>
+    <header class="page-header">
+      <h1>審査待ちML一覧</h1>
+    </header>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="tune_table_date">申請日</th>
+          @status match {
+            case Accepted => { <th class="tune_table_date">承認日</th> }
+            case Rejected => { <th class="tune_table_date">却下日</th> }
+            case _ => {}
+          }
+          <th>MLタイトル</th>
+        </tr>
+      </thead>
+      <tbody>
+      @if(page.totalResultCount > 0) { 
+        @page.items.map { mlp =>
+          <tr>
+            <td class="tune_table_date">@mlp.createdAt.toString("yyyy/MM/dd")</td>
+            @status match {
+              case Accepted|Rejected => {
+                <td class="tune_table_date">
+                  @mlp.judgedAt.map(_.toString("yyyy/MM/dd")).getOrElse("-")
+                </td>
+              }
+              case _ => {}
+            }
+            <td>
+              <a href="@routes.AdminMLProposals.show(mlp.id getOrElse 0)">@mlp.mlTitle</a>
+            </td>
+          </tr>
+        }
+      } else {
+        <tr><td colspan="@if(status == New) {2} else {3}">アイテムが見つかりません。</td></tr>
+      }
+      </tbody>
+    </table>
+    <div class="row">
+      @admin.helper.paginator(page, routes.AdminMLProposals.list(status.toString, _: Long, page.itemsPerPage))
+    </div>
+  </section>
+}

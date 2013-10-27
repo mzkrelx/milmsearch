@@ -1,0 +1,27 @@
+ID,PROPOSER_EMAIL,ML_TITLE,STATUS,ARCHIVE_TYPE,ARCHIVE_URL,MESSAGE,JUDGED_AT,CREATED_AT,UPDATED_AT
+1,foo@example.com,foo ML,new,mailman,http://example.com/arc,test foo,,2013-04-29 10:51:00,2013-04-29 10:51:00
+2,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+3,foo@example.com,foo ML,new,other,http://example.com/arc?foo=bar,test foo,,2013-04-29 10:51:00,2013-04-29 10:51:00
+4,bar@example.com,bar ML,accepted,mailman,http://example.com/arc,"test bar
+test bar2",2013-04-30 10:00:00,2013-04-29 10:52:00,2013-04-30 10:00:00
+5,bar@example.com,bar ML,rejected,mailman,http://example.com/arc,"test bar
+test bar2",2013-04-30 10:00:00,2013-04-29 10:52:00,2013-04-30 10:00:00
+6,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+7,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+8,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+9,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+10,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+11,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+12,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+13,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00
+14,bar@example.com,bar ML,new,mailman,http://example.com/arc,"test bar
+test bar2",,2013-04-29 10:52:00,2013-04-29 10:52:00

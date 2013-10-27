@@ -1,0 +1,29 @@
+# デフォルトメッセージ
+
+# --- Constraints
+constraint.required=【必須】
+constraint.min=最小値: {0}
+constraint.max=最大値: {0}
+constraint.minLength=最短文字数: {0}
+constraint.maxLength=最長文字数: {0}
+constraint.email=email
+
+# --- Formats
+format.date=日付 (''{0}'')
+format.numeric=数値
+format.real=実数値
+
+# --- Errors
+error.invalid=不正な値です
+error.required=この欄は必須です
+error.number=数値でなければいけません
+error.real=実数値でなければいけません
+error.real.precision=少数点以下 {1} 桁を含む {0} 桁の実数値でなければいけません
+error.min={0} 以上でなければいけません
+error.min.strict={0} より小さくなければいけません
+error.max={0} 以下でなければいけません
+error.max.strict={0} より大きくなければいけません
+error.minLength={0} 文字以上でなければいけません
+error.maxLength={0} 文字以下でなければいけません
+error.email=正しいemailアドレスでなければいけません
+error.pattern={0} 形式でなければいけません

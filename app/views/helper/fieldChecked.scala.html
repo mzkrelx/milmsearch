@@ -1,0 +1,5 @@
+@(fields: Set[models.search.MailSearchField.Value], fieldName: String)
+
+@import models.search.MailSearchField
+
+@if(fields.contains(MailSearchField.withName(fieldName))) { checked="checked" } 

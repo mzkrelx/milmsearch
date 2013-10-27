@@ -1,2 +1,2 @@
-milm-search-ui-scala
+MilmSearch
 ====================

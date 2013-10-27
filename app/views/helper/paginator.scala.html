@@ -1,0 +1,24 @@
+@(page: Page[_])
+
+@if(page.totalResultCount > 0) {   
+  
+  @(page.start)〜@(page.end)件&ensp;/&ensp;@(page.totalResultCount)件
+  
+  @page.previousPageNum.map { prePage =>
+    <a href="#" onclick="pageLink(@prePage)">&lt;&lt;</a>
+  }.getOrElse {
+  }
+  
+  @page.pagesInRange.map { pageNum =>
+    @if(page.currentPageNum == pageNum) {
+      <a href="" class="current">@pageNum</a>
+    } else {
+      <a href="#" onclick="pageLink(@pageNum)">@pageNum</a>
+    }
+  }
+  
+  @page.nextPageNum.map { nextPage =>
+    <a href="#" onclick="pageLink(@nextPage)">&gt;&gt;</a>
+  }.getOrElse {
+  }  
+}
