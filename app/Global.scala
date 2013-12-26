@@ -2,6 +2,7 @@ import models.executors.FirstCrawlingExecutor
 import play.api._
 import play.api.mvc._
 import play.api.mvc.Results._
+import scala.concurrent.Future
 
 object Global extends GlobalSettings {
 
@@ -16,15 +17,15 @@ object Global extends GlobalSettings {
     Logger.info("MilmSearch shutdown...")
   }
 
-  override def onHandlerNotFound(request: RequestHeader): Result = {
-    NotFound(views.html.notFound())
+  override def onHandlerNotFound(request: RequestHeader): Future[SimpleResult] = {
+    Future.successful(NotFound(views.html.notFound()))
   }
 
   override def onBadRequest(request: RequestHeader, error: String) = {
-    BadRequest("Bad Request: " + error)
+    Future.successful(BadRequest("Bad Request: " + error))
   }
 
   override def onError(request: RequestHeader, ex: Throwable) = {
-    InternalServerError(views.html.error())
+    Future.successful(InternalServerError(views.html.error()))
   }
 }

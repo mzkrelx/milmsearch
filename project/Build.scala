@@ -6,6 +6,7 @@ object ApplicationBuild extends Build {
 
   val appName         = "milmsearch"
   val appVersion      = "0.2-SNAPSHOT"
+  val buildScalaVersion = "2.10.1"
 
   val appDependencies = Seq(
     // Add your project dependencies here,
@@ -18,8 +19,12 @@ object ApplicationBuild extends Build {
     "org.elasticsearch" % "elasticsearch" % "0.90.3"
   )
 
+  val buildSettings = playScalaSettings ++ Seq (
+    version      := appVersion,
+    scalaVersion := buildScalaVersion
+  )
 
-  val main = play.Project(appName, appVersion, appDependencies).settings(
+  val main = play.Project(appName, appVersion, appDependencies, settings = buildSettings).settings(
     // Add your own project settings here      
   )
 
