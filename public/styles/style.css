@@ -619,19 +619,22 @@ div#divml li, div#divsend li{
   }
   div.top_gradient{
     width: 100%;
+    height: 300px;
     background: 
-      -moz-linear-gradient(left top, #f3fbc5, #f6c3a5);　/* Firefox用 */
+      -moz-linear-gradient(top, #f3fbc5, #f6c3a5);　/* Firefox用 */
   }
   div.top_gradient2{
     width: 100%;
+    height: 300px;
     background: 
       -webkit-gradient(linear, left top, left bottom, from(#f3fbc5), to(#f6c3a5));　/* Safari,Google Chrome用 */
   }
   h1.caption{
-    font-size: 400%;
-    line-height: 80%;
-    padding-top: 0.6em;
-    padding-bottom: 0.3em;
+    position: absolute;
+    left: 50%;
+    height: 100%;
+    width: 1000px;
+    margin-left: -500px; /* MUST be half the width */
   }
   h2.caption{
     font-size: 180%;
