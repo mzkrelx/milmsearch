@@ -1,0 +1,25 @@
+@()
+
+@admin.main(None) {
+  <form class="form-horizontal" method="post" action="">
+    <fieldset>
+    
+      <legend>HTMLカスタマイズ</legend>
+      
+      <div class="control-group">
+        <label class="control-label" for="inputFooter">フッター</label>
+        <div class="controls">
+          <textarea id="inputFooter" name="footer" rows="5" class="span8">
+          </textarea>
+        </div>
+      </div>
+
+    </fieldset>
+    
+    <div class="form-actions">
+      <input type="reset" class="btn btn-warning span2" />
+      <input type="submit" class="btn btn-primary span2" value="保存する" />
+    </div>
+
+  </form>
+}
