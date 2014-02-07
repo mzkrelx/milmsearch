@@ -182,11 +182,11 @@ footer{
   /* header element -----------------------------------  */
 
 header h1{
-	width:224px;
-	height:39px;
-	background:url(../images/common/milmsearch.gif) no-repeat top left;
-	float:left;
-	margin-top:0.5em;
+  width:300px;
+  min-height:70px;
+  background:url(../images/common/milmsearch.gif) no-repeat top left;
+  float:left;
+  margin-top:0.5em;
 }
 header h1 a{
 	width:100%;
