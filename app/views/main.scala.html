@@ -80,6 +80,7 @@
     <footer id="footer" class="clearfix">
       <div class="contentarea">
         <div class="pagetop"><a href="#">pagetop</a></div>
+        @Html(models.SiteSetting.find.footerHtml)
         <nav>
           <ul>
             <li><a href="@routes.Application.inquiry">お問い合わせ</a></li>
