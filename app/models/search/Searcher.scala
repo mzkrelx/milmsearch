@@ -85,20 +85,18 @@ object Searcher {
     Some(FilterBuilders.rangeFilter("date").from(req.fromDate).to(req.toDate))
   }
 
-  private def makeMLFilter(req: SearchRequest): Option[OrFilterBuilder] = {
+  private def makeMLFilter(req: SearchRequest): Option[AndFilterBuilder] = {
     req.mlIDs.map(_.toString) toSeq match {
-      case x if x nonEmpty => Some(FilterBuilders.orFilter(
+      case x if x nonEmpty => Some(FilterBuilders.andFilter(
         FilterBuilders.termsFilter("MLID", x: _*)))
       case _ => None
     }
   }
 
-  private def makeFromFilter(req: SearchRequest): Option[OrFilterBuilder] = {
+  private def makeFromFilter(req: SearchRequest): Option[TermsFilterBuilder] = {
     req.froms match {
-      case froms if froms nonEmpty => Some(FilterBuilders.orFilter(
-        FilterBuilders.queryFilter(QueryBuilders.fieldQuery(
-          "fromAddr",
-          froms.map(_.email.toString).mkString(",")))))
+      case froms if froms nonEmpty => Some(FilterBuilders.termsFilter(
+          "fromAddr.full", froms.map(_.email.toString()).toSeq:_*))
       case _ => None
     }
   }

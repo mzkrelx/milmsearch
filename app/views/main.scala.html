@@ -20,7 +20,7 @@
   
     <header>
       <div class="contentarea">
-        <h1><a href="@routes.Application.index">Milm Search ver.0.2</a></h1>
+        <h1><a href="@routes.Application.index">MilmSearch ver.0.2</a></h1>
         <nav class="clearfix">
           <ul class="sub">
             <li><a href="@routes.Application.help">ヘルプ</a></li>
@@ -80,6 +80,7 @@
     <footer id="footer" class="clearfix">
       <div class="contentarea">
         <div class="pagetop"><a href="#">pagetop</a></div>
+        @Html(models.SiteSetting.find.footerHtml)
         <nav>
           <ul>
             <li><a href="@routes.Application.inquiry">お問い合わせ</a></li>
@@ -87,14 +88,14 @@
             <li><a href="@routes.Application.policy">プライバシーポリシー</a></li>
           </ul>
         </nav>
-        <p>&copy;Milm Search</p>
+        <p>&copy;MilmSearch</p>
       </div>
     </footer>
 
     <script src="@routes.Assets.at("js/jquery-latest.js")"></script>
     <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="@routes.Assets.at("js/jquery-1.9.1.js")"></script>
+    <script src="@routes.Assets.at("js/jquery-ui-1.10.3.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("styles/html5shiv.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("styles/footerFixed.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("styles/jquery.leanModal.min.js")"></script>

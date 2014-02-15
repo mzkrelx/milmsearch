@@ -1,0 +1,34 @@
+@(siteSettingForm: Form[SiteSetting], flash: String = "")
+
+@import helper._
+
+@admin.main(None) {
+  
+  @if(flash != "") {
+  <div class="alert alert-success">
+    <button class="close" data-dismiss="alert" type="button">×</button>
+    @flash
+  </div>
+  }
+  
+  <form class="form-horizontal" method="post" action="@routes.AdminSiteSettings.submitEditForm">
+    <fieldset>
+    
+      <legend>サイト設定</legend>
+      
+      <div class="control-group">
+        <label class="control-label" for="footerHtml">フッターのカスタマイズ</label>
+        <div class="controls">
+          <textarea id="footerHtml" name="footerHtml" rows="5" class="span8">@siteSettingForm.get.footerHtml</textarea>
+        </div>
+      </div>
+
+    </fieldset>
+    
+    <div class="form-actions">
+      <input type="reset" class="btn btn-warning span2" />
+      <input type="submit" class="btn btn-primary span2" value="保存する" />
+    </div>
+  </form>
+  
+}
