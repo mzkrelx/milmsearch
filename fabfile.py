@@ -4,7 +4,7 @@ from fabric.api        import local, sudo
 
 @task
 def build():
-    local('play clean compile stage')
+    local('/usr/local/play-2.2.1/play clean compile stage')
 
 @task
 def rsync():
