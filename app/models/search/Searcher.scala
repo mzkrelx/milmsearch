@@ -95,7 +95,8 @@ object Searcher {
 
   private def makeFromFilter(req: SearchRequest): Option[TermsFilterBuilder] = {
     req.froms match {
-      case froms if froms nonEmpty => Some(FilterBuilders.termsFilter("fromAddr.full", froms.map(_.email.toString()).toSeq:_*))
+      case froms if froms nonEmpty => Some(FilterBuilders.termsFilter(
+          "fromAddr.full", froms.map(_.email.toString()).toSeq:_*))
       case _ => None
     }
   }
