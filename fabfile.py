@@ -12,4 +12,4 @@ def rsync():
 
 @task
 def restart():
-    sudo('supervisorctl restart milmsearch', pty=True)
+    sudo('supervisorctl restart milmsearch', pty=True, shell=False)
